@@ -2,114 +2,62 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MISSION COMMAND: NASAA S66 v15.7</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v16.1</title>
     <style>
-        /* NASA Artemis Palette */
-        :root {
-            --nasa-blue: #0b3d91;
-            --artemis-red: #fc3d39;
-            --lunar-grey: #f4f4f4;
-            --deep-space: #0b0d0f;
-            --text-dark: #212121;
-        }
-
+        :root { --nasa-blue: #0b3d91; --artemis-red: #fc3d39; --lunar-grey: #f4f4f4; --text-dark: #212121; }
         body { background: var(--lunar-grey); color: var(--text-dark); font-family: 'Helvetica Neue', Arial, sans-serif; padding: 10px; overflow-x: hidden; }
-        
-        .hud { 
-            border: 3px solid var(--nasa-blue); 
-            max-width: 800px; 
-            margin: auto; 
-            padding: 20px; 
-            background: #ffffff; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            position: relative;
-            border-radius: 8px;
-        }
-
-        #flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(252,61,57,0.3); display: none; z-index: 100; pointer-events: none; }
-        
-        .launch-pad { height: 150px; border-bottom: 2px solid #ddd; position: relative; margin: 20px 0; background: linear-gradient(to bottom, #e0e0e0, #ffffff); overflow: hidden; border-radius: 5px; }
-        #rocket { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 45px; transition: bottom 0.5s ease-in; z-index: 10; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
-        
+        .hud { border: 3px solid var(--nasa-blue); max-width: 800px; margin: auto; padding: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; border-radius: 8px; }
+        .launch-pad { height: 120px; border-bottom: 2px solid #ddd; position: relative; margin: 15px 0; background: linear-gradient(to bottom, #e0e0e0, #ffffff); overflow: hidden; border-radius: 5px; }
+        #rocket { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 40px; transition: bottom 0.5s ease-in; z-index: 10; }
         .fuel-bar { width: 100%; background: #eee; border: 1px solid #ccc; height: 30px; margin-top: 5px; position: relative; border-radius: 15px; overflow: hidden; }
         #fuel-fill { background: var(--nasa-blue); width: 0%; height: 100%; transition: width 0.5s; }
         #total-text { position: absolute; width: 100%; text-align: center; color: #fff; font-size: 12px; line-height: 30px; font-weight: bold; top: 0; left: 0; z-index: 5; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        
-        .p-btn { background: #ffffff; border: 2px solid var(--nasa-blue); color: var(--nasa-blue); padding: 15px; cursor: pointer; font-weight: bold; text-align: center; transition: 0.2s; border-radius: 6px; font-size: 0.95em; }
+        .p-btn { background: #ffffff; border: 2px solid var(--nasa-blue); color: var(--nasa-blue); padding: 15px; cursor: pointer; font-weight: bold; text-align: center; border-radius: 6px; font-size: 0.95em; }
         .p-btn:hover { background: var(--nasa-blue); color: #fff; }
-        
-        .score-tag { display: block; font-size: 13px; color: #666; margin-top: 5px; }
-        .lib-count { font-size: 10px; color: #999; display: block; }
-        .practice-text { color: var(--artemis-red); font-size: 11px; font-weight: bold; }
-        
-        .q-text { font-size: 1.2em; color: var(--text-dark); margin-bottom: 25px; border-left: 5px solid var(--artemis-red); padding-left: 15px; line-height: 1.5; font-weight: 600; }
-        
-        .ans-btn { display: block; width: 100%; padding: 18px; margin: 10px 0; background: #f9f9f9; border: 1px solid #ddd; color: var(--text-dark); cursor: pointer; text-align: left; transition: 0.2s; border-radius: 8px; font-size: 1.05em; line-height: 1.4; }
-        .ans-btn:hover:not([disabled]) { border-color: var(--nasa-blue); background: #f0f4ff; }
-        
-        #feedback { margin: 20px 0; padding: 15px; border-radius: 8px; font-weight: bold; line-height: 1.5; background: #fdfdfd; border: 1px solid #eee; }
-        .nav-btn { background: var(--nasa-blue); color: #fff; font-weight: bold; padding: 18px; border: none; width: 100%; cursor: pointer; text-transform: uppercase; margin-top: 10px; border-radius: 8px; font-size: 1.1em; box-shadow: 0 4px 0 #082d6b; }
-        .nav-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #082d6b; }
-        
-        .abort-btn { background: #eee; color: #666; border: 1px solid #ccc; padding: 10px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 25px; text-transform: uppercase; border-radius: 5px; }
-
-        .wipe-btn { background: #fff; color: var(--artemis-red); border: 2px solid var(--artemis-red); padding: 15px; font-weight: bold; cursor: pointer; margin-top: 40px; width: 100%; border-radius: 8px; text-transform: uppercase; }
-
-        #mission-report { display: none; text-align: center; }
-        
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: 1fr; }
-            .q-text { font-size: 1.1em; }
-            h1 { font-size: 1.5em; color: var(--nasa-blue); }
-        }
-
-        /* Logic Colors */
-        .correct-ans { border-color: #2e7d32 !important; background: #e8f5e9 !important; color: #1b5e20 !important; }
-        .wrong-ans { border-color: #c62828 !important; background: #ffeeb2 !important; color: #b71c1c !important; }
-
-        .shake { animation: shake 0.3s; }
-        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
+        .q-text { font-size: 1.15em; color: var(--text-dark); margin-bottom: 20px; border-left: 5px solid var(--artemis-red); padding-left: 15px; line-height: 1.5; font-weight: 600; }
+        .ans-btn { display: block; width: 100%; padding: 16px; margin: 8px 0; background: #f9f9f9; border: 1px solid #ddd; color: var(--text-dark); cursor: pointer; text-align: left; border-radius: 8px; font-size: 1em; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 8px; font-weight: bold; background: #fdfdfd; border: 1px solid #eee; display: none; }
+        .nav-btn { background: var(--nasa-blue); color: #fff; font-weight: bold; padding: 18px; border: none; width: 100%; cursor: pointer; text-transform: uppercase; margin-top: 10px; border-radius: 8px; display: none; }
+        .correct-ans { border-color: #2e7d32 !important; background: #e8f5e9 !important; color: #1b5e20 !important; font-weight: bold; }
+        .wrong-ans { border-color: #c62828 !important; background: #ffebee !important; color: #b71c1c !important; }
+        .review-item { border-bottom: 1px solid #ddd; padding: 15px 0; text-align: left; }
+        .review-logic { font-size: 0.9em; background: #f0f4ff; padding: 10px; border-radius: 5px; margin-top: 5px; color: var(--nasa-blue); border-left: 3px solid var(--nasa-blue); }
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
         .takeoff { bottom: 1500px !important; transition: bottom 4s ease-in !important; }
+        #countdown-overlay { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 80px; color: var(--artemis-red); z-index: 200; display: none; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div id="flash"></div>
     <div class="hud" id="main-hud">
-        <h1 style="text-align:center; margin-bottom: 5px;">S66: MISSION COMMAND v15.7</h1>
-        <div style="text-align: center; font-size: 14px; color: var(--artemis-red); margin-bottom: 15px; font-weight: bold; letter-spacing: 2px;">66 HOMEBREW NASAA 66 SIMULATION</div>
-        
+        <div id="countdown-overlay">IGNITION</div>
+        <h1 style="text-align:center; margin-bottom: 5px; color: var(--nasa-blue);">S66: MISSION COMMAND</h1>
+        <div style="text-align: center; font-size: 12px; color: var(--artemis-red); margin-bottom: 10px; font-weight: bold; letter-spacing: 2px;">ARTEMIS v16.1</div>
         <div class="launch-pad"><div id="rocket">🚀</div></div>
-        
         <div class="fuel-bar">
-            <div id="total-text">FLIGHT READINESS: 0% (GOAL: 73%)</div>
+            <div id="total-text">GLOBAL READINESS: 0%</div>
             <div id="fuel-fill"></div>
         </div>
-
         <div id="menu">
             <div class="grid">
-                <button class="p-btn" id="btn-p0" onclick="start(0)">01. ECONOMICS <span class="score-tag" id="s0">Status: PENDING</span><span class="lib-count" id="c0"></span></button>
-                <button class="p-btn" id="btn-p1" onclick="start(1)">02. VEHICLES <span class="score-tag" id="s1">Status: PENDING</span><span class="lib-count" id="c1"></span></button>
-                <button class="p-btn" id="btn-p2" onclick="start(2)">03. STRATEGY <span class="score-tag" id="s2">Status: PENDING</span><span class="lib-count" id="c2"></span></button>
-                <button class="p-btn" id="btn-p3" onclick="start(3)">04. REGULATIONS <span class="score-tag" id="s3">Status: PENDING</span><span class="lib-count" id="c3"></span></button>
+                <button class="p-btn" onclick="start(0)">01. ECONOMICS <span id="s0" style="display:block; font-size:10px;">PENDING</span></button>
+                <button class="p-btn" onclick="start(1)">02. VEHICLES <span id="s1" style="display:block; font-size:10px;">PENDING</span></button>
+                <button class="p-btn" onclick="start(2)">03. STRATEGY <span id="s2" style="display:block; font-size:10px;">PENDING</span></button>
+                <button class="p-btn" onclick="start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">PENDING</span></button>
             </div>
-            <button class="wipe-btn" onclick="resetScores()">⚠️ RESET MISSION DATA ⚠️</button>
+            <button onclick="resetScores()" style="width:100%; margin-top:30px; background:none; border:none; color:var(--artemis-red); cursor:pointer; font-size:11px;">⚠️ WIPE MISSION DATA</button>
         </div>
-
         <div id="game" style="display:none;">
-            <div id="status-line" style="font-size:12px; margin-bottom:10px; color:#666; font-weight:bold;"></div>
+            <div id="status-line" style="font-size:11px; color:#666; margin-bottom:10px; font-weight:bold;"></div>
             <div id="q-area"></div>
             <div id="feedback"></div>
-            <button id="next" class="nav-btn" style="display:none;" onclick="next()">NEXT GATE ></button>
-            <button id="abort-btn" class="abort-btn" style="display:none;" onclick="location.reload()">ABORT MISSION</button>
+            <button id="next" class="nav-btn" onclick="next()">NEXT GATE ></button>
         </div>
-
-        <div id="mission-report">
-            <h2 id="report-title" style="color: var(--nasa-blue);">SECTOR COMPLETE</h2>
-            <div style="font-size: 20px; margin: 20px 0;">GLOBAL READINESS: <span id="rep-global" style="color: var(--nasa-blue); font-weight:bold;"></span></div>
-            <p id="rep-msg" style="margin-top: 20px; font-weight: bold;"></p>
-            <button class="nav-btn" onclick="location.reload()">RETURN TO COMMAND</button>
+        <div id="report" style="display:none; text-align:center;">
+            <h2 id="report-title" style="color:var(--nasa-blue);">SECTOR COMPLETE</h2>
+            <p id="rep-msg" style="font-weight:bold; margin-bottom:20px;"></p>
+            <button class="nav-btn" style="display:block; background:var(--artemis-red); margin-bottom:10px;" onclick="showReview()">🔍 REVIEW MISSION LOG</button>
+            <button class="nav-btn" style="display:block;" onclick="location.reload()">RETURN TO COMMAND</button>
         </div>
     </div>
 
@@ -123,8 +71,7 @@
         if(t==='ok'){ o.type='triangle'; o.frequency.setValueAtTime(440, time); o.frequency.exponentialRampToValueAtTime(880, time+0.1); g.gain.setTargetAtTime(0.1, time, 0.01); o.start(); o.stop(time+0.2); }
         else { o.type='square'; o.frequency.setValueAtTime(150, time); o.frequency.linearRampToValueAtTime(50, time+0.3); g.gain.setTargetAtTime(0.1, time, 0.01); o.start(); o.stop(time+0.3); }
     }
-
-    const lib = [
+        const lib = [
         [ // 01. ECONOMICS (100)
             {q: "Which return calculation is specifically designed to remove the distortions caused by a client's timing of deposits and withdrawals?", c: ["Time-weighted return", "Dollar-weighted return", "Arithmetic mean", "Internal Rate of Return"], a: 0, f: "Logic: Time-weighted return measures the manager's performance by ignoring the timing of the investor's cash flow. Dollar-weighted return reflects the actual return the investor achieved, including their timing."},
 {q: "A client wishes to fund a scholarship that pays out $5,000 in perpetuity. If the anticipated annual rate of return is 4%, how much must the client deposit today?", c: ["$125,000", "$200,000", "$100,000", "$50,000"], a: 0, f: "Logic: To find the principal for a perpetuity, divide the payment by the rate. $5,000 / 0.04 = $125,000."},
@@ -227,7 +174,7 @@
             {q: "Which of the following actions by an Investment Adviser Representative (IAR) constitutes an illegal 'Breach of Fiduciary Duty'?", c: ["Recommending an affiliated broker-dealer to execute trades without disclosing the conflict of interest", "Refusing to accept a client who requests an aggressive day-trading strategy", "Charging a 1.5% AUM fee instead of an hourly rate", "Delegating the execution of trades to a registered assistant"], a: 0, f: "Logic: Fiduciaries must have undivided loyalty. Steering clients to a sister company where the firm makes double the money without telling the client is a massive breach of trust."},
             {q: "Under the USA, if a client is declared legally incompetent by a judge, the client's agent must:", c: ["Cancel all pending open orders and wait for instructions from a court-appointed conservator or guardian", "Continue trading the account using their best judgment", "Immediately liquidate the account and mail the check to the client's address", "Transfer the account to the client's nearest living relative"], a: 0, f: "Logic: Legal incompetence instantly freezes the account. The agent cannot take instructions from the client or trade the account until a legally appointed guardian takes over."},
             {q: "According to the USA, an Administrator may deny an applicant's registration if, within the past 10 years, the applicant was convicted of:", c: ["Any felony, or any misdemeanor involving securities, finance, or fraud", "Any misdemeanor, including a minor traffic violation", "A civil lawsuit involving a breach of contract", "A felony conviction 15 years ago"], a: 0, f: "Logic: The 'Statutory Disqualification' rule looks back exactly 10 years. It flags ALL felonies, but only flags misdemeanors if they specifically involve money, fraud, or securities."},
-            {q: "Congratulations. You have completed the final calibration sequence for the Series 66 exam. The primary function of the Uniform Securities Act is to:", c: ["Protect the investing public from fraud and ensure financial professionals operate with complete integrity", "Guarantee that all registered securities will be profitable", "Ensure that broker-dealers maximize their corporate profits", "Eliminate all systematic risk from the financial markets"], a: 0, f: "Logic: MISSION ACCOMPLISHED. The regulators exist to protect the public. By mastering these 400 questions, you have proven you are ready. Go pass the Series 66 on April 19th."}
+            {q: "Congratulations. You have completed the final calibration sequence for the Series 66 exam. The primary function of the Uniform Securities Act is to:", c: ["Protect the investing public from fraud and ensure financial professionals operate with complete integrity", "Guarantee that all registered securities will be profitable", "Ensure that broker-dealers maximize their corporate profits", "Eliminate all systematic risk from the financial markets"], a: 0, f: "Logic: MISSION ACCOMPLISHED. The regulators exist to protect the public. By mastering these 400 questions, you have proven you are ready. Go pass the Series 66!}
         ],
         [ // 02. VEHICLES (106)
             {q: "Which of the following mutual fund share classes is most likely to feature a front-end sales load and a lower-than-average 12b-1 fee?", c: ["Class A shares", "Class B shares", "Class C shares", "Institutional shares"], a: 0, f: "Logic: Class A shares are known for upfront loads and low internal expenses. Class C shares have no upfront load but high 12b-1 fees (level loads)."},
@@ -535,99 +482,145 @@
             {q: "SEC can suspend all trading on an exchange (e.g. NYSE) for up to:", c: ["90 days with Presidential approval", "10 days unilaterally", "30 days with Congress", "60 days"], a: 0, f: "Logic: 10 days for a stock; 90 days for an exchange."},
             {q: "Short-Swing profits (Insiders) are forfeited if held less than:", c: ["6 months", "12 months", "30 days", "90 days"], a: 0, f: "Logic: 6-month rule prevents insiders from day-trading their own firm."},
             {q: "Holding securities in 'Street Name' requires:", c: ["Strict segregation and no commingling", "Yearly liquidation", "1% safekeeping fee", "Registration in client name"], a: 0, f: "Logic: Firm's name is on it for speed, but client assets must be separate."},
-            {q: "Congratulations. You have completed the final calibration sequence for the Series 66 exam. The primary function of the Uniform Securities Act is to:", c: ["Protect the investing public from fraud and ensure financial professionals operate with complete integrity", "Guarantee that all registered securities will be profitable", "Ensure that broker-dealers maximize their corporate profits", "Eliminate all systematic risk from the financial markets"], a: 0, f: "Logic: MISSION ACCOMPLISHED. The regulators exist to protect the public. By mastering these 400 questions, you have proven you are ready. Go pass the Series 66 on April 19th."}
+            {q: "Congratulations. You have completed the final calibration sequence for the Series 66 exam. The primary function of the Uniform Securities Act is to:", c: ["Protect the investing public from fraud and ensure financial professionals operate with complete integrity", "Guarantee that all registered securities will be profitable", "Ensure that broker-dealers maximize their corporate profits", "Eliminate all systematic risk from the financial markets"], a: 0, f: "Logic: MISSION ACCOMPLISHED. The regulators exist to protect the public. By mastering these 400 questions, you have proven you are ready. Go pass the Series 66!"}
         ]
     ];
-
-    let activeSet=[], idx=0, currentPillar=0, sessionScore=0, sessionFails=0;
-    let currentScores = JSON.parse(localStorage.getItem('s66Scores')) || [0,0,0,0];
-    let sectorsCompleted = JSON.parse(localStorage.getItem('s66Done')) || [false,false,false,false];
-    let isPracticeMode = false;
-    let baseScore = 0; 
-    let frozenGlobalScore = 0; 
+let activeSet=[], idx=0, currentPillar=0, sessionScore=0, sessionFails=0;
+    let missionLog = [];
+    let currentScores = JSON.parse(localStorage.getItem('artemisScores')) || [0,0,0,0];
+    let sectorsDone = JSON.parse(localStorage.getItem('artemisDone')) || [false,false,false,false];
 
     function updateMenuUI() {
         let total = currentScores.reduce((a, b) => a + b, 0);
-        for(let i=0; i<4; i++) {
-            let tag = document.getElementById('s'+i);
-            document.getElementById('c'+i).innerText = `[${lib[i].length} GATES IN BANK]`;
-            if(sectorsCompleted[i]) {
-                tag.innerHTML = `Score: ${currentScores[i]}/25 <br><span class='practice-text'>[PRACTICE ONLY]</span>`;
-            } else tag.innerHTML = `Status: PENDING`;
-        }
         document.getElementById('fuel-fill').style.width = total + "%";
-        document.getElementById('rocket').style.bottom = (10 + (total * 1.5)) + "px";
-        document.getElementById('total-text').innerText = `FLIGHT READINESS: ${total}% (GOAL: 73%)`;
-    }
-
-    function updateLiveTelemetry() {
-        if (isPracticeMode) {
-            document.getElementById('total-text').innerText = `PRACTICE MODE - SCORE LOCKED`;
-        } else {
-            let currentGlobal = baseScore + sessionScore;
-            document.getElementById('fuel-fill').style.width = currentGlobal + "%";
-            document.getElementById('rocket').style.bottom = (10 + (currentGlobal * 1.5)) + "px";
-            document.getElementById('total-text').innerText = `LIVE READINESS: ${currentGlobal}%`;
+        document.getElementById('rocket').style.bottom = (10 + (total)) + "px";
+        document.getElementById('total-text').innerText = `GLOBAL READINESS: ${total}% (GOAL: 73%)`;
+        for(let i=0; i<4; i++) {
+            document.getElementById('s'+i).innerText = sectorsDone[i] ? `Ready: ${currentScores[i]}/25` : "PENDING";
         }
     }
 
-    function start(i){
+    function launchSequence() {
+        const overlay = document.getElementById('countdown-overlay');
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('report').style.display = 'none';
+        overlay.style.display = 'block'; overlay.innerText = "IGNITION";
+        document.getElementById('main-hud').classList.add('shake');
+        setTimeout(() => { overlay.innerText = "LIFTOFF!"; document.getElementById('rocket').classList.add('takeoff'); }, 2000);
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            document.getElementById('report').style.display = 'block';
+            document.getElementById('report-title').innerText = "MISSION SUCCESS";
+            document.getElementById('rep-msg').innerText = "ORBIT ACHIEVED. YOU ARE READY FOR THE SERIES 66.";
+        }, 5000);
+    }
+
+function start(i){
+        missionLog = [];
         currentPillar = i;
-        isPracticeMode = sectorsCompleted[i];
-        if (!isPracticeMode) baseScore = currentScores.reduce((acc, val, index) => index === i ? acc : acc + val, 0);
         
-        let rawSet = JSON.parse(JSON.stringify(lib[i]));
+        // Detect if this is a retake/practice run
+        isPracticeMode = sectorsDone[i]; 
+        
+        // If not practice, set the base score from OTHER pillars 
+        // so we can track live growth in this pillar
+        if (!isPracticeMode) {
+            baseScore = currentScores.reduce((acc, val, index) => index === i ? acc : acc + val, 0);
+        }
+
+        let rawSet = JSON.parse(JSON.stringify(lib[i])); 
+        rawSet.forEach(q => {
+            let correctText = q.c[q.a];
+            for (let j = q.c.length - 1; j > 0; j--) {
+                const k = Math.floor(Math.random() * (j + 1));
+                [q.c[j], q.c[k]] = [q.c[k], q.c[j]];
+            }
+            q.a = q.c.indexOf(correctText);
+        });
+        
         activeSet = rawSet.sort(() => 0.5 - Math.random()).slice(0, 25);
         idx = 0; sessionScore = 0; sessionFails = 0;
+        
         document.getElementById('menu').style.display = 'none';
         document.getElementById('game').style.display = 'block';
-        document.getElementById('abort-btn').style.display = 'block';
+        
+        // HUD Status Update
+        let statusEl = document.getElementById('status-line');
+        if (isPracticeMode) {
+            statusEl.innerText = "⚠️ PRACTICE MODE: GLOBAL SCORE LOCKED";
+            statusEl.style.color = "var(--artemis-red)";
+        } else {
+            statusEl.innerText = "LIVE EXAM SESSION";
+            statusEl.style.color = "#666";
+        }
+        
         show();
     }
 
     function show(){
         if(idx >= activeSet.length){
+            // ONLY save to LocalStorage if NOT in Practice Mode
             if (!isPracticeMode) {
-                currentScores[currentPillar] = sessionScore; sectorsCompleted[currentPillar] = true;
-                localStorage.setItem('s66Scores', JSON.stringify(currentScores));
-                localStorage.setItem('s66Done', JSON.stringify(sectorsCompleted));
+                currentScores[currentPillar] = sessionScore; 
+                sectorsDone[currentPillar] = true;
+                localStorage.setItem('artemisScores', JSON.stringify(currentScores));
+                localStorage.setItem('artemisDone', JSON.stringify(sectorsDone));
+                
+                let total = currentScores.reduce((a,b)=>a+b,0);
+                if (sectorsDone.every(Boolean) && total >= 73) { launchSequence(); return; }
             }
+            
             document.getElementById('game').style.display = 'none';
-            document.getElementById('mission-report').style.display = 'block';
-            document.getElementById('rep-correct').innerText = sessionScore;
-            document.getElementById('rep-wrong').innerText = sessionFails;
-            document.getElementById('rep-global').innerText = currentScores.reduce((a,b)=>a+b,0) + "%";
+            document.getElementById('report').style.display = 'block';
+            
+            let totalDisplay = isPracticeMode ? 
+                currentScores.reduce((a,b)=>a+b,0) : 
+                currentScores.reduce((a,b)=>a+b,0);
+
+            document.getElementById('rep-msg').innerHTML = `
+                Session Score: ${sessionScore}/${activeSet.length}<br>
+                ${isPracticeMode ? '<span style="color:var(--artemis-red)">PRACTICE RUN: DATA NOT SAVED</span>' : 'MISSION DATA LOGGED'}
+            `;
             return;
         }
         let s = activeSet[idx], h = `<div class="q-text">${s.q}</div>`;
         s.c.forEach((v,i) => { h += `<button class="ans-btn" onclick="check(${i})"><strong>${String.fromCharCode(65+i)}.</strong> ${v}</button>`; });
         document.getElementById('q-area').innerHTML = h;
+        document.getElementById('status-line').innerText = isPracticeMode ? 
+            `PRACTICE GATE ${idx+1}/25` : 
+            `EXAM GATE ${idx+1}/25 | CURRENT SECTOR: ${sessionScore}`;
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next').style.display = 'none';
-        document.getElementById('status-line').innerText = `GATE ${idx+1}/${activeSet.length} | SECTOR SCORE: ${sessionScore}`;
     }
 
     function check(i){
         let s = activeSet[idx]; const btns = document.getElementsByClassName('ans-btn');
+        missionLog.push({ q: s.q, mine: s.c[i], correct: s.c[s.a], isOk: i === s.a, logic: s.f });
         for(let b of btns) b.disabled = true;
-        
-        if(i === s.a){ 
-            playSnd('ok'); sessionScore++; 
-            btns[i].classList.add('correct-ans');
-            document.getElementById('feedback').innerHTML = "🟢 [SUCCESS] " + s.f; 
-        } else { 
-            playSnd('no'); sessionFails++; 
-            btns[i].classList.add('wrong-ans');
-            btns[s.a].classList.add('correct-ans');
-            document.getElementById('feedback').innerHTML = "🔴 [FAILED] " + s.f; 
-        }
-        updateLiveTelemetry();
+        if(i === s.a){ sessionScore++; btns[i].classList.add('correct-ans'); playSnd('ok'); }
+        else { sessionFails++; btns[i].classList.add('wrong-ans'); btns[s.a].classList.add('correct-ans'); playSnd('no'); }
+        document.getElementById('feedback').innerHTML = s.f;
         document.getElementById('feedback').style.display = 'block';
         document.getElementById('next').style.display = 'block';
     }
 
+    function showReview() {
+        document.getElementById('report').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        let h = `<h2 style="color:var(--nasa-blue); text-align:center;">DEBRIEFING LOG</h2>`;
+        missionLog.forEach((item, index) => {
+            let color = item.isOk ? "#2e7d32" : "#c62828";
+            h += `<div class="review-item"><p><strong>GATE ${index+1}:</strong> ${item.q}</p><p style="color:${color}">${item.isOk ? '✅' : '❌'} Your Answer: ${item.mine}</p>${!item.isOk ? `<p style="color:#2e7d32">✔️ Correct: ${item.correct}</p>` : ''}<div class="review-logic"><strong>Analysis:</strong> ${item.logic}</div></div>`;
+        });
+        h += `<button class="nav-btn" style="display:block;" onclick="location.reload()">RETURN TO COMMAND</button>`;
+        document.getElementById('q-area').innerHTML = h;
+        document.getElementById('next').style.display = 'none';
+        document.getElementById('status-line').innerText = "POST-FLIGHT REVIEW";
+    }
+
     function next(){ idx++; show(); }
-    function resetScores() { if(confirm("WIPE MISSION DATA?")) { localStorage.clear(); location.reload(); } }
+    function resetScores() { if(confirm("RESET ALL MISSION DATA?")) { localStorage.clear(); location.reload(); } }
     updateMenuUI();
 </script>
 </body>
