@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MISSION COMMAND: ARTEMIS S66 v16.4</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v16.5</title>
     <style>
         :root { --nasa-blue: #0b3d91; --artemis-red: #fc3d39; --lunar-grey: #f4f4f4; --text-dark: #212121; }
         body { background: var(--lunar-grey); color: var(--text-dark); font-family: 'Helvetica Neue', Arial, sans-serif; padding: 10px; overflow-x: hidden; }
@@ -13,7 +13,6 @@
         #fuel-fill { background: var(--nasa-blue); width: 0%; height: 100%; transition: width 0.5s; }
         #total-text { position: absolute; width: 100%; text-align: center; color: #fff; font-size: 12px; line-height: 30px; font-weight: bold; top: 0; left: 0; z-index: 5; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
         
-        /* Mode Toggle Style */
         .mode-toggle { display: flex; background: #eee; border-radius: 25px; margin: 15px 0; padding: 5px; border: 1px solid #ccc; }
         .mode-btn { flex: 1; border: none; background: none; padding: 10px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 11px; transition: 0.3s; color: #666; }
         .mode-btn.active { background: var(--nasa-blue); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
@@ -29,26 +28,31 @@
         .wrong-ans { border-color: #c62828 !important; background: #ffebee !important; color: #b71c1c !important; }
         .review-item { border-bottom: 1px solid #ddd; padding: 15px 0; text-align: left; }
         .review-logic { font-size: 0.9em; background: #f0f4ff; padding: 10px; border-radius: 5px; margin-top: 5px; color: var(--nasa-blue); border-left: 3px solid var(--nasa-blue); }
+        
+        /* Animations */
+        .shake { animation: shakeAnim 0.5s infinite; }
+        @keyframes shakeAnim { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 50% { transform: translate(-1px, 2px) rotate(1deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+        .takeoff { bottom: 1000px !important; transition: bottom 3s ease-in !important; }
+
         @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-        .takeoff { bottom: 1500px !important; transition: bottom 4s ease-in !important; }
-        #countdown-overlay { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 80px; color: var(--artemis-red); z-index: 200; display: none; font-weight: bold; }
+        #countdown-overlay { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 60px; color: var(--artemis-red); z-index: 200; display: none; font-weight: bold; text-align: center; width: 100%; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
     <div class="hud" id="main-hud">
         <div id="countdown-overlay">IGNITION</div>
         <h1 style="text-align:center; margin-bottom: 5px; color: var(--nasa-blue);">S66: MISSION COMMAND</h1>
-        <div style="text-align: center; font-size: 12px; color: var(--artemis-red); margin-bottom: 10px; font-weight: bold; letter-spacing: 2px;">ARTEMIS v16.4</div>
+        <div style="text-align: center; font-size: 12px; color: var(--artemis-red); margin-bottom: 10px; font-weight: bold; letter-spacing: 2px;">V16.5 SECURE OPS</div>
         <div class="launch-pad"><div id="rocket">🚀</div></div>
         <div class="fuel-bar">
-            <div id="total-text">GLOBAL READINESS: 0%</div>
+            <div id="total-text">FLIGHT READINESS: 0%</div>
             <div id="fuel-fill"></div>
         </div>
 
         <div id="menu">
             <div class="mode-toggle">
-                <button id="mode-sprint" class="mode-btn active" onclick="setMode('sprint')">TRAINING SPRINTS (25 Qs)</button>
-                <button id="mode-sim" class="mode-btn" onclick="setMode('sim')">MISSION SIMULATION (WEIGHTED)</button>
+                <button id="mode-sprint" class="mode-btn active" onclick="setMode('sprint')">TRAINING SPRINTS</button>
+                <button id="mode-sim" class="mode-btn" onclick="setMode('sim')">MISSION SIMULATION</button>
             </div>
             <div class="grid">
                 <button class="p-btn" onclick="start(0)">01. ECONOMICS <span id="s0" style="display:block; font-size:10px;">PENDING</span></button>
@@ -56,7 +60,7 @@
                 <button class="p-btn" onclick="start(2)">03. STRATEGY <span id="s2" style="display:block; font-size:10px;">PENDING</span></button>
                 <button class="p-btn" onclick="start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">PENDING</span></button>
             </div>
-            <button onclick="resetScores()" style="width:100%; margin-top:30px; background:none; border:none; color:var(--artemis-red); cursor:pointer; font-size:11px;">⚠️ WIPE MISSION DATA</button>
+            <button onclick="resetScores()" style="width:100%; margin-top:30px; background:none; border:none; color:var(--artemis-red); cursor:pointer; font-size:11px;">⚠️ RESET MISSION LOG</button>
         </div>
 
         <div id="game" style="display:none;">
@@ -66,15 +70,13 @@
             <button id="next" class="nav-btn" onclick="next()">NEXT GATE ></button>
         </div>
 
-        <div id="report" style="display:none; text-align:center;">
+<div id="report" style="display:none; text-align:center;">
             <h2 id="report-title" style="color:var(--nasa-blue);">SECTOR COMPLETE</h2>
             <p id="rep-msg" style="font-weight:bold; margin-bottom:20px;"></p>
             <button class="nav-btn" style="display:block; background:var(--artemis-red); margin-bottom:10px;" onclick="showReview()">🔍 REVIEW MISSION LOG</button>
-            <button class="nav-btn" style="display:block;" onclick="location.reload()">RETURN TO COMMAND</button>
+            <button id="return-btn" class="nav-btn" style="display:block;" onclick="location.reload()">RETURN TO COMMAND</button>
         </div>
-    </div>
-
-<script>
+    </div> <script>
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSnd(t){
         if(audioCtx.state==='suspended') audioCtx.resume();
@@ -502,9 +504,9 @@
         ]
     ];
 
-
-    let activeSet=[], idx=0, currentPillar=0, sessionScore=0, sessionFails=0;
+let activeSet=[], idx=0, currentPillar=0, sessionScore=0, sessionFails=0;
     let missionLog = [];
+    let isPracticeMode = false; 
     let currentScores = JSON.parse(localStorage.getItem('artemisScores')) || [0,0,0,0];
     let sectorsDone = JSON.parse(localStorage.getItem('artemisDone')) || [false,false,false,false];
     let appMode = localStorage.getItem('artemisMode') || 'sprint';
@@ -519,27 +521,48 @@
     function updateMenuUI() {
         let total = currentScores.reduce((a, b) => a + b, 0);
         document.getElementById('fuel-fill').style.width = total + "%";
-        document.getElementById('rocket').style.bottom = (10 + (total)) + "px";
+        
+        // Rocket height follows global readiness
+        document.getElementById('rocket').style.bottom = (10 + total) + "px";
         document.getElementById('total-text').innerText = `GLOBAL READINESS: ${total}% (GOAL: 73%)`;
+        
         for(let i=0; i<4; i++) {
             document.getElementById('s'+i).innerText = sectorsDone[i] ? `Ready: ${currentScores[i]}` : "PENDING";
         }
         setMode(appMode);
     }
 
-    function start(i){
+    function launchSequence() {
+        const overlay = document.getElementById('countdown-overlay');
+        const hud = document.getElementById('main-hud');
+        const rocket = document.getElementById('rocket');
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('report').style.display = 'none';
+        overlay.style.display = 'block'; 
+        overlay.innerText = "T-MINUS 3...";
+        setTimeout(() => overlay.innerText = "T-MINUS 2...", 1000);
+        setTimeout(() => overlay.innerText = "T-MINUS 1...", 2000);
+        setTimeout(() => { overlay.innerText = "IGNITION!"; hud.classList.add('shake'); }, 3000);
+        setTimeout(() => { overlay.innerText = "LIFTOFF!"; rocket.classList.add('takeoff'); }, 4000);
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            hud.classList.remove('shake');
+            document.getElementById('report').style.display = 'block';
+            document.getElementById('report-title').innerText = "MISSION SUCCESS";
+            document.getElementById('rep-msg').innerText = "FLIGHT PROFILE OPTIMAL. ALL SECTORS CLEAR.";
+            document.getElementById('return-btn').style.display = 'block';
+        }, 7000);
+    }
+
+function start(i){
         missionLog = [];
         currentPillar = i;
+        isPracticeMode = sectorsDone[i]; 
         
-        // Dynamic Question Count Logic
-        let count = 25; // Default for Sprints
-        if (appMode === 'sim') {
-            const weights = [10, 20, 30, 40]; // Weighted counts
-            count = weights[i];
-        }
-
-        // Shuffle and Re-index Correct Answers
+        let count = (appMode === 'sim') ? [10, 20, 30, 45][i] : 25;
         let rawSet = JSON.parse(JSON.stringify(lib[i])); 
+        
         rawSet.forEach(q => {
             let correctText = q.c[q.a];
             for (let j = q.c.length - 1; j > 0; j--) {
@@ -558,25 +581,49 @@
 
     function show(){
         if(idx >= activeSet.length){
-            // Only update scores if this isn't just a quick practice run of a finished section
-            if (!sectorsDone[currentPillar] || confirm("Update high score with this result?")) {
+            // Data logging: Only save if NOT in practice mode
+            if (!isPracticeMode) {
                 currentScores[currentPillar] = sessionScore; 
                 sectorsDone[currentPillar] = true;
                 localStorage.setItem('artemisScores', JSON.stringify(currentScores));
                 localStorage.setItem('artemisDone', JSON.stringify(sectorsDone));
             }
-            document.getElementById('game').style.display = 'none';
-            document.getElementById('report').style.display = 'block';
-            document.getElementById('rep-msg').innerText = `Pillar Score: ${sessionScore}/${activeSet.length}`;
+            
+            let totalScore = currentScores.reduce((a,b) => a + b, 0);
+            let allSectorsFinished = sectorsDone.every(status => status === true);
+
+            // Strict Launch: All 4 pillars must be DONE + Score >= 73
+            if (allSectorsFinished && totalScore >= 73 && !isPracticeMode) {
+                launchSequence(); 
+            } else {
+                document.getElementById('game').style.display = 'none';
+                document.getElementById('report').style.display = 'block';
+                document.getElementById('rep-msg').innerHTML = `
+                    Session Score: ${sessionScore}/${activeSet.length}<br>
+                    ${isPracticeMode ? '<span style="color:var(--artemis-red); font-weight:bold;">PRACTICE COMPLETED: SCORE NOT MODIFIED</span>' : `Global Readiness: ${totalScore}%`}
+                `;
+            }
             return;
         }
+        
         let s = activeSet[idx], h = `<div class="q-text">${s.q}</div>`;
         s.c.forEach((v,i) => { h += `<button class="ans-btn" onclick="check(${i})"><strong>${String.fromCharCode(65+i)}.</strong> ${v}</button>`; });
+        
+        // Practice mode "Eject" button
+        if(isPracticeMode) {
+            h += `<button class="nav-btn" style="display:block; background:#666; margin-top:30px;" onclick="location.reload()">⏹️ ABORT & RETURN TO COMMAND</button>`;
+        }
+
         document.getElementById('q-area').innerHTML = h;
-        document.getElementById('status-line').innerText = `GATE ${idx+1}/${activeSet.length} | MODE: ${appMode.toUpperCase()}`;
+        document.getElementById('status-line').innerHTML = isPracticeMode ? 
+            `<span style="color:var(--artemis-red)">⚠️ PRACTICE MODE: SCORE LOCKED</span>` : 
+            `GATE ${idx+1}/${activeSet.length} | MISSION: ${appMode.toUpperCase()}`;
+        
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next').style.display = 'none';
     }
+
+
 
     function check(i){
         let s = activeSet[idx]; const btns = document.getElementsByClassName('ans-btn');
@@ -592,7 +639,7 @@
     function showReview() {
         document.getElementById('report').style.display = 'none';
         document.getElementById('game').style.display = 'block';
-        let h = `<h2 style="color:var(--nasa-blue); text-align:center;">DEBRIEFING LOG</h2>`;
+        let h = `<h2 style="color:var(--nasa-blue); text-align:center;">MISSION LOG</h2>`;
         missionLog.forEach((item, index) => {
             let color = item.isOk ? "#2e7d32" : "#c62828";
             h += `<div class="review-item"><p><strong>GATE ${index+1}:</strong> ${item.q}</p><p style="color:${color}">${item.isOk ? '✅' : '❌'} Your Answer: ${item.mine}</p>${!item.isOk ? `<p style="color:#2e7d32">✔️ Correct: ${item.correct}</p>` : ''}<div class="review-logic"><strong>Analysis:</strong> ${item.logic}</div></div>`;
@@ -603,8 +650,8 @@
         document.getElementById('status-line').innerText = "POST-FLIGHT REVIEW";
     }
 
-    function next(){ idx++; show(); }
-    function resetScores() { if(confirm("WIPE ALL DATA?")) { localStorage.clear(); location.reload(); } }
+function next(){ idx++; show(); }
+    function resetScores() { if(confirm("WIPE ALL MISSION DATA?")) { localStorage.clear(); location.reload(); } }
     updateMenuUI();
 </script>
 </body>
