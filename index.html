@@ -2010,7 +2010,7 @@ const simLib = [
         let total = currentScores.reduce((a,b) => a + b, 0);
         let sourceLib = (appMode === 'sim') ? simLib : sprintLib;
         let max = sourceLib.reduce((sum, arr, i) => {
-            let count = (appMode === 'sim') ? [10, 20, 30, 45][i] : 25;
+            let count = (appMode === 'sim') ? [8, 17, 30, 45][i] : 25;
             return sum + Math.min(count, arr.length);
         }, 0);
         // SAFETY CLAMP: No 988% glitches
