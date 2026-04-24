@@ -1777,7 +1777,7 @@ function start(i) {
     
     currentPillar = i;
     let source = (appMode === 'sim') ? simLib : sprintLib;
-    let count = (appMode === 'sim') ? [10, 20, 30, 45][i] : 25;
+    let count = (appMode === 'sim') ? [8, 17, 30, 45][i] : 25;
     
     // Safety check: Don't pull more than exists in the array
     let limit = Math.min(count, source[i].length);
