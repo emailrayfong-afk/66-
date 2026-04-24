@@ -1,220 +1,173 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: ARTEMIS S66 v18.5</title>
-    <style>
-        :root { --nasa-blue: #0b3d91; --artemis-red: #fc3d39; --lunar-grey: #f4f4f4; --text-dark: #212121; --go-green: #2e7d32; --error-red: #c62828; }
-        body { background: var(--lunar-grey); color: var(--text-dark); font-family: 'Helvetica Neue', Arial, sans-serif; padding: 10px; touch-action: manipulation; overflow-x: hidden; }
-        .hud { border: 3px solid var(--nasa-blue); max-width: 800px; margin: auto; padding: 20px; background: #ffffff; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .launch-pad { height: 120px; border-bottom: 2px solid #ddd; position: relative; margin: 15px 0; background: linear-gradient(to bottom, #87ceeb 0%, #e0f6ff 100%); overflow: hidden; border-radius: 5px; }
-        #rocket { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%) rotate(-45deg); font-size: 40px; transition: bottom 0.1s linear; z-index: 10; }
-        #countdown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 60px; font-weight: bold; color: var(--artemis-red); display: none; z-index: 5; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .fuel-bar { width: 100%; background: #eee; border: 1px solid #ccc; height: 30px; margin-top: 5px; position: relative; border-radius: 15px; overflow: hidden; }
-        #fuel-fill { background: linear-gradient(90deg, var(--nasa-blue) 0%, #1565c0 100%); width: 0%; height: 100%; transition: width 0.5s; }
-        #total-text { position: absolute; width: 100%; text-align: center; color: #fff; font-size: 12px; line-height: 30px; font-weight: bold; top: 0; left: 0; z-index: 5; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-        .mode-toggle { display: flex; background: #eee; border-radius: 25px; margin: 15px 0; padding: 5px; }
-        .mode-btn { flex: 1; border: none; background: none; padding: 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 12px; transition: all 0.3s; }
-        .mode-btn.active { background: var(--nasa-blue); color: white; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-        .p-btn { background: #ffffff; border: 2px solid var(--nasa-blue); color: var(--nasa-blue); padding: 15px; cursor: pointer; font-weight: bold; border-radius: 6px; transition: all 0.3s; }
-        .p-btn:hover { background: var(--nasa-blue); color: white; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .q-text { font-size: 1.1em; color: var(--text-dark); margin-bottom: 20px; border-left: 5px solid var(--artemis-red); padding-left: 15px; line-height: 1.5; font-weight: bold; }
-        .ans-btn { display: block; width: 100%; padding: 16px; margin: 8px 0; background: #f9f9f9; border: 2px solid #ddd; border-radius: 8px; text-align: left; font-weight: bold; transition: all 0.2s; cursor: pointer; }
-        .ans-btn:hover:not(:disabled) { background: #e3f2fd; border-color: var(--nasa-blue); transform: translateX(5px); }
-        .ans-btn.correct { background: var(--go-green) !important; color: white !important; border-color: var(--go-green) !important; }
-        .ans-btn.wrong { background: var(--error-red) !important; color: white !important; border-color: var(--error-red) !important; }
-        #feedback { margin: 15px 0; padding: 15px; border-radius: 8px; font-weight: bold; display: none; background: #f0f4ff; border: 1px solid #d0d7de; }
-        .nav-btn { background: var(--nasa-blue); color: #fff; font-weight: bold; padding: 18px; border: none; width: 100%; cursor: pointer; border-radius: 8px; display: none; margin-top: 10px; transition: all 0.3s; }
-        .nav-btn:hover { background: #073a7a; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .takeoff { animation: liftoff 4s ease-in forwards; }
-        .crash { animation: explosion 1s ease-out forwards; }
-        @keyframes liftoff { 0% { bottom: 10px; transform: translateX(-50%) rotate(-45deg); } 100% { bottom: 1000px; transform: translateX(-50%) rotate(-45deg) scale(0.5); } }
-        @keyframes explosion { 0% { bottom: 10px; transform: translateX(-50%) rotate(-45deg) scale(1); opacity: 1; } 50% { transform: translateX(-50%) rotate(180deg) scale(1.5); opacity: 0.5; } 100% { bottom: -50px; transform: translateX(-50%) rotate(360deg) scale(0); opacity: 0; } }
-        @keyframes shake { 0%, 100% { transform: translateX(-50%) rotate(-45deg); } 25% { transform: translateX(-48%) rotate(-43deg); } 75% { transform: translateX(-52%) rotate(-47deg); } }
-        .shake { animation: shake 0.5s ease-in-out infinite; }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+<style>
+        :root { 
+            --nasa-blue: #0b3d91; 
+            --artemis-red: #fc3d39; 
+            --lunar-grey: #f4f4f4; 
+            --text-dark: #212121; 
+            --sky-blue: #87CEEB;
+            --horizon-white: #e1f5fe;
+        }
+
+        body { 
+            background: var(--lunar-grey); 
+            color: var(--text-dark); 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            padding: 10px; 
+            touch-action: manipulation; 
+        }
+
+        .hud { 
+            border: 3px solid var(--nasa-blue); 
+            max-width: 800px; 
+            margin: auto; 
+            padding: 20px; 
+            background: #ffffff; 
+            border-radius: 8px; 
+        }
+
+        /* Blue Sky Background */
+        .launch-pad { 
+            height: 120px; 
+            border-bottom: 2px solid #ddd; 
+            position: relative; 
+            margin: 15px 0; 
+            background: linear-gradient(to bottom, var(--sky-blue) 0%, var(--horizon-white) 100%); 
+            overflow: hidden; 
+            border-radius: 5px; 
+        }
+
+        #rocket { 
+            position: absolute; 
+            bottom: 10px; 
+            left: 50%; 
+            transform: translateX(-50%) rotate(-45deg); 
+            font-size: 40px; 
+            transition: bottom 3s ease-in, opacity 2s ease-in; 
+        }
+
+        /* Takeoff Animation Logic */
+        .takeoff { 
+            bottom: 1000px !important; 
+            opacity: 0; 
+        }
+
+        .fuel-bar { 
+            width: 100%; 
+            background: #eee; 
+            border: 1px solid #ccc; 
+            height: 30px; 
+            margin-top: 5px; 
+            position: relative; 
+            border-radius: 15px; 
+            overflow: hidden; 
+        }
+
+        #fuel-fill { 
+            background: var(--nasa-blue); 
+            width: 0%; 
+            height: 100%; 
+            transition: width 0.5s; 
+        }
+
+        #total-text { 
+            position: absolute; 
+            width: 100%; 
+            text-align: center; 
+            color: #fff; 
+            font-size: 12px; 
+            line-height: 30px; 
+            font-weight: bold; 
+            top: 0; 
+            left: 0; 
+            z-index: 5; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5); 
+        }
+
+        .mode-toggle { 
+            display: flex; 
+            background: #eee; 
+            border-radius: 25px; 
+            margin: 15px 0; 
+            padding: 5px; 
+        }
+
+        .mode-btn { 
+            flex: 1; 
+            border: none; 
+            background: none; 
+            padding: 12px; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 12px; 
+        }
+
+        .mode-btn.active { 
+            background: var(--nasa-blue); 
+            color: white; 
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            margin-top: 10px; 
+        }
+
+        .p-btn { 
+            background: #ffffff; 
+            border: 2px solid var(--nasa-blue); 
+            color: var(--nasa-blue); 
+            padding: 15px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            border-radius: 6px; 
+        }
+
+        .q-text { 
+            font-size: 1.1em; 
+            color: var(--text-dark); 
+            margin-bottom: 20px; 
+            border-left: 5px solid var(--artemis-red); 
+            padding-left: 15px; 
+            line-height: 1.5; 
+            font-weight: bold; 
+        }
+
+        .ans-btn { 
+            display: block; 
+            width: 100%; 
+            padding: 16px; 
+            margin: 8px 0; 
+            background: #f9f9f9; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            text-align: left; 
+        }
+
+        #feedback { 
+            margin: 15px 0; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            display: none; 
+            background: #f0f4ff; 
+        }
+
+        .nav-btn { 
+            background: var(--nasa-blue); 
+            color: #fff; 
+            font-weight: bold; 
+            padding: 18px; 
+            border: none; 
+            width: 100%; 
+            cursor: pointer; 
+            border-radius: 8px; 
+            display: none; 
+            margin-top: 10px; 
+        }
+
+        @media (max-width: 600px) { 
+            .grid { grid-template-columns: 1fr; } 
+        }
     </style>
-</head>
-<body>
-    <div class="hud">
-        <h1 style="text-align:center; color: var(--nasa-blue);">S66: MISSION COMMAND</h1>
-
-        <div class="launch-pad">
-            <div id="rocket">🚀</div>
-            <div id="countdown"></div>
-        </div>
-
-        <div class="fuel-bar">
-            <div id="total-text">FLIGHT READINESS: 0%</div>
-            <div id="fuel-fill"></div>
-        </div>
-
-        <div id="menu">
-            <div class="mode-toggle">
-                <button id="mode-sprint" class="mode-btn active" onclick="initAudio(); setMode('sprint')">TRAINING SPRINTS</button>
-                <button id="mode-sim" class="mode-btn" onclick="initAudio(); setMode('sim')">MISSION SIMULATION</button>
-            </div>
-
-            <div class="grid">
-                <button class="p-btn" onclick="initAudio(); start(0)">01. ECONOMICS <span id="s0" style="display:block; font-size:10px;">PENDING</span></button>
-                <button class="p-btn" onclick="initAudio(); start(1)">02. VEHICLES <span id="s1" style="display:block; font-size:10px;">PENDING</span></button>
-                <button class="p-btn" onclick="initAudio(); start(2)">03. STRATEGY <span id="s2" style="display:block; font-size:10px;">PENDING</span></button>
-                <button class="p-btn" onclick="initAudio(); start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">PENDING</span></button>
-            </div>
-        </div>
-
-        <div id="game" style="display:none;">
-            <div id="status-line" style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px;"></div>
-            <div id="q-area"></div>
-            <div id="feedback"></div>
-            <button id="next" class="nav-btn" onclick="next()">NEXT GATE ></button>
-        </div>
-    </div>
-<script>
-// ========================================
-// ⚙️ GAME SETTINGS
-// ========================================
-const SPRINT_Q_COUNT = 25; 
-const SIM_WEIGHTS = [8, 17, 30, 45];
-// ========================================
-// DATA LIBRARY
-// ========================================
-const sprintLib = [
-[ // PILLAR 1
-    {q: "Which return calculation is used strictly to evaluate a manager's performance by ignoring the timing of investor deposits?", c: ["Time-Weighted Return", "Dollar-Weighted Return"], a: 0, f: "Logic: Time-Weighted measures manager skill by neutralizing cash flow impact; however, Dollar-Weighted measures the investor's actual IRR, which is heavily influenced by their own timing of deposits and withdrawals."},
-    {q: "An IAR is reviewing a client's 'Net Worth.' On which financial statement is this found, and what does it represent?", c: ["Balance Sheet (Equity)", "Income Statement (Net Income)"], a: 0, f: "Logic: The Balance Sheet is a 'Snapshot' of what is owned (Assets) minus what is owed (Liabilities); however, the Income Statement is a 'Video' showing the flow of profits/losses over a period of time."},
-    {q: "Which form of the Efficient Market Hypothesis (EMH) suggests that fundamental analysis cannot provide an edge because all public info is already priced in?", c: ["Semi-Strong Form", "Weak Form"], a: 0, f: "Logic: Semi-Strong says public info is already reflected, meaning only 'inside information' provides an edge; however, Weak Form only accounts for past price history, implying fundamental research could still work."},
-    {q: "If a project has an Internal Rate of Return (IRR) higher than the company's cost of capital, the Net Present Value (NPV) will be:", c: ["Positive (greater than zero)", "Zero"], a: 0, f: "Logic: Positive NPV means the project earns more than it costs to fund; however, if IRR equals the cost of capital, the NPV is exactly zero (the break-even point)."},
-    {q: "The Sharpe Ratio is the standard for measuring risk-adjusted return. What does it use as its measure of risk?", c: ["Standard Deviation (Total Risk)", "Beta (Market Risk)"], a: 0, f: "Logic: Sharpe looks at efficiency relative to total volatility (Standard Deviation); however, Beta is only used for Systematic (Market) risk, typically in the CAPM formula."},
-    {q: "Which economic indicator is considered 'Leading' because it predicts future business activity?", c: ["Building Permits", "Average Prime Rate"], a: 0, f: "Logic: Permits signal future labor and material spending; however, the Prime Rate is 'Lagging' because banks only change it after the Fed has already moved rates."},
-    {q: "An Inverted Yield Curve occurs when the 'Front End' of the curve is higher than the 'Back End.' This signals:", c: ["Spiking short-term rates / Recession fears", "Economic expansion"], a: 0, f: "Logic: Inversion means the Fed is tightening short rates while investors buy long bonds for safety; however, a Normal (Upward) curve indicates a healthy, expanding economy."},
-    {q: "Which ratio is the most 'stringent' test of a company's ability to pay debt because it ignores slow-moving assets?", c: ["Quick Ratio (Acid Test)", "Current Ratio"], a: 0, f: "Logic: The Quick Ratio subtracts Inventory from current assets because you can't sell a warehouse of goods 'instantly'; however, the Current Ratio includes everything, which can hide liquidity issues."},
-    {q: "When inflation is rising, which 'Real' measurement decreases for an investor holding a fixed-rate bond?", c: ["Purchasing Power", "Nominal Interest"], a: 0, f: "Logic: Purchasing Power is the 'Real' value of the dollar; however, Nominal Interest is the fixed coupon percentage, which stays the same even as its value erodes."},
-    {q: "A stock with a Beta of 1.2 is expected to move how much relative to the S&P 500?", c: ["20% more volatile than the market", "20% less volatile than the market"], a: 0, f: "Logic: 1.0 is the benchmark market speed; however, anything above 1.0 is a 'multiplier' of market movement (1.2 = 120% of the market)."},
-    {q: "Which measurement calculates the 'excess return' a manager achieved that cannot be explained by market movement?", c: ["Alpha", "Beta"], a: 0, f: "Logic: Alpha is the 'bonus' return attributed to the manager's skill; however, Beta is just the 'systematic' movement you get for simply being in the market."},
-    {q: "Current Assets minus Current Liabilities equals which liquidity measure?", c: ["Working Capital", "Net Worth"], a: 0, f: "Logic: Working Capital is the cash available for day-to-day operations; however, Net Worth (Assets - Total Liabilities) is the long-term equity of the owners."},
-    {q: "Which accounting method results in the highest reported 'Net Income' during a period of rising prices?", c: ["FIFO (First-In, First-Out)", "LIFO (Last-In, First-Out)"], a: 0, f: "Logic: FIFO sells the 'oldest/cheapest' inventory first, resulting in lower costs and higher paper profits; however, LIFO sells the 'newest/expensive' stuff, which lowers profit and taxes."},
-    {q: "The 'Security Market Line' (SML) is a visual representation of which model?", c: ["CAPM (Capital Asset Pricing Model)", "MPT (Modern Portfolio Theory)"], a: 0, f: "Logic: SML plots expected return against Beta (Systematic risk); however, MPT uses the 'Efficient Frontier' to plot return against Standard Deviation (Total risk)."},
-    {q: "A company with high P/E and P/B ratios but a low dividend yield is likely a:", c: ["Growth Stock", "Value Stock"], a: 0, f: "Logic: Growth stocks trade at a premium because earnings are expected to explode, so they reinvest all cash; however, Value stocks trade 'cheap' and usually pay higher dividends."},
-    {q: "If the U.S. Dollar is 'Strong' against the Euro, what is the most likely trade outcome?", c: ["U.S. exports become more expensive (Bad for Trade)", "U.S. exports become cheaper"], a: 0, f: "Logic: A strong dollar means foreigners need more of their currency to buy our goods; however, it makes foreign imports much cheaper for American consumers."},
-    {q: "Which Fed rate is set by commercial banks rather than the Federal Reserve Board?", c: ["Fed Funds Rate", "Discount Rate"], a: 0, f: "Logic: Fed Funds is the market rate banks charge each other for overnight loans; however, the Discount Rate is the only rate the Fed sets directly for loans to banks."},
-    {q: "What is the 'Geometric Mean' of a return series (e.g., 10%, -5%, 20%) used for?", c: ["Time-weighted compounded return", "The simple arithmetic average"], a: 0, f: "Logic: Geometric mean accounts for the 'math of a loss' (it's harder to recover from -50%); however, arithmetic mean is just a simple sum-and-divide that overstates performance."},
-    {q: "Standard Deviation measures the dispersion of returns around which point?", c: ["The Mean (Average)", "The Beta"], a: 0, f: "Logic: Standard Deviation shows how far results stray from the 'average' (the center of the bell curve); however, Beta only measures movement relative to an outside index."},
-    {q: "In a 'Stagflation' environment, an economy experiences high inflation and:", c: ["High Unemployment (Stagnant Growth)", "Low Interest Rates"], a: 0, f: "Logic: Stagflation is the 'Worst Case Scenario' where prices go up but the job market is dead; however, normal inflation usually happens during high-growth periods."},
-    {q: "Which metric represents the 'Internal Rate of Return' (IRR) for a bond held to its final maturity?", c: ["Yield to Maturity (YTM)", "Nominal Yield (Coupon)"], a: 0, f: "Logic: YTM accounts for all interest plus the gain/loss of the discount/premium over time; however, the Nominal Yield is just the fixed rate printed on the paper."},
-    {q: "The 'Dividend Discount Model' (DDM) is used to find which value of a stock?", c: ["Intrinsic Value (Fair Price)", "Current Yield"], a: 0, f: "Logic: DDM values a stock by discounting all future dividends back to today; however, Current Yield is just a simple ratio of the annual dividend divided by the current price."},
-    {q: "Which branch of government is responsible for 'Monetary Policy' (Interest rates/Money supply)?", c: ["The Federal Reserve", "Congress"], a: 0, f: "Logic: The central bank (Fed) uses open market operations to steer the economy; however, Congress handles 'Fiscal Policy' (Taxing and Spending)."},
-    {q: "A correlation coefficient of -1.0 between two assets provides what benefit?", c: ["Maximum Diversification", "Maximum Performance"], a: 0, f: "Logic: -1.0 means when one goes up, the other goes down exactly the same amount, canceling out volatility; however, a correlation of +1.0 offers no diversification benefit."},
-    {q: "Rule of 72: If an investment earns 6% annually, it will double in how many years?", c: ["12 years", "6 years"], a: 0, f: "Logic: 72 divided by the growth rate equals the doubling time; however, 72 divided by the years equals the required rate to double."},
-    {q: "In the 'Discounted Cash Flow' (DCF) model, if market interest rates rise, what happens to the theoretical price of a bond?", c: ["The price decreases", "The price increases"], a: 0, f: "Logic: Rising rates increase the discount rate (the denominator), making future cash flows worth less today; however, falling rates make future cash flows more valuable, pushing prices up."},
-    {q: "Which financial ratio measures a company's 'Leverage' by comparing borrowed funds to owner-invested funds?", c: ["Debt-to-Equity Ratio", "Total Asset Turnover"], a: 0, f: "Logic: Debt-to-Equity shows how much risk the company takes via borrowing; however, Asset Turnover measures efficiency in using assets to generate sales."},
-    {q: "According to the 'Strong Form' of EMH, which type of information can an investor use to achieve superior returns?", c: ["None (Information is already priced in)", "Inside Information"], a: 0, f: "Logic: Strong Form argues that even non-public (inside) info is already reflected in the stock price; however, Semi-Strong Form argues that inside info is the ONLY way to get an edge."},
-    {q: "What is the primary difference between GDP and GNP?", c: ["Geography vs. Citizenship", "Inflation-adjusted vs. Nominal"], a: 0, f: "Logic: GDP measures activity within U.S. borders regardless of the worker's nationality; however, GNP measures activity by U.S. citizens regardless of where they are in the world."},
-    {q: "Which measurement is the square root of the variance?", c: ["Standard Deviation", "Range"], a: 0, f: "Logic: Standard Deviation is the mathematical square root of variance, measuring total dispersion; however, Range is simply the difference between the highest and lowest data points."},
-    {q: "If an investor is 'Risk Averse,' they would prefer a portfolio located on the Efficient Frontier with:", c: ["Lower Standard Deviation", "Higher Alpha"], a: 0, f: "Logic: Risk-averse investors prioritize safety (low volatility) even if it means lower returns; however, aggressive investors seek higher returns and accept the risk."},
-    {q: "Which indicator move confirms that the economy has already changed direction?", c: ["Lagging Indicator", "Coincident Indicator"], a: 0, f: "Logic: Lagging indicators (like duration of unemployment) show where we've been; however, Coincident indicators move exactly with the economy in real-time."},
-    {q: "The 'Risk-Free Rate' used in Sharpe Ratio and CAPM calculations is traditionally based on:", c: ["91-day Treasury Bills", "30-year Treasury Bonds"], a: 0, f: "Logic: T-Bills have virtually no interest rate or default risk due to their short maturity; however, 30-year bonds have massive interest rate risk."},
-    {q: "A company's 'Quick Ratio' is 1.2 and its 'Current Ratio' is 2.5. This large gap is caused by:", c: ["High Inventory levels", "High Accounts Payable"], a: 0, f: "Logic: The Quick Ratio ignores inventory because it is hard to liquidate quickly; however, the Current Ratio includes it, creating the gap."},
-    {q: "Which economic phase is characterized by 'Trough' activity transitioning into growth?", c: ["Expansion", "Contraction"], a: 0, f: "Logic: Expansion follows the Trough (the bottom); however, Contraction follows the Peak (the top)."},
-    {q: "Does 'Disinflation' mean that prices are falling?", c: ["No (Prices are rising, but slower)", "Yes"], a: 0, f: "Logic: Disinflation is a slowing of the inflation rate (e.g., 5% down to 2%); however, Deflation is an actual decrease in the price level (negative inflation)."},
-{
-  q: "Does 'Disinflation' mean that prices are falling?", 
-  c: ["The rate of inflation is slowing but remains positive", "The general price level is experiencing an absolute decline"], 
-  a: 0, 
-  f: "Logic: Disinflation is a slowing of the inflation rate (e.g., 5% down to 2%); however, Deflation is an actual decrease in the price level (negative inflation)."
-},
-    {q: "Which valuation model determines the required return by adding the Risk-Free rate to the (Beta * Market Risk Premium)?", c: ["CAPM", "Dividend Discount Model"], a: 0, f: "Logic: CAPM is the formula for expected return based on systematic risk; however, DDM values a stock based only on the present value of its dividends."},
-    {q: "Total Assets minus Total Liabilities equals:", c: ["Shareholders' Equity (Net Worth)", "Working Capital"], a: 0, f: "Logic: This is the basic accounting equation for what the owners 'own' free and clear; however, Working Capital only looks at short-term assets and debts."},
-    {q: "A stock with a Beta of 1.0 will move:", c: ["In tandem with the S&P 500", "Twice as fast as the market"], a: 0, f: "Logic: 1.0 is the benchmark for the market system; however, a Beta of 2.0 would move twice as fast as the market."},
-@@ -126,7 +131,7 @@
-    {q: "If a company has a P/E ratio of 10 and Earnings Per Share (EPS) of $5.00, what is the stock price?", c: ["$50.00", "$2.00"], a: 0, f: "Logic: Price = P/E Ratio multiplied by EPS; however, Yield = Dividend divided by Price."},
-    {q: "Which return measure accounts for the 'Time Value of Money' by finding the rate that makes the PV of inflows equal to the initial cost?", c: ["Internal Rate of Return (IRR)", "Total Return"], a: 0, f: "Logic: IRR is a DCF-based 'break-even' yield; however, Total Return is just the raw gain/loss without discounting for time."},
-    {q: "A 'Defensive' stock is most likely found in which industry?", c: ["Tobacco or Utilities", "Steel or Automobiles"], a: 0, f: "Logic: Defensive stocks sell necessities that people buy even in recessions; however, Cyclical stocks (Steel/Cars) rely on a strong economy."},
-    {q: "Which metric measures the dispersion of a set of data points around their 'Median'?", c: ["None (Dispersion is measured around the Mean)", "Standard Deviation"], a: 0, f: "Logic: Standard Deviation always measures dispersion from the Mean (average); however, the Range just looks at the gap between high and low."},
-    {q: "Which metric measures the dispersion of a set of data points around their 'Median'?", c: ["None", "Standard Deviation"], a: 0, f: "Logic: Standard Deviation always measures dispersion from the Mean (average); however, the Range just looks at the gap between high and low."},
-    {q: "An investor seeking 'Maximum Capital Appreciation' would likely prioritize which metric?", c: ["High Beta", "High Dividend Yield"], a: 0, f: "Logic: Aggressive growth requires high sensitivity to market upswings (High Beta); however, income investors prioritize High Yield."},
-    {q: "The 'Consumer Price Index' (CPI) is the primary measure of:", c: ["Inflation", "Economic Growth"], a: 0, f: "Logic: CPI tracks the cost of a basket of consumer goods; however, GDP tracks the total output of those goods."},
-    {q: "If an analyst wants to know how a fund is 'Correlated' to its benchmark, they look at:", c: ["R-Squared", "Alpha"], a: 0, f: "Logic: R-Squared shows the percentage of movement explained by the benchmark (correlation); however, Alpha shows the movement that the benchmark CANNOT explain."},
-@@ -325,7 +330,7 @@
-    {q: "SIMPLE IRAs are restricted to businesses with a maximum of how many employees?", c: ["100 employees", "500 employees"], a: 0, f: "Logic: SIMPLE stands for 'Savings Incentive Match for Employees' of small businesses; however, larger firms typically utilize 401(k) plans."},
-    {q: "What is the mandatory age to begin Required Minimum Distributions (RMDs) under current SECURE 2.0 legislation?", c: ["Age 73", "Age 70.5"], a: 0, f: "Logic: The law pushed the age back to allow more growth; however, don't forget that Roth IRA original owners are exempt from RMDs entirely."},
-    {q: "Which Medicare part covers hospital stays and is generally free to those who paid into the system?", c: ["Part A", "Part B"], a: 0, f: "Logic: A is for All-in (Hospital); however, Part B is for Body (Outpatient/Doctor) and requires a monthly premium."},
-    {q: "Does a 'Step-up in Basis' apply when a client gifts stock to a charity?", c: ["No (The charity gets the donor's basis)", "Yes"], a: 0, f: "Logic: Charities carry over the original cost basis; however, gifting appreciated stock to a charity is still smart because the donor gets a deduction for the Full Market Value."},
-    {q: "Does a 'Step-up in Basis' apply when a client gifts stock to a charity?", c: ["No", "Yes"], a: 0, f: "Logic: Charities carry over the original cost basis; however, gifting appreciated stock to a charity is still smart because the donor gets a deduction for the Full Market Value."},
-    {q: "A client who believes they can 'out-trade' the market despite high fees and taxes is exhibiting:", c: ["Overconfidence Bias", "Herding"], a: 0, f: "Logic: Overconfidence leads to excessive trading and lower net returns; however, Herding is the tendency to follow the crowd into whatever is currently 'hot'."},
-    {q: "Which ratio identifies the 'break-even' percentage of a real estate project or capital investment?", c: ["Internal Rate of Return (IRR)", "Net Present Value (NPV)"], a: 0, f: "Logic: IRR is the rate that results in an NPV of zero; however, NPV itself is a dollar amount, not a percentage."},
-    {q: "A 'Per Stirpes' distribution in a Will means assets go to:", c: ["The children of a deceased beneficiary", "The other surviving siblings only"], a: 0, f: "Logic: Per Stirpes keeps the money in that specific 'family branch'; however, 'Per Capita' would divide the money equally among all surviving members."},
-@@ -391,7 +396,12 @@
-    {q: "An individual represents a Broker-Dealer in the sale of exempt U.S. Government bonds to retail clients. Is this person required to register as an Agent?", c: ["Yes (BD representatives are always agents)", "No (Exempt securities exclude agents)"], a: 0, f: "Logic: If you work for a Broker-Dealer, you are an Agent regardless of what you sell; however, if you work for an Issuer (like the Treasury), selling exempt securities would exclude you from registration."},
-    {q: "A clerk at a Broker-Dealer describes the 'benefits of a specific mutual fund' to a caller to generate interest. Does this clerk need to register?", c: ["Yes (Solicitation requires registration)", "No (Excluded as clerical/administrative)"], a: 0, f: "Logic: Describing investment benefits is 'solicitation.' Once a clerk moves beyond administrative tasks (like taking a phone number), they lose their exclusion; however, true clerical staff do not register."},
-    {q: "Under the Uniform Securities Act (USA), how long must an Investment Adviser (IA) maintain records of a business-related blog post or social media ad?", c: ["5 years total", "3 years total"], a: 0, f: "Logic: IAs follow the '5 and 2' rule (5 years total, 2 years in-office) for all advertisements, including digital posts; however, Broker-Dealers typically follow a 3-year recordkeeping rule."},
-    {q: "An individual represents an Issuer selling its own stock to existing employees, and no commission is paid. Is this person an Agent?", c: ["No (Excluded)", "Yes"], a: 0, f: "Logic: Representing an Issuer in a transaction with existing employees where NO commission is paid is a specific exclusion from the Agent definition; however, if a commission is paid, registration is required."},
-   {
-    q: "An individual represents an Issuer selling its own stock to existing employees, and no commission is paid. Is this person an Agent?", 
-    c: ["The individual is excluded from the definition of an agent in this specific transaction", "The individual must register as an agent because the transaction involves retail investors"], 
-    a: 0, 
-    f: "Logic: Representing an Issuer in a transaction with existing employees where NO commission is paid is a specific exclusion from the Agent definition; however, if a commission is paid, registration is required."
-},
-    {q: "A Broker-Dealer has no office in State A, but has one existing retail client who is on a 2-week vacation in State A. Does the BD need to register in State A?", c: ["No (Snowbird/Vacation Exemption)", "Yes"], a: 0, f: "Logic: The 'Snowbird' rule allows firms to deal with existing clients on vacation in a new state without registering; however, if the client moves permanently, the firm has 30 days to register."},
-    {q: "An Investment Adviser (IA) is deemed to have 'Custody' if they mistakenly receive a client check and do not return it within:", c: ["3 Business Days", "24 Hours"], a: 0, f: "Logic: The 72-hour (3 business day) window is the safe harbor to avoid being 'deemed' to have custody; however, checks made out to third parties must be forwarded within the same 3-day window."},
-    {q: "Which law created the SEC and regulates the secondary market (Exchanges and People)?", c: ["Securities Exchange Act of 1934", "Securities Act of 1933"], a: 0, f: "Logic: The 1934 Act polices the 'People and Places' (Exchanges/Dealers); however, the 1933 Act is the 'Paper Act' that regulates new issues (Prospectuses)."},
-@@ -419,11 +429,21 @@
-    {q: "The Investment Adviser 'Brochure' (Part 2A) must be delivered to a client at least how many hours before the contract is signed?", c: ["48 hours (if withdrawal is allowed within 5 days)", "24 hours"], a: 0, f: "Logic: State-registered IAs must follow the 48-hour rule or allow a 5-day penalty-free withdrawal; however, Federal IAs only need to provide it 'at or before' the contract signing."},
-    {q: "A person paid to refer clients to an Investment Adviser (a Solicitor) is generally required to register as:", c: ["An IAR", "An Agent"], a: 0, f: "Logic: Most states define 'soliciting' as an advisory function; however, a person referring clients to a Broker-Dealer would need to register as an Agent."},
-    {q: "What is the '3-5-0' rule for CRIMINAL violations of the Uniform Securities Act?", c: ["3 years prison, $5,000 fine, 0 jail if no knowledge", "5 years prison, $3,000 fine"], a: 0, f: "Logic: The criminal penalty is 3 years/$5k, but you can't go to jail if you prove you didn't know the specific rule you broke; however, you still pay the fine."},
-    {q: "Is a 'Bank' defined as a Broker-Dealer under the Uniform Securities Act?", c: ["No (Banks are specifically excluded)", "Yes"], a: 0, f: "Logic: Banks, Savings Institutions, and Trust Companies are not BDs by statute; however, their 'wholly owned subsidiaries' (like a separate brokerage arm) MUST register."},
-    {
-    q: "Is a 'Bank' defined as a Broker-Dealer under the Uniform Securities Act?", 
-    c: ["Banks, savings institutions, and trust companies are specifically excluded from the definition", "Banks must register as broker-dealers if they offer interest-bearing accounts to the public"], 
-    a: 0, 
-    f: "Logic: Banks, Savings Institutions, and Trust Companies are not BDs by statute; however, their 'wholly owned subsidiaries' (like a separate brokerage arm) MUST register."
-},
-    {q: "If an IAR suspects an elderly client is being financially exploited, they should:", c: ["Place a temporary hold on disbursements", "Liquidate the account for safety"], a: 0, f: "Logic: Regulations allow for a 'hold' to investigate exploitation; however, an IAR can never liquidate an account without specific client instructions or a POA."},
-    {q: "Under Reg S-P (Privacy), a 'Consumer' must receive a privacy notice:", c: ["Before the firm shares their info with outsiders", "Every single year"], a: 0, f: "Logic: Consumers only get a notice if you plan to disclose their data; however, 'Customers' (ongoing relationships) must get an initial notice and an annual notice regardless of sharing."},
-    {q: "An Agent fails to mention a 'Material Fact' (like a major risk) when selling a stock. This is:", c: ["Omission (Fraud)", "Churning"], a: 0, f: "Logic: Leaving out an important risk is just as illegal as lying about a gain; however, Churning is specifically about the frequency of trades."},
-    {q: "Can the Administrator deny registration simply because an applicant was suspended by a foreign securities regulator?", c: ["Yes (Foreign SRO actions count)", "No"], a: 0, f: "Logic: Foreign disciplinary actions carry the same weight as domestic ones for statutory disqualification; however, the action must have happened within the last 10 years."},
-   {
-    q: "Can the Administrator deny registration simply because an applicant was suspended by a foreign securities regulator?", 
-    c: ["The Administrator may consider foreign disciplinary actions that occurred within the last 10 years", "The Administrator is limited to reviewing domestic violations of state and federal securities laws"], 
-    a: 0, 
-    f: "Logic: Foreign disciplinary actions carry the same weight as domestic ones for statutory disqualification; however, the action must have happened within the last 10 years."
-},
-    {q: "A Broker-Dealer executes a trade between its own accounts to give the appearance of high volume. This is:", c: ["Painting the Tape / Wash Trading", "Front-running"], a: 0, f: "Logic: Faking volume is market manipulation; however, Front-running is placing your own trade before a client's large block order."},
-    {q: "What happens to a Power of Attorney (POA) if the client dies?", c: ["It is cancelled immediately", "It survives for 3 business days"], a: 0, f: "Logic: All POAs (including Durable) expire at the moment of death; however, a 'Durable' POA is unique because it survives the client's mental incapacity (dementia/coma)."},
-    {q: "An IAR works for a Federal Covered IA and has a place of business in State A, but only serves institutional clients (banks). Do they register in State A?", c: ["Yes (Place of Business rule)", "No (Institutional exemption)"], a: 0, f: "Logic: For Federal IARs, a physical 'Place of Business' overrides everything; they must register in that state; however, if they had NO office and only institutional clients, they would be exempt."},
-@@ -439,7 +459,12 @@
-    {q: "An IAR uses a pseudonym or 'handle' on X/Twitter to solicit business. This is allowed:", c: ["Only if the handle is registered and supervised by the firm", "Always"], a: 0, f: "Logic: Firms must supervise all business-related digital communications regardless of the name used; however, personal non-business posts are generally not subject to IA recordkeeping."},
-    {q: "Which official is the 'primary cop' responsible for enforcing the Uniform Securities Act?", c: ["The Administrator", "The Attorney General"], a: 0, f: "Logic: The Administrator (or Commissioner) is the specific regulator for the USA; however, the Attorney General usually handles the actual criminal prosecution in a courtroom."},
-    {q: "If an Agent's Broker-Dealer has its registration revoked by the state, what is the status of the Agent's license?", c: ["It is suspended (Inactive)", "It remains active if the Agent is innocent"], a: 0, f: "Logic: An Agent's license is only effective while they are associated with a registered firm; however, the Agent can reactivate their license by associating with a new BD within 30 days."},
-    {q: "Is an Investment Adviser (IA) required to register in a state if they only advise 'Institutional' clients like insurance companies and banks?", c: ["No (Institutional Exemption)", "Yes"], a: 0, f: "Logic: Dealing strictly with professionals (institutions) removes the need for state registration; however, as soon as you have even ONE retail client and no De Minimis, you must register."},
-    {
-    q: "Is an Investment Adviser (IA) required to register in a state if they only advise 'Institutional' clients like insurance companies and banks?", 
-    c: ["The IA is exempt from registration provided they have no physical place of business in the state", "The IA must register if the total number of institutional clients in the state exceeds five"], 
-    a: 0, 
-    f: "Logic: Dealing strictly with professionals (institutions) removes the need for state registration; however, as soon as you have even ONE retail client and no De Minimis, you must register."
-},,
-    {q: "Which law is known as the 'Paper Act' and requires the delivery of a Prospectus for all new issues?", c: ["Securities Act of 1933", "Securities Exchange Act of 1934"], a: 0, f: "Logic: The 1933 Act focuses on the full disclosure of 'new' securities entering the market; however, the 1934 Act polices the people and places where 'old' stocks trade."},
-    {q: "An IAR gives a speech at a public seminar and recommends three specific small-cap stocks. Is this considered an 'Advertisement'?", c: ["Yes (Any public recommendation is an ad)", "No (Only written material counts)"], a: 0, f: "Logic: IA advertising rules include any communication directed to more than one person that offers advisory services; however, a private one-on-one meeting is generally not an ad."},
-    {q: "If an individual represents an Issuer in a transaction that is 'Exempt' (like a private placement), do they need to register as an Agent?", c: ["No (Exempt transaction exclusion)", "Yes"], a: 0, f: "Logic: Representing the Issuer in an exempt transaction excludes the person from the Agent definition; however, representing a Broker-Dealer in the same transaction ALWAYS requires registration."},
-@@ -470,13 +495,18 @@
-    {q: "What is the 'statutory disqualification' period for a felony conviction?", c: ["10 Years", "5 Years"], a: 0, f: "Logic: Any felony in the last decade allows the Admin to deny registration; however, the crime must also be disclosed on the U4 even if it was 20 years ago."},
-    {q: "An IA uses 'Discretion' to buy 1,000 shares of a stock for a client without a written agreement. Is this a violation?", c: ["No (If written authority is obtained within 10 days)", "Yes"], a: 0, f: "Logic: Advisory rules allow 'Verbal Discretion' for the first 10 days only; however, Broker-Dealers MUST have written authority BEFORE the first trade."},
-    {q: "Which law polices 'Insider Trading' and allows for 'Treble Damages' (3x profit)?", c: ["Insider Trading Act of 1988", "USA"], a: 0, f: "Logic: This specific federal act raised the penalties for cheating; however, the 1934 Act was the original law that made insider trading illegal."},
-    {q: "Can an IA take 'Custody' of client funds if the state has NO rule regarding it?", c: ["Yes (If they notify the Admin)", "No"], a: 0, f: "Logic: If the state is silent, custody is allowed with notice; however, if the state EXPLICITLY prohibits it, no amount of notice makes it legal."},
-    {
-    q: "Can an IA take 'Custody' of client funds if the state has NO rule regarding it?", 
-    c: ["Custody is permitted with notice to the Administrator unless a specific rule prohibits it", "Custody is strictly prohibited unless the state has a formal rule explicitly allowing it"], 
-    a: 0, 
-    f: "Logic: If the state is silent, custody is allowed with notice; however, if the state EXPLICITLY prohibits it, no amount of notice makes it legal."
-},,
-    {q: "A Broker-Dealer has a place of business in State A. They only serve institutional clients. Do they register in State A?", c: ["Yes (Office trigger)", "No"], a: 0, f: "Logic: The 'Institutional' and 'De Minimis' exemptions only apply if you have NO office in the state; however, once you open a door, you must register."},
-    {q: "What is the minimum Net Worth requirement for an IA with 'Custody'?", c: ["$35,000", "$10,000"], a: 0, f: "Logic: High risk requires high collateral; however, having 'Discretion' only requires $10,000."},
-    {q: "An Agent tells a client a stock is 'Guaranteed' against loss by the clearing firm. This is:", c: ["Fraud", "Allowed with a bond"], a: 0, f: "Logic: No one can guarantee market performance; however, you can guarantee the payment of interest on a 'Guaranteed Bond' (backed by a parent company)."},
-    {q: "Is 'Soft Dollar' compensation allowed if it pays for a manager's travel to a research conference?", c: ["No (Only research/tools allowed)", "Yes"], a: 0, f: "Logic: Soft dollars must benefit the client (like software or reports); however, travel, rent, and furniture only benefit the IA and are prohibited."},
-    {q: "How many retail clients trigger Broker-Dealer registration in a state with no office?", c: ["ONE (No De Minimis)", "Six"], a: 0, f: "Logic: BDs are 'transactional' and have zero tolerance; one retail client triggers them; however, IAs have the '5-client' buffer."},
-    {q: "Is a 'Limited Partnership' interest considered a security?", c: ["Yes (Investor is passive)", "No"], a: 0, f: "Logic: If you provide money and someone else does the work, it's a security; however, a 'General Partner' who manages the business is not holding a security."},
-    {q: "Is a 'Limited Partnership' interest considered a security?", c: ["Yes", "No"], a: 0, f: "Logic: If you provide money and someone else does the work, it's a security; however, a 'General Partner' who manages the business is not holding a security."},
-    {q: "Which registration method is used for an IPO being sold in multiple states simultaneously?", c: ["Coordination", "Qualification"], a: 0, f: "Logic: Coordination 'syncs' the SEC and State effective dates; however, 'Qualification' is for 'Intrastate' (single state) offerings and is much harder."},
-    {q: "An IAR inadvertently sees a client's password and uses it to 'help' the client trade. This is:", c: ["Custody and an Unethical Practice", "Good customer service"], a: 0, f: "Logic: Holding login credentials that allow withdrawals/trades is deemed custody; however, you should always use your own 'Discretionary' access instead."},
-    {q: "Under the USA, 'Fraud' requires which of the following?", c: ["A willful attempt to deceive", "The client losing money"], a: 0, f: "Logic: Fraud is about the 'Intent' to lie or omit; however, you can be guilty of fraud even if the client actually makes money on the trade."},
