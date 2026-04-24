@@ -402,14 +402,24 @@ const sprintLib = [
     a: 0, 
     f: "Logic: Representing an Issuer in a transaction with existing employees where NO commission is paid is a specific exclusion from the Agent definition; however, if a commission is paid, registration is required."
 },
-    {q: "A Broker-Dealer has no office in State A, but has one existing retail client who is on a 2-week vacation in State A. Does the BD need to register in State A?", c: ["No (Snowbird/Vacation Exemption)", "Yes"], a: 0, f: "Logic: The 'Snowbird' rule allows firms to deal with existing clients on vacation in a new state without registering; however, if the client moves permanently, the firm has 30 days to register."},
+{
+    q: "A Broker-Dealer has no office in State A, but has one existing retail client who is on a 2-week vacation in State A. Does the BD need to register in State A?", 
+    c: ["The Broker-Dealer is exempt from registration because the client is only temporarily in the state", "The Broker-Dealer must register in State A because the exclusion only applies to institutional clients"], 
+    a: 0, 
+    f: "Logic: The 'Snowbird' rule allows firms to deal with existing clients on vacation in a new state without registering; however, if the client moves permanently, the firm has 30 days to register."
+},
     {q: "An Investment Adviser (IA) is deemed to have 'Custody' if they mistakenly receive a client check and do not return it within:", c: ["3 Business Days", "24 Hours"], a: 0, f: "Logic: The 72-hour (3 business day) window is the safe harbor to avoid being 'deemed' to have custody; however, checks made out to third parties must be forwarded within the same 3-day window."},
     {q: "Which law created the SEC and regulates the secondary market (Exchanges and People)?", c: ["Securities Exchange Act of 1934", "Securities Act of 1933"], a: 0, f: "Logic: The 1934 Act polices the 'People and Places' (Exchanges/Dealers); however, the 1933 Act is the 'Paper Act' that regulates new issues (Prospectuses)."},
     {q: "Can the State Administrator issue a 'Permanent Bar' from the securities industry for an IAR who committed fraud?", c: ["Yes (After a hearing)", "No (Only a court can bar an individual)"], a: 0, f: "Logic: The Administrator has the statutory power to revoke licenses and issue bars; however, the Administrator cannot put a violator in jail—only a court can seek criminal prison time."},
     {q: "An IAR sends a 'mass text' to 30 retail people in State B recommending a stock. This communication is categorized as:", c: ["Retail Communication", "Correspondence"], a: 0, f: "Logic: Reaching more than 25 retail people in a 30-day period triggers 'Retail Communication' rules (requiring pre-approval); however, reaching 25 or fewer is simply 'Correspondence'."},
     {q: "Does a 'Consent to Service of Process' need to be filed with the State Administrator every year during renewal?", c: ["No (Permanent/One-time filing)", "Yes"], a: 0, f: "Logic: This document appoints the Administrator as the person's attorney for legal papers; it is filed once and never expires; however, the 'Registration' itself and fees must be renewed annually."},
     {q: "Is a 'Variable Annuity' considered a 'Security' under the Uniform Securities Act?", c: ["Yes (Investor assumes market risk)", "No"], a: 0, f: "Logic: Because the value fluctuates based on a separate account of stocks, it is a security; however, a 'Fixed Annuity' is considered an insurance product, not a security."},
-    {q: "The State Administrator may summarily suspend a registration. A hearing must be held within how many days of the written request?", c: ["15 days", "30 days"], a: 0, f: "Logic: This is the 'Stop now, talk in 15' rule; however, an appeal to a court regarding an Administrator's final order must be filed within 60 days."},
+    {
+    q: "The State Administrator may summarily suspend a registration. A hearing must be held within how many days of the written request?", 
+    c: ["A hearing must be granted within 15 days of the Administrator receiving a written request", "A hearing must be scheduled within 60 days to allow for a full judicial review of the facts"], 
+    a: 0, 
+    f: "Logic: This is the 'Stop now, talk in 15' rule; however, an appeal to a court regarding an Administrator's final order must be filed within 60 days."
+},
     {q: "A Canadian Broker-Dealer has no office in the U.S. and only trades with an existing Canadian client who is temporarily in California. Is the firm exempt?", c: ["Yes (Canadian Snowbird rule)", "No"], a: 0, f: "Logic: Canadian firms have a specific exemption for existing clients on vacation in the U.S.; however, they cannot solicit NEW clients in the state without registering."},
     {q: "Which part of Form ADV is the 'Brochure Supplement' that contains information about specific IARs (the people)?", c: ["Part 2B", "Part 2A"], a: 0, f: "Logic: 2B is for the 'Body' (the individual person); however, 2A is for the 'Adviser' (the firm's disclosure brochure)."},
     {q: "An IAR is convicted of a non-securities-related MISDEMEANOR (e.g., DUI) 3 years ago. Can the Administrator deny their registration based on this?", c: ["No", "Yes"], a: 0, f: "Logic: Only FELONIES (within 10 years) or securities/money-related misdemeanors are grounds for denial; however, a conviction for any felony must be disclosed on Form U4."},
@@ -420,8 +430,18 @@ const sprintLib = [
     {q: "Can an Investment Adviser borrow money from a retail client who is NOT a bank or lending institution?", c: ["No (Strictly Prohibited)", "Yes (With disclosure)"], a: 0, f: "Logic: IAs and IARs are held to a fiduciary standard and cannot borrow from clients unless the client is a professional lender (like a bank); however, Agents of BDs have slightly different rules but generally follow the same ban."},
     {q: "If an IA's 'Net Worth' falls below the state minimum, when must they notify the Administrator?", c: ["By the close of business the next business day", "Within 15 days"], a: 0, f: "Logic: This is a fiscal emergency requiring 'next day' notice; however, a written report explaining the numbers must be filed the day following that notice."},
     {q: "An IAR utilizes 'Client Testimonials' in an ad on LinkedIn. They must disclose if the person was paid. Is this permitted?", c: ["Yes (With proper disclosure)", "No (Testimonials are always banned)"], a: 0, f: "Logic: SEC rules now allow testimonials if compensation and conflicts are disclosed; however, the old rules used to ban them entirely for IAs."},
-    {q: "The Administrator has 'Subpoena Power.' This means they can:", c: ["Compel witnesses and records inside or outside the state", "Arrest suspects"], a: 0, f: "Logic: Administrative power is civil/investigative and reaches across state lines; however, only a judge/court has the power to issue an arrest warrant."},
-    {q: "Is a 'Gift' of assessable stock considered both an offer and a sale under the USA?", c: ["Yes", "No"], a: 0, f: "Logic: Because 'assessable' stock carries a future liability (potential debt), giving it away is legally a sale; however, a gift of standard non-assessable stock is NOT a sale."},
+{
+    q: "The Administrator has 'Subpoena Power.' This means they can:", 
+    c: ["Compel the attendance of witnesses and the production of records in any state", "Issue an arrest warrant for individuals who refuse to cooperate with an investigation"], 
+    a: 0, 
+    f: "Logic: Administrative power is civil/investigative and reaches across state lines; however, only a judge/court has the power to issue an arrest warrant."
+},,
+    {
+    q: "Is a 'Gift' of assessable stock considered both an offer and a sale under the USA?", 
+    c: ["The transfer is considered a sale because it carries a potential future liability for the recipient", "A gift is never considered a sale because no cash is exchanged between the parties"], 
+    a: 0, 
+    f: "Logic: Because 'assessable' stock carries a future liability (potential debt), giving it away is legally a sale; however, a gift of standard non-assessable stock is NOT a sale."
+},,
     {q: "The statute of limitations for a CIVIL suit seeking damages under the USA is:", c: ["3 years from event / 2 years from discovery", "5 years from event"], a: 0, f: "Logic: Civil suits follow the 3/2 rule (whichever comes first); however, criminal suits under the USA have a 5-year statute of limitations."},
     {q: "Under the USA, an 'Offer to Sell' is made in a state if it is directed to that state and:", c: ["Received in that state", "Forwarded to another state"], a: 0, f: "Logic: Jurisdiction is based on where the offer originated or where it was received; however, if a client's mail is simply forwarded to them while they are out of state, the Administrator of the temporary state has no jurisdiction."},
     {q: "A Broker-Dealer acting as a 'Broker' (Agency capacity) charges which of the following?", c: ["Commission", "Markup / Markdown"], a: 0, f: "Logic: Brokers act as middlemen (Agents) and charge a commission; however, Dealers act as Principals (trading from their own inventory) and charge markups."},
@@ -437,10 +457,10 @@ const sprintLib = [
 },
     {q: "If an IAR suspects an elderly client is being financially exploited, they should:", c: ["Place a temporary hold on disbursements", "Liquidate the account for safety"], a: 0, f: "Logic: Regulations allow for a 'hold' to investigate exploitation; however, an IAR can never liquidate an account without specific client instructions or a POA."},
     {q: "Under Reg S-P (Privacy), a 'Consumer' must receive a privacy notice:", c: ["Before the firm shares their info with outsiders", "Every single year"], a: 0, f: "Logic: Consumers only get a notice if you plan to disclose their data; however, 'Customers' (ongoing relationships) must get an initial notice and an annual notice regardless of sharing."},
-    {q: "An Agent fails to mention a 'Material Fact' (like a major risk) when selling a stock. This is:", c: ["Omission (Fraud)", "Churning"], a: 0, f: "Logic: Leaving out an important risk is just as illegal as lying about a gain; however, Churning is specifically about the frequency of trades."},
-   {
+    {q: "An Agent fails to mention a 'Material Fact' (like a major risk) when selling a stock. This is:", c: ["Omission", "Churning"], a: 0, f: "Logic: Leaving out an important risk is just as illegal as lying about a gain; however, Churning is specifically about the frequency of trades."},
+  {
     q: "Can the Administrator deny registration simply because an applicant was suspended by a foreign securities regulator?", 
-    c: ["The Administrator may consider foreign disciplinary actions that occurred within the last 10 years", "The Administrator is limited to reviewing domestic violations of state and federal securities laws"], 
+    c: ["Disqualification is permitted if the action occurred within the last ten years", "The Administrator's authority is limited to domestic violations of state and federal law"], 
     a: 0, 
     f: "Logic: Foreign disciplinary actions carry the same weight as domestic ones for statutory disqualification; however, the action must have happened within the last 10 years."
 },
@@ -472,7 +492,12 @@ const sprintLib = [
     {q: "An IA firm is registered with the SEC (Federal Covered). In which states are the firm's IARs required to register?", c: ["Only in states where the IAR has a physical office", "In every state where they have retail clients"], a: 0, f: "Logic: Federal IARs are only policed by the states where they physically 'set up shop'; however, state-registered IARs must register in any state where they exceed the De Minimis 5."},
     {q: "Which official is authorized to take over an IA firm's assets if the firm becomes 'insolvent' (bankrupt)?", c: ["A Court-appointed Receiver", "The State Administrator"], a: 0, f: "Logic: The Admin can revoke the license, but a court must appoint a receiver to liquidate assets; however, the Admin can apply to the court for an 'Injunction' to stop the firm's activity."},
     {q: "Is 'Matched Trading' (two parties buying/selling to fake volume) a criminal or civil violation?", c: ["Both (It is market manipulation)", "Civil only"], a: 0, f: "Logic: Manipulation is a fraudulent act that triggers both civil lawsuits and criminal prosecution; however, an unintentional paperwork error is usually just a civil matter."},
-    {q: "An IAR is also a licensed real estate agent. When recommending a REIT, must they disclose their background to the client?", c: ["Yes (Disclosure of all capacities is required)", "No (Only securities licenses matter)"], a: 0, f: "Logic: Fiduciaries must disclose any potential conflict or 'other capacity' that could influence advice; however, if you are just a hobbyist with no pay, disclosure is less critical."},
+    {{
+    q: "An IAR is also a licensed real estate agent. When recommending a REIT, must they disclose their background to the client?", 
+    c: ["Disclosure is required because the IAR is acting in a capacity that presents a potential conflict of interest", "Disclosure is only required if the IAR earns a commission exceeding 5% of the transaction value"], 
+    a: 0, 
+    f: "Logic: Fiduciaries must disclose any potential conflict or 'other capacity' that could influence advice; however, if you are just a hobbyist with no pay, disclosure is less critical."
+},
     {q: "A newspaper has 90% of its circulation outside of State A. Does an advertisement in it count as an offer in State A?", c: ["No (The 'Two-Thirds' Rule)", "Yes"], a: 0, f: "Logic: If more than 2/3 of a paper's readers are out of state, it is NOT an offer in that state; however, a local city paper is considered an offer in the town where it's printed."},
     {q: "Which part of Form ADV must be delivered to clients annually if there are material changes?", c: ["Part 2A (The Brochure)", "Part 1A"], a: 0, f: "Logic: Part 2 is written in 'plain English' specifically for the client; however, Part 1 is the 'Check-the-box' data used primarily by regulators."},
     {q: "An IA with custody must have a surprise audit by an independent CPA. How often must this occur?", c: ["At least once per year", "Every 3 years"], a: 0, f: "Logic: Custody is a high-risk state that requires annual verification; however, Broker-Dealers are also audited annually but under different FINRA rules."},
@@ -668,11 +693,15 @@ function start(pillar) {
 }
 
 function showQuestion() {
-    const q = activeSet[currentQ]; const total = activeSet.length;
+    const q = activeSet[currentQ];
+    const total = activeSet.length;
+    
     const modeLabel = isPracticeMode ? 'PRACTICE' : (mode === 'sprint' ? 'SPRINT' : 'SIMULATION');
     document.getElementById('status-line').textContent = `${modeLabel} MODE | GATE ${currentQ + 1} of ${total}`;
     
+    // THIS LINE AUTOMATICALLY SHOWS 2 CHOICES FOR SPRINT, AND 4 FOR SIM
     let choicesToDisplay = (mode === 'sprint') ? q.c.slice(0, 2) : q.c;
+    
     let scrambled = choicesToDisplay.map((text, i) => ({ text, originalIndex: i }));
     scrambled.sort(() => 0.5 - Math.random());
     
@@ -680,10 +709,14 @@ function showQuestion() {
     scrambled.forEach(choice => {
         html += `<button class="ans-btn" onclick="checkAnswer(${choice.originalIndex}, this)">${choice.text}</button>`;
     });
-    if (isPracticeMode) html += `<button class="nav-btn" style="display:block; background:#666; margin-top:15px;" onclick="abortPractice()">⚠️ ABORT PRACTICE</button>`;
+    
+    if (isPracticeMode) {
+        html += `<button class="nav-btn" style="display:block; background:#666; margin-top:15px;" onclick="abortPractice()">⚠️ ABORT PRACTICE</button>`;
+    }
     
     document.getElementById('q-area').innerHTML = html;
-    document.getElementById('feedback').style.display = 'none'; document.getElementById('next').style.display = 'none';
+    document.getElementById('feedback').style.display = 'none';
+    document.getElementById('next').style.display = 'none';
     answered = false;
 }
 
