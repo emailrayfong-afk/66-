@@ -1838,6 +1838,7 @@ function next() {
 
 function endSession() {
     const pct = Math.round((sessionScore / activeSet.length) * 100);
+    // Keep the highest score achieved in this session
     currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
     document.getElementById('game').style.display = 'none';
     document.getElementById('menu').style.display = 'block';
@@ -1845,21 +1846,21 @@ function endSession() {
 }
 
 function updateFuel() {
-    const avg = Math.round(currentScores.reduce((a,b)=>a+b)/4);
+    const avg = Math.round(currentScores.reduce((a,b)=>a+b, 0) / 4);
     document.getElementById('fuel-fill').style.width = avg + '%';
-    document.getElementById('total-text').innerText = `FLIGHT READINESS: ${avg}%`;
+    document.getElementById('total-text').innerText = `FLIGHT READINESS: ${avg}% (GOAL: 73%)`;
     
     currentScores.forEach((s, i) => {
         const el = document.getElementById(`s${i}`);
-        el.innerText = s + '%';
+        // This ensures it says "Ready: 85%" instead of just a raw number like "1"
+        el.innerText = s > 0 ? `Ready: ${s}%` : "PENDING";
         el.style.color = s >= 73 ? "#2e7d32" : "#666";
     });
 
-    if (currentScores.every(s => s >= 73)) {
+    if (avg >= 73 && currentScores.every(s => s >= 50)) {
         document.getElementById('rocket').classList.add('takeoff');
     }
 }
-
 function playTone(freq, dur) {
     if (!audioCtx) return;
     const osc = audioCtx.createOscillator();
