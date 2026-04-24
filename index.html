@@ -4,47 +4,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MISSION COMMAND: ARTEMIS S66 v18.5</title>
     <style>
-        :root { --nasa-blue: #0b3d91; --artemis-red: #fc3d39; --lunar-grey: #f4f4f4; --text-dark: #212121; }
-        body { background: var(--lunar-grey); color: var(--text-dark); font-family: 'Helvetica Neue', Arial, sans-serif; padding: 10px; touch-action: manipulation; }
-        .hud { border: 3px solid var(--nasa-blue); max-width: 800px; margin: auto; padding: 20px; background: #ffffff; border-radius: 8px; }
-        .launch-pad { height: 120px; border-bottom: 2px solid #ddd; position: relative; margin: 15px 0; background: #eee; overflow: hidden; border-radius: 5px; }
-        #rocket { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%) rotate(-45deg); font-size: 40px; transition: bottom 3s ease-in; }
+        :root { --nasa-blue: #0b3d91; --artemis-red: #fc3d39; --lunar-grey: #f4f4f4; --text-dark: #212121; --go-green: #2e7d32; --error-red: #c62828; }
+        body { background: var(--lunar-grey); color: var(--text-dark); font-family: 'Helvetica Neue', Arial, sans-serif; padding: 10px; touch-action: manipulation; overflow-x: hidden; }
+        .hud { border: 3px solid var(--nasa-blue); max-width: 800px; margin: auto; padding: 20px; background: #ffffff; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .launch-pad { height: 120px; border-bottom: 2px solid #ddd; position: relative; margin: 15px 0; background: linear-gradient(to bottom, #87ceeb 0%, #e0f6ff 100%); overflow: hidden; border-radius: 5px; }
+        #rocket { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%) rotate(-45deg); font-size: 40px; transition: bottom 0.1s linear; z-index: 10; }
+        #countdown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 60px; font-weight: bold; color: var(--artemis-red); display: none; z-index: 5; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
         .fuel-bar { width: 100%; background: #eee; border: 1px solid #ccc; height: 30px; margin-top: 5px; position: relative; border-radius: 15px; overflow: hidden; }
-        #fuel-fill { background: var(--nasa-blue); width: 0%; height: 100%; transition: width 0.5s; }
+        #fuel-fill { background: linear-gradient(90deg, var(--nasa-blue) 0%, #1565c0 100%); width: 0%; height: 100%; transition: width 0.5s; }
         #total-text { position: absolute; width: 100%; text-align: center; color: #fff; font-size: 12px; line-height: 30px; font-weight: bold; top: 0; left: 0; z-index: 5; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
         .mode-toggle { display: flex; background: #eee; border-radius: 25px; margin: 15px 0; padding: 5px; }
-        .mode-btn { flex: 1; border: none; background: none; padding: 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .mode-btn { flex: 1; border: none; background: none; padding: 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 12px; transition: all 0.3s; }
         .mode-btn.active { background: var(--nasa-blue); color: white; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-        .p-btn { background: #ffffff; border: 2px solid var(--nasa-blue); color: var(--nasa-blue); padding: 15px; cursor: pointer; font-weight: bold; border-radius: 6px; }
+        .p-btn { background: #ffffff; border: 2px solid var(--nasa-blue); color: var(--nasa-blue); padding: 15px; cursor: pointer; font-weight: bold; border-radius: 6px; transition: all 0.3s; }
+        .p-btn:hover { background: var(--nasa-blue); color: white; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .q-text { font-size: 1.1em; color: var(--text-dark); margin-bottom: 20px; border-left: 5px solid var(--artemis-red); padding-left: 15px; line-height: 1.5; font-weight: bold; }
-        .ans-btn { display: block; width: 100%; padding: 16px; margin: 8px 0; background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; text-align: left; }
-        #feedback { margin: 15px 0; padding: 15px; border-radius: 8px; font-weight: bold; display: none; background: #f0f4ff; }
-        .nav-btn { background: var(--nasa-blue); color: #fff; font-weight: bold; padding: 18px; border: none; width: 100%; cursor: pointer; border-radius: 8px; display: none; margin-top:10px; }
-        .takeoff { bottom: 1000px !important; }
+        .ans-btn { display: block; width: 100%; padding: 16px; margin: 8px 0; background: #f9f9f9; border: 2px solid #ddd; border-radius: 8px; text-align: left; font-weight: bold; transition: all 0.2s; cursor: pointer; }
+        .ans-btn:hover:not(:disabled) { background: #e3f2fd; border-color: var(--nasa-blue); transform: translateX(5px); }
+        .ans-btn.correct { background: var(--go-green) !important; color: white !important; border-color: var(--go-green) !important; }
+        .ans-btn.wrong { background: var(--error-red) !important; color: white !important; border-color: var(--error-red) !important; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 8px; font-weight: bold; display: none; background: #f0f4ff; border: 1px solid #d0d7de; }
+        .nav-btn { background: var(--nasa-blue); color: #fff; font-weight: bold; padding: 18px; border: none; width: 100%; cursor: pointer; border-radius: 8px; display: none; margin-top: 10px; transition: all 0.3s; }
+        .nav-btn:hover { background: #073a7a; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .takeoff { animation: liftoff 4s ease-in forwards; }
+        .crash { animation: explosion 1s ease-out forwards; }
+        @keyframes liftoff { 0% { bottom: 10px; transform: translateX(-50%) rotate(-45deg); } 100% { bottom: 1000px; transform: translateX(-50%) rotate(-45deg) scale(0.5); } }
+        @keyframes explosion { 0% { bottom: 10px; transform: translateX(-50%) rotate(-45deg) scale(1); opacity: 1; } 50% { transform: translateX(-50%) rotate(180deg) scale(1.5); opacity: 0.5; } 100% { bottom: -50px; transform: translateX(-50%) rotate(360deg) scale(0); opacity: 0; } }
+        @keyframes shake { 0%, 100% { transform: translateX(-50%) rotate(-45deg); } 25% { transform: translateX(-48%) rotate(-43deg); } 75% { transform: translateX(-52%) rotate(-47deg); } }
+        .shake { animation: shake 0.5s ease-in-out infinite; }
         @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="hud">
         <h1 style="text-align:center; color: var(--nasa-blue);">S66: MISSION COMMAND</h1>
-        <div class="launch-pad"><div id="rocket">🚀</div></div>
+
+        <div class="launch-pad">
+            <div id="rocket">🚀</div>
+            <div id="countdown"></div>
+        </div>
+
         <div class="fuel-bar">
             <div id="total-text">FLIGHT READINESS: 0%</div>
             <div id="fuel-fill"></div>
         </div>
+
         <div id="menu">
             <div class="mode-toggle">
-                <button id="mode-sprint" class="mode-btn active" onclick="setMode('sprint')">TRAINING SPRINTS</button>
-                <button id="mode-sim" class="mode-btn" onclick="setMode('sim')">MISSION SIMULATION</button>
+                <button id="mode-sprint" class="mode-btn active" onclick="initAudio(); setMode('sprint')">TRAINING SPRINTS</button>
+                <button id="mode-sim" class="mode-btn" onclick="initAudio(); setMode('sim')">MISSION SIMULATION</button>
             </div>
+
             <div class="grid">
-                <button class="p-btn" onclick="start(0)">01. ECONOMICS <span id="s0" style="display:block; font-size:10px;">PENDING</span></button>
-                <button class="p-btn" onclick="start(1)">02. VEHICLES <span id="s1" style="display:block; font-size:10px;">PENDING</span></button>
-                <button class="p-btn" onclick="start(2)">03. STRATEGY <span id="s2" style="display:block; font-size:10px;">PENDING</span></button>
-                <button class="p-btn" onclick="start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">PENDING</span></button>
+                <button class="p-btn" onclick="initAudio(); start(0)">01. ECONOMICS <span id="s0" style="display:block; font-size:10px;">PENDING</span></button>
+                <button class="p-btn" onclick="initAudio(); start(1)">02. VEHICLES <span id="s1" style="display:block; font-size:10px;">PENDING</span></button>
+                <button class="p-btn" onclick="initAudio(); start(2)">03. STRATEGY <span id="s2" style="display:block; font-size:10px;">PENDING</span></button>
+                <button class="p-btn" onclick="initAudio(); start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">PENDING</span></button>
             </div>
         </div>
+
         <div id="game" style="display:none;">
             <div id="status-line" style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px;"></div>
             <div id="q-area"></div>
@@ -52,1833 +71,150 @@
             <button id="next" class="nav-btn" onclick="next()">NEXT GATE ></button>
         </div>
     </div>
-
 <script>
-// --- 1. DATA LIBRARIES ---
-// ALL 100 QUESTIONS PER PILLAR ARE NOW CONSOLIDATED HERE
+// ========================================
+// ⚙️ GAME SETTINGS
+// ========================================
+const SPRINT_Q_COUNT = 25; 
+const SIM_WEIGHTS = [8, 17, 30, 45];
+// ========================================
+// DATA LIBRARY
+// ========================================
 const sprintLib = [
-[ // 01. ECONOMICS (PILLAR 1: 100 QUESTIONS)
-    {q: "Which return calculation ignores the timing of cash flows?", c: ["Time-weighted", "Dollar-weighted"], a: 0, f: "Logic: Time-weighted measures manager skill; Dollar-weighted measures investor timing."},
-    {q: "Payment / Rate is the formula for which calculation?", c: ["Perpetuity", "Future Value"], a: 0, f: "Logic: Dividing the payout by the rate gives the principal needed for a perpetuity."},
-    {q: "DCF is used to calculate which value?", c: ["Present Value", "Stated Value"], a: 0, f: "Logic: Discounted Cash Flow finds what future money is worth today (Present Value)."},
-    {q: "What is the 'break-even' rate of a project?", c: ["Internal Rate of Return (IRR)", "Expected Return"], a: 0, f: "Logic: IRR is the rate that makes NPV equal to zero."},
-    {q: "Total Return minus the Risk-Free Rate equals the:", c: ["Risk Premium", "Alpha"], a: 0, f: "Logic: The Risk Premium is the 'extra' return earned for taking risk over a T-Bill."},
-    {q: "Which risk metric measures 'Total Volatility'?", c: ["Standard Deviation", "Beta"], a: 0, f: "Logic: Standard Deviation = Total Risk. Beta = Market Risk only."},
-    {q: "A correlation of -1.0 means two assets move:", c: ["Exactly opposite", "In the same direction"], a: 0, f: "Logic: -1.0 is a perfect inverse relationship."},
-    {q: "Which form of EMH says only 'past price info' is priced in?", c: ["Weak Form", "Semi-Strong Form"], a: 0, f: "Logic: Weak Form = Past prices. Semi-Strong = All public info."},
-    {q: "Which ratio is the most 'stringent' test of liquidity?", c: ["Quick Ratio", "Current Ratio"], a: 0, f: "Logic: Quick Ratio (Acid Test) is harder to pass because it excludes inventory."},
-    {q: "An Inverted Yield Curve shows short-term rates are:", c: ["Higher than long-term", "Lower than long-term"], a: 0, f: "Logic: Short > Long = Inverted. This signals a recession."},
-    {q: "Current Assets - Current Liabilities =", c: ["Working Capital", "Net Worth"], a: 0, f: "Logic: Working Capital measures immediate cash availability."},
-    {q: "The Sharpe Ratio uses which denominator?", c: ["Standard Deviation", "Beta"], a: 0, f: "Logic: Sharpe measures return per unit of Total Risk (Standard Deviation)."},
-    {q: "Which indicator confirms a trend after it has started?", c: ["Lagging Indicator", "Leading Indicator"], a: 0, f: "Logic: Lagging confirms (e.g., Prime Rate). Leading predicts (e.g., Permits)."},
-    {q: "A company that stays stable during a crash is considered:", c: ["Defensive", "Cyclical"], a: 0, f: "Logic: Defensive stocks (food, utilities) don't follow the business cycle."},
-    {q: "72 divided by the interest rate equals:", c: ["Years to double", "Total return"], a: 0, f: "Logic: This is the 'Rule of 72' shortcut."},
-    {q: "Nominal Return minus Inflation equals:", c: ["Real Return", "Expected Return"], a: 0, f: "Logic: Real Return represents actual increase in purchasing power."},
-    {q: "Is GDP based on geographic location or citizenship?", c: ["Location (Borders)", "Citizenship"], a: 0, f: "Logic: GDP = within borders. GNP = citizens."},
-    {q: "Inflation-adjusted GDP is known as:", c: ["Real GDP", "Nominal GDP"], a: 0, f: "Logic: Real GDP uses constant dollars to remove price inflation."},
-    {q: "Which Fed rate is set by the banks, not the Fed?", c: ["Fed Funds Rate", "Discount Rate"], a: 0, f: "Logic: Fed Funds is bank-to-bank. Discount Rate is Fed-to-bank."},
-    {q: "Which accounting method assumes the 'oldest' items are sold first?", c: ["FIFO", "LIFO"], a: 0, f: "Logic: First-In, First-Out assumes the first inventory purchased is the first sold."},
-    {q: "A high P/E ratio usually indicates what type of stock?", c: ["Growth", "Value"], a: 0, f: "Logic: Investors pay a premium (high P/E) for expected growth."},
-    {q: "What is the 'bottom line' of an income statement?", c: ["Net Income", "Gross Profit"], a: 0, f: "Logic: Net Income is the profit remaining after all expenses and taxes."},
-    {q: "Yield to Maturity is higher than the Coupon on which bond?", c: ["Discount Bond", "Premium Bond"], a: 0, f: "Logic: If you buy for less (discount), you earn more than the coupon at maturity."},
-    {q: "Which metric measures a manager's 'added value'?", c: ["Alpha", "Beta"], a: 0, f: "Logic: Alpha is return generated beyond what the Beta (risk) would predict."},
-    {q: "The 'Capital Market Line' (CML) is used to evaluate:", c: ["Diversified Portfolios", "Individual Stocks"], a: 0, f: "Logic: CML is for total portfolios. SML (Security Market Line) is for individual stocks."},
-    {q: "Which metric is the square root of the variance?", c: ["Standard Deviation", "Beta"], a: 0, f: "Logic: Standard Deviation is the mathematical square root of variance."},
-    {q: "Does a high 'Inventory Turnover' ratio suggest efficiency or inefficiency?", c: ["Efficiency", "Inefficiency"], a: 0, f: "Logic: Turning over inventory quickly means the company is selling goods fast."},
-    {q: "The 'Acid Test' ratio is another name for the:", c: ["Quick Ratio", "Current Ratio"], a: 0, f: "Logic: The Quick Ratio (Acid Test) is a more rigorous test of liquidity."},
-    {q: "Which form of EMH claims that even 'inside information' is already priced in?", c: ["Strong Form", "Semi-Strong Form"], a: 0, f: "Logic: Strong Form EMH says nothing can help you beat the market."},
-    {q: "A stock with a Beta of 1.0 will move:", c: ["In tandem with the market", "Twice as fast as the market"], a: 0, f: "Logic: Beta of 1.0 is the market benchmark."},
-    {q: "Net Present Value (NPV) measures a project's value in:", c: ["Today's dollars", "Future dollars"], a: 0, f: "Logic: NPV tells you the 'net' value discounted to today."},
-    {q: "If a project has an NPV of +$1,000, should the company accept or reject it?", c: ["Accept", "Reject"], a: 0, f: "Logic: Any positive NPV means the investment adds value."},
-    {q: "Which economic phase follows a 'Trough'?", c: ["Expansion", "Contraction"], a: 0, f: "Logic: The Trough is the bottom; the only way to go is up into Expansion."},
-    {q: "Is the Consumer Price Index (CPI) a measure of inflation or GDP?", c: ["Inflation", "GDP"], a: 0, f: "Logic: CPI measures the change in prices paid by consumers."},
-    {q: "A 'Coincident' indicator moves:", c: ["Simultaneously with the economy", "Before the economy"], a: 0, f: "Logic: Coincident = 'At the same time.'"},
-    {q: "The Dividend Discount Model (DDM) is used to find:", c: ["Intrinsic Value", "Beta"], a: 0, f: "Logic: DDM values a stock based on the present value of all future dividends."},
-    {q: "Which branch of government controls 'Fiscal Policy'?", c: ["Congress and the President", "The Federal Reserve"], a: 0, f: "Logic: Fiscal = Taxing and Spending (Government)."},
-    {q: "A price-to-book (P/B) ratio compares market price to:", c: ["Equity (Net Assets)", "Annual Revenue"], a: 0, f: "Logic: Book Value is essentially the Net Worth (Assets - Liabilities)."},
-    {q: "In a 'Normal' yield curve, long-term rates are:", c: ["Higher than short-term rates", "Lower than short-term rates"], a: 0, f: "Logic: Investors usually demand more interest for locking up money longer."},
-    {q: "If the Fed sells securities, does the money supply expand or contract?", c: ["Contract", "Expand"], a: 0, f: "Logic: Sell = Small. The Fed takes cash out of the system."},
-    {q: "Which return reflects the 'Internal Rate of Return' of a bond?", c: ["Yield to Maturity (YTM)", "Current Yield"], a: 0, f: "Logic: YTM is the IRR of a bond held to the end."},
-    {q: "Is 'Business Risk' considered Systematic or Unsystematic?", c: ["Unsystematic", "Systematic"], a: 0, f: "Logic: Business risk is specific to one company; you can diversify it away."},
-    {q: "The measure of a security's sensitivity to the market is:", c: ["Beta", "Standard Deviation"], a: 0, f: "Logic: Beta measures market sensitivity."},
-    {q: "When inflation rises, what generally happens to bond prices?", c: ["They fall", "They rise"], a: 0, f: "Logic: Rising rates drive bond prices down."},
-    {q: "Which financial statement shows a 'snapshot' of a company's assets and debts?", c: ["Balance Sheet", "Income Statement"], a: 0, f: "Logic: Balance sheet is a snapshot at a specific point in time."},
-    {q: "A stock with a Beta of 0.5 is expected to be:", c: ["Less volatile than the market", "More volatile than the market"], a: 0, f: "Logic: 0.5 is half as bouncy as the S&P 500."},
-    {q: "The 'Risk-Free Rate' is usually based on which security?", c: ["91-day T-Bill", "30-year Treasury Bond"], a: 0, f: "Logic: Short-term T-Bill has virtually zero interest rate risk."},
-    {q: "Does 'Disinflation' mean prices are falling or rising slower?", c: ["Rising slower", "Falling"], a: 0, f: "Logic: Disinflation is a slowing of the inflation rate."},
-    {q: "Total Assets - Total Liabilities equals:", c: ["Shareholders' Equity", "Working Capital"], a: 0, f: "Logic: Basic accounting equation for Net Worth."},
-    {q: "Which indicator is most likely to move first: S&P 500 or Prime Rate?", c: ["S&P 500", "Prime Rate"], a: 0, f: "Logic: Stock prices are 'Leading'; Prime Rate is 'Lagging'."},
-    {q: "Does a high 'Debt-to-Equity' ratio indicate a more or less leveraged company?", c: ["More leveraged", "Less leveraged"], a: 0, f: "Logic: High ratio means more borrowed money relative to shareholder funds."},
-    {q: "Which ratio measures ability to pay liabilities using only most liquid assets?", c: ["Quick Ratio", "Current Ratio"], a: 0, f: "Logic: Quick Ratio excludes inventory."},
-    {q: "The 'Capital Asset Pricing Model' (CAPM) is used to calculate:", c: ["Expected Return", "Standard Deviation"], a: 0, f: "Logic: CAPM uses Beta and Risk-Free rate to determine required return."},
-    {q: "Which form of EMH argues that stock prices reflect all information, including private data?", c: ["Strong Form", "Semi-Strong Form"], a: 0, f: "Logic: Strong form says even insiders can't beat the market."},
-    {q: "Is 'Market Risk' considered Systematic or Unsystematic?", c: ["Systematic", "Unsystematic"], a: 0, f: "Logic: Market risk hits the whole system and cannot be diversified."},
-    {q: "The 'Real' rate of return on an investment is adjusted for:", c: ["Inflation", "Taxes"], a: 0, f: "Logic: Real Return = Nominal Return - Inflation (CPI)."},
-    {q: "If IRR is GREATER than the required rate, is NPV positive or negative?", c: ["Positive", "Negative"], a: 0, f: "Logic: Beating required return creates Positive NPV."},
-    {q: "Which method shows higher net income during rising prices?", c: ["FIFO", "LIFO"], a: 0, f: "Logic: FIFO sells 'old' cheaper items first, showing higher profit."},
-    {q: "A stock's P/E ratio is 20. If EPS is $2, what is the market price?", c: ["$40", "$10"], a: 0, f: "Logic: Price = P/E Ratio x EPS ($20 x 2 = $40)."},
-    {q: "Which indicator move follows the direction of the economy with a lag?", c: ["Lagging Indicator", "Coincident Indicator"], a: 0, f: "Logic: Lagging indicators confirm what has already happened."},
-    {q: "Does an 'Expansion' phase typically see rising or falling interest rates?", c: ["Rising", "Falling"], a: 0, f: "Logic: Demand for money pushes interest rates up."},
-    {q: "In DCF, if the discount rate increases, what happens to the value?", c: ["It decreases", "It increases"], a: 0, f: "Logic: Higher discount rate penalizes future money more."},
-    {q: "Which yield calculation remains fixed for the life of a bond?", c: ["Nominal Yield", "Current Yield"], a: 0, f: "Logic: Nominal yield (Coupon) never changes."},
-    {q: "A high 'Dividend Payout Ratio' is a characteristic of:", c: ["Mature/Value", "Growth"], a: 0, f: "Logic: Mature companies pay out more as they have fewer expansion needs."},
-    {q: "If the U.S. Dollar is strong, will U.S. exports be more or less competitive?", c: ["Less competitive", "More competitive"], a: 0, f: "Logic: Strong dollar makes American goods more expensive for foreign buyers."},
-    {q: "Which organization controls 'Monetary Policy' in the U.S.?", c: ["The Federal Reserve", "Congress"], a: 0, f: "Logic: The Fed controls money supply and interest rates."},
-    {q: "Is interest paid on a loan a 'Source' or 'Use' of cash?", c: ["Use of cash", "Source of cash"], a: 0, f: "Logic: Paying interest is cash leaving the company."},
-    {q: "Which ratio is: (Current Assets - Inventory) / Current Liabilities?", c: ["Quick Ratio", "Current Ratio"], a: 0, f: "Logic: Subtracting inventory creates the 'Quick' test."},
-    {q: "If a project has an IRR equal to the discount rate, what is the NPV?", c: ["Zero", "Positive"], a: 0, f: "Logic: IRR is the rate that makes NPV exactly zero."},
-    {q: "A 'Cyclical' stock is most likely found in which industry?", c: ["Steel/Auto", "Utilities"], a: 0, f: "Logic: Cyclical stocks move with the economy (e.g., cars)."},
-    {q: "The 'Risk-Adjusted' return is most commonly measured by:", c: ["Sharpe Ratio", "Current Ratio"], a: 0, f: "Logic: Sharpe measures excess return per unit of volatility."},
-    {q: "What is the formula for the 'Current Yield' of a stock?", c: ["Annual Dividend / Market Price", "Annual Dividend / EPS"], a: 0, f: "Logic: Yield = Dividend / Price."},
-    {q: "Does 'Stagflation' involve rising or falling unemployment?", c: ["Rising", "Falling"], a: 0, f: "Logic: Stagflation = Stagnant growth (High Unemployment) + Inflation."},
-    {q: "A company's Net Worth is also known as:", c: ["Shareholders' Equity", "Working Capital"], a: 0, f: "Logic: Assets - Liabilities = Net Worth."},
-    {q: "Which EMH form asserts that even technical analysis is useless?", c: ["Weak Form", "Semi-Strong Form"], a: 0, f: "Logic: Weak form says past price patterns are already in the price."},
-    {q: "Which valuation model uses 'Risk-Free Rate', 'Beta', and 'Market Return'?", c: ["CAPM", "Dividend Discount Model"], a: 0, f: "Logic: Formula for expected return based on risk."},
-    {q: "Does a 'Growth' investor prioritize dividends or capital appreciation?", c: ["Capital appreciation", "High dividends"], a: 0, f: "Logic: Growth investors reinvest earnings for share price growth."},
-    {q: "Rule of 72 works for interest rates and what other factor?", c: ["Inflation", "Unemployment"], a: 0, f: "Logic: Shows how long for inflation to cut purchasing power in half."},
-    {q: "Is a 'Stock Split' a material change to total Net Worth?", c: ["No", "Yes"], a: 0, f: "Logic: Only changes share count and price, not total equity."},
-    {q: "If IRR is 10% and cost of capital is 12%, is NPV positive or negative?", c: ["Negative", "Positive"], a: 0, f: "Logic: If IRR is lower than cost to borrow, project loses value."},
-    {q: "Which metric measures 'systematic' risk of a stock?", c: ["Beta", "Standard Deviation"], a: 0, f: "Logic: Beta measures sensitivity to the broader system."},
-    {q: "High 'Price-to-Sales' (P/S) is most common in which phase?", c: ["Early-stage/Growth", "Mature/Declining"], a: 0, f: "Logic: Startups with high revenue potential but no profit yet."},
-    {q: "Does 'Deflation' benefit the borrower or the lender?", c: ["Lender", "Borrower"], a: 0, f: "Logic: Borrowers pay back loans with 'more expensive' dollars."},
-    {q: "What is the 'Top' of the business cycle called?", c: ["Peak", "Expansion"], a: 0, f: "Logic: Peak is the maximum point of activity."},
-    {q: "Which ratio is: Market Price / Book Value per Share?", c: ["Price-to-Book (P/B)", "Price-to-Earnings (P/E)"], a: 0, f: "Logic: P/B compares market value to accounting worth."},
-    {q: "Does the Federal Reserve set the 'Prime Rate'?", c: ["No", "Yes"], a: 0, f: "Logic: Commercial banks set Prime based on the Fed Funds Rate."},
-    {q: "If an investor is 'Risk Averse,' will they choose higher or lower Standard Deviation?", c: ["Lower", "Higher"], a: 0, f: "Logic: Avoiding volatility means choosing lower SD."},
-    {q: "Which EMH form suggests fundamental analysis provides an 'edge'?", c: ["Weak Form", "Semi-Strong Form"], a: 0, f: "Logic: Weak Form says only charts are useless, implying research works."},
-    {q: "Is 'Current Ratio' a measure of profitability or liquidity?", c: ["Liquidity", "Profitability"], a: 0, f: "Logic: Measures ability to pay short-term bills."},
-    {q: "When a company issues a bond, does 'Debt-to-Equity' rise or fall?", c: ["Rise", "Fall"], a: 0, f: "Logic: Increases total debt while equity stays the same."},
-    {q: "What is 'Geometric Mean' also known as?", c: ["Time-Weighted Return", "Arithmetic Average"], a: 0, f: "Logic: Basis for Time-Weighted compounded returns."},
-    {q: "A 'Lagging' indicator is used primarily to:", c: ["Confirm a trend", "Predict a trend"], a: 0, f: "Logic: Lagging indicators tell you where you've been."},
-    {q: "Which measurement is best for comparing two managers with different risk?", c: ["Sharpe Ratio", "Total Return"], a: 0, f: "Logic: Sharpe levels the field by adjusting for risk taken."},
-    {q: "If Fed wants to 'ease' money supply, do they buy or sell Treasuries?", c: ["Buy", "Sell"], a: 0, f: "Logic: Buy = Big. Injects cash into banks."},
-    {q: "Does 'Alpha' represent positive or negative return relative to benchmark?", c: ["Either (it measures the difference)", "Only positive"], a: 0, f: "Logic: Alpha measures the difference from predicted return."},
-    {q: "Balance Sheet equation: Assets =", c: ["Liabilities + Equity", "Liabilities - Equity"], a: 0, f: "Logic: Assets must be balanced by borrowed and owner money."},
-    {q: "If rates rise, what happens to Present Value of a future payment?", c: ["It falls", "It rises"], a: 0, f: "Logic: PV is lower because you can invest less today to get the same amount."},
-    {q: "A 'Leading' indicator for consumer spending is:", c: ["Building Permits", "Inventory levels"], a: 0, f: "Logic: Permits signal future spending on labor and goods."},
-    {q: "Does a 'Value' investor look for a high or low P/E ratio?", c: ["Low P/E", "High P/E"], a: 0, f: "Logic: Value investors look for bargains cheap relative to earnings."},
-    {q: "The 'Security Market Line' (SML) is a representation of:", c: ["CAPM", "Efficient Frontier"], a: 0, f: "Logic: The SML plots expected return against Beta."}
-], [ // 02. INVESTMENT VEHICLES (PILLAR 2)
-    {q: "Which vehicle issues 'redeemable' shares and does not trade on an exchange?", c: ["Open-End Mutual Fund", "Closed-End Fund"], a: 0, f: "Logic: Open-end funds are redeemable with the issuer."},
-    {q: "Net Asset Value (NAV) of a mutual fund is calculated how often?", c: ["Daily", "Continuously"], a: 0, f: "Logic: Calculated once per day at market close."},
-    {q: "Which security has most senior claim in liquidation?", c: ["Secured Bond", "Preferred Stock"], a: 0, f: "Logic: Secured debt is paid first."},
-    {q: "ADRs facilitate the trading of:", c: ["Foreign stocks in the U.S.", "U.S. stocks in foreign markets"], a: 0, f: "Logic: Buy foreign company shares in USD."},
-    {q: "Which interest rate is associated with 'Purchasing Power Risk'?", c: ["Fixed Rate", "Variable Rate"], a: 0, f: "Logic: Fixed rates lose value when inflation rises."},
-    {q: "A 'Zero-Coupon' bond pays interest as:", c: ["Accretion", "Semi-annual checks"], a: 0, f: "Logic: Growth from discount price to par."},
-    {q: "Which share class has a front-end load but lowest internal fees?", c: ["Class A Shares", "Class C Shares"], a: 0, f: "Logic: Upfront charge but lower ongoing 12b-1 fees."},
-    {q: "Max duration of 'Commercial Paper' to remain exempt?", c: ["270 Days", "365 Days"], a: 0, f: "Logic: Legal limit for exemption."},
-    {q: "Which vehicle MUST distribute 90% of income?", c: ["REIT", "DPP"], a: 0, f: "Logic: REITs avoid corporate tax this way."},
-    {q: "Option writer has the:", c: ["Obligation", "Choice"], a: 0, f: "Logic: Paid a premium to take on obligation."},
-    {q: "A 'Call' is 'In-the-Money' when market price is:", c: ["Higher than strike", "Lower than strike"], a: 0, f: "Logic: Call UP."},
-    {q: "Which product allows choice of underlying sub-accounts?", c: ["Variable Life", "Whole Life"], a: 0, f: "Logic: Separate accounts where investor takes risk."},
-    {q: "Municipal bond interest is generally exempt from:", c: ["Federal Income Tax", "Capital Gains Tax"], a: 0, f: "Logic: Interest is federally tax-free."},
-    {q: "Treasury 'Bills' mature in:", c: ["One year or less", "2 to 10 years"], a: 0, f: "Logic: Bills (Short)."},
-    {q: "Which represents 'Equity' in a corporation?", c: ["Common Stock", "Debenture"], a: 0, f: "Logic: Stocks are ownership."},
-    {q: "A 'Warrant' exercise price is usually:", c: ["Above market", "Below market"], a: 0, f: "Logic: Long-term sweeteners."},
-    {q: "Which is 'unmanaged' with a fixed portfolio?", c: ["Unit Investment Trust (UIT)", "Mutual Fund"], a: 0, f: "Logic: No active manager after selection."},
-    {q: "The 'Exchange Privilege' within a fund family is:", c: ["Taxable event", "Tax-free event"], a: 0, f: "Logic: Sale of Fund A is a taxable event."},
-    {q: "Which bond has higher 'Duration'?", c: ["Low Coupon Bond", "High Coupon Bond"], a: 0, f: "Logic: Low coupons are more sensitive to rate changes."},
-    {q: "A 'Put' option buyer is:", c: ["Bearish", "Bullish"], a: 0, f: "Logic: Want price to fall."},
-    {q: "Which product has a 'flexible' premium?", c: ["Universal Life", "Variable Life"], a: 0, f: "Logic: Known for adjustable premiums."},
-    {q: "Money Market instruments mature in max of:", c: ["One Year", "Two Years"], a: 0, f: "Logic: High quality, short-term debt."},
-    {q: "Backed by 'full faith and credit' of U.S. Govt?", c: ["GNMA (Ginnie Mae)", "FNMA (Fannie Mae)"], a: 0, f: "Logic: Explicit Treasury backing."},
-    {q: "Break-even for a Call buyer is:", c: ["Strike + Premium", "Strike - Premium"], a: 0, f: "Logic: Stock must go UP past strike + cost."},
-    {q: "Which stock is 'Residual' in claim on assets?", c: ["Common Stock", "Preferred Stock"], a: 0, f: "Logic: Last in line for payments."},
-    {q: "ETN follows an index but is actually:", c: ["Unsecured debt", "Pool of stocks"], a: 0, f: "Logic: Senior unsecured debt of a bank."},
-    {q: "Allows holder to receive missed dividends later?", c: ["Cumulative Preferred", "Participating"], a: 0, f: "Logic: Missed payments accumulate."},
-    {q: "Mutual fund 'Public Offering Price' (POP) is:", c: ["NAV + Sales Charge", "NAV - Redemption Fee"], a: 0, f: "Logic: Price customer pays."},
-    {q: "Security with no maturity date and junior claim?", c: ["Common Stock", "Corporate Bond"], a: 0, f: "Logic: Perpetual ownership."},
-    {q: "Primary risk of an ETN?", c: ["Credit risk of issuer", "Interest rate risk"], a: 0, f: "Logic: If bank goes bust, investor loses."},
-    {q: "Fund most likely to trade at a 'Discount to NAV'?", c: ["Closed-End Fund", "Open-End Fund"], a: 0, f: "Logic: Trades on supply/demand."},
-    {q: "Investor in 'Variable' Annuity assumes:", c: ["Investment Risk", "Mortality Risk"], a: 0, f: "Logic: Investor takes market risk."},
-    {q: "Treasury 'Notes' maturity range:", c: ["2 to 10 years", "10 to 30 years"], a: 0, f: "Logic: Bills (<1), Notes (2-10)."},
-    {q: "Type of life insurance with 'Guaranteed Minimum' cash value?", c: ["Whole Life", "Variable Life"], a: 0, f: "Logic: Whole Life is fixed."},
-    {q: "Strike Price is also known as:", c: ["Exercise Price", "Premium Price"], a: 0, f: "Logic: Fixed price to buy/sell."},
-    {q: "A 'Put' is 'In-the-Money' when market price is:", c: ["Lower than strike", "Higher than strike"], a: 0, f: "Logic: Put DOWN."},
-    {q: "Bond type most sensitive to rate changes?", c: ["Long-term Zero", "Short-term High-coupon"], a: 0, f: "Logic: Highest duration."},
-    {q: "DPP allows for 'pass-through' of:", c: ["Both income and losses", "Income only"], a: 0, f: "Logic: Partners claim business losses."},
-    {q: "Mutual fund share class with 'Back-end Load'?", c: ["Class B Shares", "Class A Shares"], a: 0, f: "Logic: CDSC charge if sold early."},
-    {q: "Intrinsic Value of an option can never be:", c: ["Negative", "Zero"], a: 0, f: "Logic: Either in-the-money or zero."},
-    {q: "Treasury security with no regular coupon?", c: ["T-Bill", "T-Bond"], a: 0, f: "Logic: Issued at a discount."},
-    {q: "1035 Exchange refers to tax-free transfer of:", c: ["Insurance/Annuities", "Stocks"], a: 0, f: "Logic: Swap contracts without tax."},
-    {q: "Provides fixed dividend and priority over common?", c: ["Preferred Stock", "Convertible Bond"], a: 0, f: "Logic: 'Preferred' as to dividends."},
-    {q: "Break-even for Put buyer is:", c: ["Strike - Premium", "Strike + Premium"], a: 0, f: "Logic: Stock falls below strike - cost."},
-    {q: "Pooled vehicle 'unmanaged' after initial selection?", c: ["UIT", "ETF"], a: 0, f: "Logic: Buy and hold trust."},
-    {q: "Is an 'Option' a derivative or equity?", c: ["Derivative", "Equity"], a: 0, f: "Logic: Value derived from stock."},
-    {q: "Rate the Fed actually 'targets'?", c: ["Fed Funds Rate", "Discount Rate"], a: 0, f: "Logic: Managed via open market ops."},
-    {q: "Life insurance allowing adjust of death benefit?", c: ["Universal Life", "Whole Life"], a: 0, f: "Logic: Flexible premiums/benefits."},
-    {q: "Eurodollar bond is issued by foreign company in:", c: ["U.S. Dollars", "Euros"], a: 0, f: "Logic: USD held outside U.S."},
-    {q: "Investor sells a Call, they are:", c: ["Bearish", "Bullish"], a: 0, f: "Logic: Want stock below strike."},
-    {q: "Backed by taxing power of issuer?", c: ["GO Bond", "Revenue Bond"], a: 0, f: "Logic: Full Faith and Credit."},
-    {q: "Rights offering allows buying stock at a:", c: ["Discount", "Premium"], a: 0, f: "Logic: Keep percentage at lower price."},
-    {q: "Primary tax benefit of Municipal bond?", c: ["Federally tax-free interest", "Tax-free capital gains"], a: 0, f: "Logic: Only interest is exempt."},
-    {q: "Investment company with NO Board of Directors?", c: ["UIT", "Mutual Fund"], a: 0, f: "Logic: Governed by trust indenture."},
-    {q: "Is Variable Life Insurance a security?", c: ["Yes", "No"], a: 0, f: "Logic: Policyholder assumes investment risk."},
-    {q: "Share class with level load (highest 12b-1)?", c: ["Class C Shares", "Class A Shares"], a: 0, f: "Logic: High ongoing fees."},
-    {q: "Exclusion Ratio in annuity determines:", c: ["Portion that is tax-free", "Penalty"], a: 0, f: "Logic: Return of original principal."},
-    {q: "Bond with principal that adjusts for inflation?", c: ["TIPS", "STRIPS"], a: 0, f: "Logic: Principal tied to CPI."},
-    {q: "Letter of Intent (LOI) valid for:", c: ["13 Months", "9 Months"], a: 0, f: "Logic: Reach breakpoint discount."},
-    {q: "Security used to finance international trade?", c: ["Banker's Acceptance", "Commercial Paper"], a: 0, f: "Logic: Like a certified check."},
-    {q: "Long a Put has the right to:", c: ["Sell stock", "Buy stock"], a: 0, f: "Logic: 'Put' it to someone else."},
-    {q: "REIT investing in mortgages/loans?", c: ["Mortgage REIT", "Equity REIT"], a: 0, f: "Logic: They act as lenders."},
-    {q: "Does a 'Covered Call' writer own stock?", c: ["Yes", "No"], a: 0, f: "Logic: Covered by the shares owned."},
-    {q: "Mutual fund fee for marketing/commissions?", c: ["12b-1 Fee", "Management Fee"], a: 0, f: "Logic: Distribution fees."},
-    {q: "ADR dividends declared in foreign but paid in:", c: ["U.S. Dollars", "Foreign currency"], a: 0, f: "Logic: Bank converts the payment."},
-    {q: "Lowest 'Investment Grade' for S&P?", c: ["BBB", "BB"], a: 0, f: "Logic: Cutoff for speculative bonds."},
-    {q: "Double-Barreled bond backed by revenue and:", c: ["Taxing power", "Grants"], a: 0, f: "Logic: Two protection sources."},
-    {q: "No investment component, pure insurance?", c: ["Term Life", "Whole Life"], a: 0, f: "Logic: Temporary protection."},
-    {q: "Is POP ever lower than NAV?", c: ["No", "Yes"], a: 0, f: "Logic: Load added to NAV creates POP."},
-    {q: "Derivative with longest expiration?", c: ["Warrants", "Options"], a: 0, f: "Logic: Warrants last years."},
-    {q: "Considered 'unsecured debt'?", c: ["Debenture", "Mortgage Bond"], a: 0, f: "Logic: Good faith backing only."},
-    {q: "At-the-Money intrinsic value is:", c: ["Zero", "Positive"], a: 0, f: "Logic: No profit built in yet."},
-    {q: "Treasury known as a 'Zero-Coupon' bond?", c: ["STRIPS", "Notes"], a: 0, f: "Logic: Coupons stripped off."},
-    {q: "Break-even for Call SELLER is:", c: ["Strike + Premium", "Strike - Premium"], a: 0, f: "Logic: Loses if stock rises above strike + cash."},
-    {q: "Provide prospectus only at initial IPO?", c: ["Closed-End Fund", "Open-End Fund"], a: 0, f: "Logic: Open-end is continuous."},
-    {q: "Prepayment Risk associated with:", c: ["CMOs", "Treasury Bonds"], a: 0, f: "Logic: Homeowners pay off loans."},
-    {q: "Preferred stock swapped for common?", c: ["Convertible", "Callable"], a: 0, f: "Logic: Holder switch option."},
-    {q: "Primary risk of 'Fixed' Annuity?", c: ["Inflation Risk", "Investment Risk"], a: 0, f: "Logic: Fixed check loses power."},
-    {q: "Municipal security for short-term cash flow?", c: ["Anticipation Notes", "Revenue Bonds"], a: 0, f: "Logic: TANs/RANs stop-gaps."},
-    {q: "Money Market NAV expected to stay at:", c: ["$1.00", "$10.00"], a: 0, f: "Logic: Goal is stable share price."},
-    {q: "Variable products provide a:", c: ["Separate Account", "Universal Account"], a: 0, f: "Logic: Separates risky assets."},
-    {q: "Short a Put has the:", c: ["Obligation to buy", "Right to sell"], a: 0, f: "Logic: Forced to buy if exercised."},
-    {q: "Index that is 'Price-weighted'?", c: ["DJIA", "S&P 500"], a: 0, f: "Logic: Dow uses share price weights."},
-    {q: "CDSC is a:", c: ["Back-end load", "Front-end load"], a: 0, f: "Logic: Paid when you leave."},
-    {q: "Rate charged by Fed to banks?", c: ["Discount Rate", "Fed Funds"], a: 0, f: "Logic: Fed directly sets Discount."},
-    {q: "Qualified dividend taxed at:", c: ["Capital Gains rate", "Income rate"], a: 0, f: "Logic: Tax break for dividends."},
-    {q: "Allows ISSUER to pay back early?", c: ["Call Feature", "Put Feature"], a: 0, f: "Logic: Issuer calls bond away."},
-    {q: "Used to value Convertibles?", c: ["Parity", "Beta"], a: 0, f: "Logic: Bond/Stock value equality."},
-    {q: "Highest 'Interest Rate Risk'?", c: ["30-year Bond", "10-year Note"], a: 0, f: "Logic: Longest maturity."},
-    {q: "Naked Put seller:", c: ["No cash to buy", "Owns stock"], a: 0, f: "Logic: No funds set aside."},
-    {q: "Always actively managed?", c: ["Mutual Fund", "UIT"], a: 0, f: "Logic: UITs only supervised."},
-    {q: "Rights offering happens:", c: ["After IPO", "Before IPO"], a: 0, f: "Logic: For existing shareholders."},
-    {q: "Best for $1M with 20-yr horizon?", c: ["Class A Shares", "Class B Shares"], a: 0, f: "Logic: Long-term and breakpoints."},
-    {q: "ETNs more liquid than DPPs?", c: ["Yes", "No"], a: 0, f: "Logic: ETNs trade on exchanges."},
-    {q: "Universal Life is:", c: ["Adjustable", "Term"], a: 0, f: "Logic: Adjust premiums/benefits."},
-    {q: "Spread is difference between:", c: ["Bid and Ask", "Coupon/YTM"], a: 0, f: "Logic: Dealer profit margin."},
-    {q: "Defeased bond backed by:", c: ["Treasury escrow", "Default"], a: 0, f: "Logic: Removed from books."},
-    {q: "Unlimited risk position?", c: ["Short Naked Call", "Long Put"], a: 0, f: "Logic: Stock goes to infinity."},
-    {q: "Income Bond suitable for income?", c: ["No", "Yes"], a: 0, f: "Logic: Only pays if company earns."},
-    {q: "Investment Vehicles align capital with:", c: ["Risk/Return goals", "Broker profit"], a: 0, f: "Logic: Tools to solve client puzzles."}
-], [ // 03. STRATEGY & RECOMMENDATIONS (PILLAR 3)
-    {q: "Which risk metric measures 'Total Risk'?", c: ["Standard Deviation", "Beta"], a: 0, f: "Logic: SD covers total volatility."},
-    {q: "According to MPT, an 'Optimal Portfolio' lies on:", c: ["Efficient Frontier", "CML"], a: 0, f: "Logic: Highest return per risk level."},
-    {q: "Joint account with unequal ownership?", c: ["TIC", "JTWROS"], a: 0, f: "Logic: TIC allow split ownership."},
-    {q: "Roth IRA contributions are:", c: ["After-tax", "Pre-tax"], a: 0, f: "Logic: No upfront deduction."},
-    {q: "Defined Benefit plan risk on:", c: ["Employer", "Employee"], a: 0, f: "Logic: Promised specific payout."},
-    {q: "Maintaining target mix by selling winners?", c: ["Rebalancing", "Tactical"], a: 0, f: "Logic: Passive target return."},
-    {q: "Bypass probate but keep control?", c: ["TOD", "TIC"], a: 0, f: "Logic: Direct transfer to heirs."},
-    {q: "Manager outperformed risk-adjusted expectations?", c: ["Positive Alpha", "Negative"], a: 0, f: "Logic: Added value metric."},
-    {q: "RMDs must begin at age:", c: ["73", "59.5"], a: 0, f: "Logic: Current law (SECURE 2.0)."},
-    {q: "Limited strictly to married couples?", c: ["Tenancy by Entirety", "JTWROS"], a: 0, f: "Logic: One legal unit treatment."},
-    {q: "Strategic asset allocation is:", c: ["Passive", "Active"], a: 0, f: "Logic: Buy and hold anchor."},
-    {q: "Metric return relative to SD?", c: ["Sharpe Ratio", "Treynor"], a: 0, f: "Logic: Sharpe uses total risk."},
-    {q: "ERISA fiduciary acts in interest of:", c: ["Participants", "Shareholders"], a: 0, f: "Logic: Duty of loyalty to employees."},
-    {q: "IRA with no income limits for contributions?", c: ["Traditional", "Roth"], a: 0, f: "Logic: No phase-outs for anyone earning."},
-    {q: "Simple Trust MUST distribute:", c: ["Net Income", "Principal"], a: 0, f: "Logic: Empty bucket every year."},
-    {q: "Step-up in Basis occur when heir:", c: ["Inherits", "Gifted"], a: 0, f: "Logic: Value at date of death."},
-    {q: "Project cash flow relative to cost of capital?", c: ["NPV", "P/S"], a: 0, f: "Logic: Primary budgeting tool."},
-    {q: "20-year growth horizon priority:", c: ["Equities", "Fixed Income"], a: 0, f: "Logic: Stock appreciation."},
-    {q: "Limited liability, 100-shareholder cap?", c: ["S-Corp", "C-Corp"], a: 0, f: "Logic: Flow-through tax treatment."},
-    {q: "Non-Qualified plan creditor risk?", c: ["Employee", "IRS"], a: 0, f: "Logic: Unsecured company promise."},
-    {q: "MPT says markets efficient?", c: ["EMH", "CAPM"], a: 0, f: "Logic: Prices reflect all info."},
-    {q: "Determine amount of Life Insurance?", c: ["Capital Needs Analysis", "Allocation"], a: 0, f: "Logic: Survivor gap calculation."},
-    {q: "Broad Market highest correlation?", c: ["Wilshire 5000", "S&P 500"], a: 0, f: "Logic: Total market index."},
-    {q: "Use 529 and Coverdell for same child?", c: ["Yes", "No"], a: 0, f: "Logic: Can use both legally."},
-    {q: "Growth investor's biggest risk?", c: ["Market Risk", "Inflation Risk"], a: 0, f: "Logic: High volatility concerns."},
-    {q: "Tactical focus on short-term timing?", c: ["Yes", "No"], a: 0, f: "Logic: Active management style."},
-    {q: "TIC assets pass to survivor?", c: ["No (Estate)", "Yes"], a: 0, f: "Logic: Heirs get TIC assets."},
-    {q: "Solo 401(k) for self-employed?", c: ["Yes", "No"], a: 0, f: "Logic: Highest owner contributions."},
-    {q: "Wash Sale period?", c: ["30 Days", "90 Days"], a: 0, f: "Logic: Disallowed tax loss period."},
-    {q: "Created by Will, effective at death?", c: ["Testamentary Trust", "Living"], a: 0, f: "Logic: Written into the will."},
-    {q: "Balanced Fund invests in:", c: ["Stocks/Bonds", "Growth only"], a: 0, f: "Logic: Growth and Income mix."},
-    {q: "Eliminate Unsystematic risk via:", c: ["Diversification", "Beta"], a: 0, f: "Logic: Kill specific stock risk."},
-    {q: "UPIA fiduciaries judged on:", c: ["Whole Portfolio", "One trade"], a: 0, f: "Logic: Context of entire mix."},
-    {q: "LLC has unlimited owners?", c: ["Yes", "No"], a: 0, f: "Logic: Flow-through like partnership."},
-    {q: "Negative Alpha means manager:", c: ["Worse than Beta predicted", "Better"], a: 0, f: "Logic: Underperformed risk taken."},
-    {q: "Pre-tax 401(k) taxed now?", c: ["No", "Yes"], a: 0, f: "Logic: Lowers current tax bill."},
-    {q: "Complex Trust can accumulate?", c: ["Yes", "No"], a: 0, f: "Logic: Flexibility on income."},
-    {q: "Fund grandchild college with control?", c: ["529 Plan", "UGMA"], a: 0, f: "Logic: Owner keeps control."},
-    {q: "Beta measure of volatility?", c: ["Yes", "No"], a: 0, f: "Logic: Sensitivity to market."},
-    {q: "SEP IRA contributions by:", c: ["Employer", "Employee"], a: 0, f: "Logic: Boss only funding."},
-    {q: "Per Stirpes assets go to:", c: ["Beneficiary children", "Others"], a: 0, f: "Logic: Family branch branch."},
-    {q: "P/B compares price to:", c: ["Liquidation value", "Earnings"], a: 0, f: "Logic: Asset value comparison."},
-    {q: "Strategic allocator rebalances?", c: ["Yes", "No"], a: 0, f: "Logic: Keeps target mix intact."},
-    {q: "Withdraw 529 for K-12?", c: ["Yes ($10k)", "No"], a: 0, f: "Logic: Private school law change."},
-    {q: "Retiree on pension risk?", c: ["Inflation Risk", "Market"], a: 0, f: "Logic: Fixed checks lose power."},
-    {q: "Step-up in basis at death?", c: ["Yes", "No"], a: 0, f: "Logic: Heirs get fair market value."},
-    {q: "Mandatory 10% penalty early withdrawal?", c: ["Yes (Before 59.5)", "No"], a: 0, f: "Logic: Retirement age rule."},
-    {q: "Portfolio Beta 1.5 sensitivity?", c: ["50% more than market", "Less"], a: 0, f: "Logic: High sensitivity factor."},
-    {q: "Private Muni interest subject to AMT?", c: ["Yes", "No"], a: 0, f: "Logic: Tax preference item."},
-    {q: "Revocable Trust income taxed to:", c: ["Grantor", "Trustee"], a: 0, f: "Logic: Grantor retains control."},
-    {q: "Roth original owner RMDs?", c: ["No", "Yes"], a: 0, f: "Logic: Never forced for Roth."},
-    {q: "Safe Harbor 401(k) avoids:", c: ["Testing", "Fiduciary Duty"], a: 0, f: "Logic: Skips non-discrimination test."},
-    {q: "Bias holding losing stock?", c: ["Loss Aversion", "Overconfidence"], a: 0, f: "Logic: Avoid pain of the loss."},
-    {q: "ILIT removes death benefit from estate?", c: ["Yes", "No"], a: 0, f: "Logic: Trust owns policy outside."},
-    {q: "Medicare Part D covers:", c: ["Drugs", "Hospital"], a: 0, f: "Logic: 'D' is for Drugs."},
-    {q: "QDRO splits assets in:", c: ["Divorce", "Death"], a: 0, f: "Logic: Qualified plan court order."},
-    {q: "Best measure of market risk?", c: ["Beta", "Alpha"], a: 0, f: "Logic: Systematic risk factor."},
-    {q: "Employer deduction for 401(k)?", c: ["Immediate", "Delayed"], a: 0, f: "Logic: Qualified plan benefit."},
-    {q: "Trust for spouse then kids?", c: ["QTIP", "Simple"], a: 0, f: "Logic: Terminable Interest Property."},
-    {q: "Belief in timing market bias?", c: ["Overconfidence", "Anchoring"], a: 0, f: "Logic: Overestimating ability."},
-    {q: "IRR finds specific percent?", c: ["Yes", "No"], a: 0, f: "Logic: Rate where PV equals zero."},
-    {q: "Community property assets?", c: ["50/50", "Earner"], a: 0, f: "Logic: Equal ownership in marriage."},
-    {q: "High Dividend Yield stock?", c: ["Preferred", "Growth"], a: 0, f: "Logic: Designed for income."},
-    {q: "SD measures both risks?", c: ["Yes", "No"], a: 0, f: "Logic: Total risk (Market + specific)."},
-    {q: "403(b) for non-profits?", c: ["Yes", "No"], a: 0, f: "Logic: TSA for teachers/schools."},
-    {q: "1031 exchange for real estate?", c: ["Yes", "No"], a: 0, f: "Logic: Defer capital gains swap."},
-    {q: "Medicare Part A covers:", c: ["Hospital", "Doctors"], a: 0, f: "Logic: 'A'll-in hospital stay."},
-    {q: "Fixate on purchase price bias?", c: ["Anchoring", "Loss Aversion"], a: 0, f: "Logic: Anchor to first number."},
-    {q: "Cannot diversify Market Risk?", c: ["Yes", "No"], a: 0, f: "Logic: Systematic hits everyone."},
-    {q: "SIMPLE IRA max employees?", c: ["100", "500"], a: 0, f: "Logic: 'Small' business plan."},
-    {q: "Trustee loyalty to:", c: ["Beneficiary", "Grantor"], a: 0, f: "Logic: Fiduciary duty focus."},
-    {q: "Indexed Life insurance floor?", c: ["0%", "No floor"], a: 0, f: "Logic: Downside protection."},
-    {q: "Time Horizon ends when:", c: ["Money needed", "Investment made"], a: 0, f: "Logic: Date of the 'harvest'."},
-    {q: "ERISA 404(c) provides:", c: ["Employer Safe Harbor", "High Fees"], a: 0, f: "Logic: Avoid participant liability."},
-    {q: "Strategic involves market timing?", c: ["No", "Yes"], a: 0, f: "Logic: Anchor long-term target."},
-    {q: "Roth always after-tax?", c: ["Yes", "No"], a: 0, f: "Logic: Pay tax now for tax-free later."},
-    {q: "DC plan risk on:", c: ["Employee", "Employer"], a: 0, f: "Logic: Final balance depends on market."},
-    {q: "Growth stock dividend?", c: ["Low", "High"], a: 0, f: "Logic: Reinvest for expansion."},
-    {q: "Alpha beat market risk-adjusted?", c: ["Yes", "No"], a: 0, f: "Logic: Manager added value."},
-    {q: "Inflation risk same as purchasing power?", c: ["Yes", "No"], a: 0, f: "Logic: Falling power of dollar."},
-    {q: "LLC taxed like partnership?", c: ["Yes", "No"], a: 0, f: "Logic: Flow-through protection."},
-    {q: "Value focus on undervalued?", c: ["Yes", "No"], a: 0, f: "Logic: Buying bargains."},
-    {q: "JTWROS bypasses probate?", c: ["Yes", "No"], a: 0, f: "Logic: Passes direct to survivor."},
-    {q: "Emergency savings account?", c: ["Money Market", "S&P 500"], a: 0, f: "Logic: Liquidity and safety."},
-    {q: "Fiduciary prioritize co profits?", c: ["No", "Yes"], a: 0, f: "Logic: Loyalty to participants."},
-    {q: "Total Risk of non-diversified?", c: ["SD", "Beta"], a: 0, f: "Logic: Only SD captures total risk."},
-    {q: "Coverdell used by age 30?", c: ["Yes", "No"], a: 0, f: "Logic: Use or transfer rule."},
-    {q: "Catch-up at age 50?", c: ["Yes", "No"], a: 0, f: "Logic: Extra retirement contributions."},
-    {q: "Tactical overweight sectors?", c: ["Yes", "No"], a: 0, f: "Logic: Capitalize on trends."},
-    {q: "Trust cannot be changed?", c: ["Irrevocable", "Revocable"], a: 0, f: "Logic: Grantor gives up control."},
-    {q: "Balance sheet list revenue?", c: ["No (Income Statement)", "Yes"], a: 0, f: "Logic: Assets and debt only."},
-    {q: "Currency risk in foreign invest?", c: ["Yes", "No"], a: 0, f: "Logic: USD vs foreign fluctuations."},
-    {q: "Cap Rate for Real Estate?", c: ["Yes", "No"], a: 0, f: "Logic: Income vs price metric."},
-    {q: "Small-Cap higher volatility?", c: ["Yes", "No"], a: 0, f: "Logic: Sensitive economic shifts."},
-    {q: "457 Plan for govt workers?", c: ["Yes", "No"], a: 0, f: "Logic: Government version of 401k."},
-    {q: "Interest-only mortgage reduction?", c: ["No", "Yes"], a: 0, f: "Logic: Principal remains same."},
-    {q: "Exact same direction movement?", c: ["Positive Correlation", "Negative"], a: 0, f: "Logic: Move together coefficient."},
-    {q: "Rebalancing triggers tax?", c: ["Yes (Taxable accounts)", "No"], a: 0, f: "Logic: Selling gain assets."},
-    {q: "Section 3 goal is Suitability?", c: ["Yes", "No"], a: 0, f: "Logic: MISSION COMPLETED."}
-], [ // 04. REGULATIONS & GUIDELINES (PILLAR 4)
-    {q: "USA 'Person' includes:", c: ["Corporation", "Deceased"], a: 0, f: "Logic: Entities capable of contract."},
-    {q: "BD register if office in state?", c: ["Yes (Immediate)", "No"], a: 0, f: "Logic: Place of Business trigger."},
-    {q: "IA retail client de minimis?", c: ["5 or fewer", "10"], a: 0, f: "Logic: Home-office exemption limit."},
-    {q: "IAR of Federal firm registers with:", c: ["State", "SEC"], a: 0, f: "Logic: Individual is always state license."},
-    {q: "Consent to Service is:", c: ["Permanent", "Annual"], a: 0, f: "Logic: Filed once for legal service."},
-    {q: "State registration expires:", c: ["Dec 31st", "Anniversary"], a: 0, f: "Logic: Year-end uniform license."},
-    {q: "Felony look-back period?", c: ["10 Years", "5"], a: 0, f: "Logic: Statutory disqualification rule."},
-    {q: "BD Agent register for exempt stock?", c: ["Yes", "No"], a: 0, f: "Logic: Representing BD requires license."},
-    {q: "Firm >$110M AUM registers with:", c: ["SEC", "State"], a: 0, f: "Logic: Federal mandatory threshold."},
-    {q: "Registration effective within:", c: ["30 Days", "15"], a: 0, f: "Logic: Noon on the 30th day rule."},
-    {q: "Agent leaves BD, who notifies?", c: ["Both BD and Agent", "Only Agent"], a: 0, f: "Logic: Dual notification rule."},
-    {q: "Admin issue Cease/Desist without hearing?", c: ["Yes (Summarily)", "No"], a: 0, f: "Logic: Immediate protection power."},
-    {q: "Is Fixed Annuity a security?", c: ["No", "Yes"], a: 0, f: "Logic: Insurance product, no risk."},
-    {q: "Unsolicited trade is exempt:", c: ["Transaction", "Security"], a: 0, f: "Logic: Method of trade exemption."},
-    {q: "IAR charge performance fee to retail?", c: ["No", "Yes"], a: 0, f: "Logic: Qualified client rule applies."},
-    {q: "IA custody inadvertent return time?", c: ["3 Business Days", "24 hrs"], a: 0, f: "Logic: 72-hour window rule."},
-    {q: "Form ADV known as Brochure?", c: ["Part 2A", "Part 1"], a: 0, f: "Logic: Plain-English client doc."},
-    {q: "Agent share in client profits?", c: ["Yes (Permission/Proportional)", "No"], a: 0, f: "Logic: BD agent exception rule."},
-    {q: "Power to cross state lines for records?", c: ["Subpoena Power", "Injunction"], a: 0, f: "Logic: Investigative authority."},
-    {q: "Is Front-Running ethical?", c: ["No", "Yes"], a: 0, f: "Logic: Violation of loyalty."},
-    {q: "IA Books and Records period?", c: ["5 Years", "3"], a: 0, f: "Logic: 2 years in main office."},
-    {q: "NYSE-listed stock requirement?", c: ["Notice File", "Register"], a: 0, f: "Logic: Federal Covered treatment."},
-    {q: "Judge fiduciary by:", c: ["Entire Portfolio", "Trade"], a: 0, f: "Logic: Prudent Investor Act rule."},
-    {q: "Custody Net Worth required?", c: ["$35,000", "$10,000"], a: 0, f: "Logic: Touch the money threshold."},
-    {q: "Admin sentence IAR to jail?", c: ["No (Only Court)", "Yes"], a: 0, f: "Logic: Regulator vs Judiciary power."},
-    {q: "Statute of Limitations civil?", c: ["3/2 Rule", "5 Years"], a: 0, f: "Logic: 3 years event/2 discovery."},
-    {q: "Private Placement retail limit?", c: ["10 (12 months)", "35"], a: 0, f: "Logic: USA state-specific rule."},
-    {q: "Pre-approval by principal communication?", c: ["Retail (>25)", "Correspondence"], a: 0, f: "Logic: SIGNATURE required upfront."},
-    {q: "Soft dollars pay for rent?", c: ["No", "Yes"], a: 0, f: "Logic: Must benefit client (research)."},
-    {q: "IAR leave Federal firm, notify:", c: ["IAR", "Firm"], a: 0, f: "Logic: Federal firm not state reg."},
-    {q: "ABC test for IA: Business, Advice, and:", c: ["Compensation", "Authority"], a: 0, f: "Logic: Charge for advice rule."},
-    {q: "Testimonials permitted?", c: ["Yes (Disclosure)", "No"], a: 0, f: "Logic: Modernized NASAA rules."},
-    {q: "Options document delivery?", c: ["ODD (Before approval)", "Prospectus"], a: 0, f: "Logic: Derivative risk disclosure."},
-    {q: "Gift of Assessable stock is sale?", c: ["Yes", "No"], a: 0, f: "Logic: Carries future liability."},
-    {q: "Principal trade charge?", c: ["Markup/Markdown", "Commission"], a: 0, f: "Logic: Dealer role compensation."},
-    {q: "POA survives mental incompetence?", c: ["Only Durable", "Standard"], a: 0, f: "Logic: Standard dies with client mind."},
-    {q: "Privacy of non-public info rule?", c: ["Reg S-P", "Reg T"], a: 0, f: "Logic: Opt-out requirement."},
-    {q: "Borrow from brother client?", c: ["No (Unless institution)", "Yes"], a: 0, f: "Logic: Prohibited family borrowing."},
-    {q: "Annual updating amendment time?", c: ["90 Days (Fiscal Year)", "120"], a: 0, f: "Logic: Form ADV maintenance."},
-    {q: "IPO exempt transaction?", c: ["No", "Yes"], a: 0, f: "Logic: Requires full registration."},
-    {q: "Created by 1934 Act?", c: ["SEC", "FINRA"], a: 0, f: "Logic: Police the secondary market."},
-    {q: "IA Net Worth fall notification?", c: ["Next Business Day", "Immediately"], a: 0, f: "Logic: Fiscal emergency report."},
-    {q: "Admin investigate Federal IA?", c: ["Yes (Anti-fraud)", "No"], a: 0, f: "Logic: Jurisdiction over all fraud."},
-    {q: "Canadian client in Florida?", c: ["Snowbird Exemption", "De Minimis"], a: 0, f: "Logic: Temporary cross-border rule."},
-    {q: "BD charge separate fee for advice IA?", c: ["Yes", "No"], a: 0, f: "Logic: Lose exclusion via charge."},
-    {q: "LATE exclusion E stands for:", c: ["Engineers", "Economists"], a: 0, f: "Logic: Professional advice incidental."},
-    {q: "Guaranteed stock committed:", c: ["Fraud", "Churning"], a: 0, f: "Logic: Never guarantee market gain."},
-    {q: "Offer seen on national TV in state?", c: ["No", "Yes"], a: 0, f: "Logic: Only originating state offer."},
-    {q: "Agency Cross Trade consent?", c: ["Written", "Verbal"], a: 0, f: "Logic: Prior client approval required."},
-    {q: "The law is the shield mission goal?", c: ["Yes", "No"], a: 0, f: "Logic: MISSION ACCOMPLISHED."}
-]
-];
-
-const simLib = [
-[ // PILLAR 1: ECONOMICS & BUSINESS INFORMATION (SIMULATION MODE)
-    {
-        q: "An analyst identifies a stock with a very low P/B ratio and a high Dividend Yield. This stock would most likely be categorized as:",
-        c: ["Value", "Growth", "Speculative", "High Beta"],
-        a: 0,
-        f: "Logic: Value investors look for 'bargains' (Low P/B) and are often rewarded with higher income (High Yield) while waiting for the price to rise."
-    },      
-    {
-        q: "A stock is trading with a Price-to-Earnings (P/E) ratio of 45 and a Price-to-Book (P/B) ratio of 8.0. Which of the following is the most likely characteristic of this investment?",
-        c: [
-            "The company reinvests most of its earnings into expansion.",
-            "The stock is considered a 'Value' investment.",
-            "The stock provides a high dividend yield for income-seeking clients.",
-            "The market price is very close to the company's liquidation value."
-        ],
-        a: 0,
-        f: "Logic: High P/E and High P/B are signatures of Growth stocks. Growth stocks reinvest earnings rather than paying dividends (High Yield)."
-    },
-    {
-        q: "An analyst is comparing two companies in the same industry. Company A has a P/E of 25 and a P/S of 1.5. Company B has a P/E of 12 and a P/S of 4.5. Which of the following is the MOST accurate conclusion regarding Company B?",
-        c: [
-            "Company B has higher profit margins than Company A",
-            "Company B is currently undervalued relative to its earnings",
-            "Company B is a 'Growth' stock while Company A is a 'Value' stock",
-            "Company B is generating less revenue per dollar of share price than Company A"
-        ],
-        a: 0,
-        f: "Logic: Application. A low P/E (12) suggests a company is 'cheap' relative to profit, but a high P/S (4.5) suggests it is 'expensive' relative to sales. The only way to have high profit relative to sales is to have high profit margins."
-    },
-    {
-        q: "In a period of 'Stagflation,' which of the following economic conditions would an adviser expect to observe simultaneously?",
-        c: [
-            "Rising inflation and rising unemployment",
-            "Rising inflation and decreasing unemployment",
-            "Falling prices and rising GDP growth",
-            "Increasing interest rates and decreasing CPI"
-        ],
-        a: 0,
-        f: "Logic: Definition Application. Stagflation is the 'worst of both worlds': Stagnant economic growth (high unemployment) combined with high Inflation."
-    },
-    {
-        q: "A company's 'Quick Ratio' (Acid Test) has decreased over the last year, while its 'Current Ratio' has remained stable. What is the MOST likely cause of this divergence?",
-        c: [
-            "The company has significantly increased its inventory levels",
-            "The company has paid off its short-term accounts payable",
-            "The company has issued new long-term debentures",
-            "The company's accounts receivable turnover has slowed down"
-        ],
-        a: 0,
-        f: "Logic: Formula Application. Current Ratio includes Inventory; Quick Ratio excludes it. If the Quick Ratio falls but the Current Ratio stays the same, the 'gap' (Inventory) must have grown."
-    },
-    {
-        q: "Which of the following would be the MOST appropriate valuation tool for a project that has uneven cash flows over a 10-year period and requires an initial capital outlay?",
-        c: [
-            "Net Present Value (NPV)",
-            "Dividend Discount Model (DDM)",
-            "Price-to-Book Ratio",
-            "Rule of 72"
-        ],
-        a: 0,
-        f: "Logic: Tool Selection. NPV is specifically designed to evaluate the present value of future uneven cash flows minus the initial cost to determine if a project is worth the investment."
-    },
-    {
-        q: "If the U.S. Dollar strengthens significantly against the Euro, what is the most likely impact on the U.S. economy?",
-        c: [
-            "U.S. exports become more expensive for European consumers, potentially increasing the trade deficit",
-            "U.S. exports become cheaper, leading to an increase in domestic manufacturing",
-            "Foreign investment in U.S. Treasuries will decrease due to lower purchasing power",
-            "Domestic inflation will rise as the cost of imported goods increases"
-        ],
-        a: 0,
-        f: "Logic: Currency Application. A 'Strong Dollar' makes our goods more expensive for foreigners to buy (bad for exports) but makes foreign goods cheaper for us to buy (good for imports/lowering inflation)."
-    },
-    {
-        q: "According to the Discounted Cash Flow (DCF) method, which of the following changes would result in the HIGHEST increase in a security's intrinsic value?",
-        c: [
-            "A decrease in the discount rate and an increase in future cash flows",
-            "An increase in the discount rate and an increase in future cash flows",
-            "A decrease in the discount rate and a decrease in future cash flows",
-            "The discount rate and cash flows both remaining stagnant while Beta increases"
-        ],
-        a: 0,
-        f: "Logic: Formula Directionality. Value goes UP when the numerator (cash flows) goes UP and the denominator (discount rate) goes DOWN."
-    },
-    {
-        q: "An investor is reviewing a company's Annual Report and notices a 'Qualified Opinion' from the independent auditor. This should be interpreted by the IAR as:",
-        c: [
-            "The auditor has found specific areas of concern or departures from GAAP, though the overall report is fair",
-            "The auditor has completely verified all financial statements as 100% accurate",
-            "The company has been disqualified from listing on national exchanges",
-            "The auditor was unable to complete the audit due to a lack of access to records"
-        ],
-        a: 0,
-        f: "Logic: Audit Nuance. An 'Unqualified' opinion is the best (clean). A 'Qualified' opinion means 'Everything is okay, EXCEPT for these specific items.'"
-    },
-    {
-        q: "A 'Large Cap' growth company is most likely to have which of the following financial characteristics?",
-        c: [
-            "A high P/E ratio and a low dividend payout ratio",
-            "A low P/E ratio and a high dividend payout ratio",
-            "A high Price-to-Book ratio and a high dividend yield",
-            "A low Debt-to-Equity ratio and a high Current Ratio"
-        ],
-        a: 0,
-        f: "Logic: Characteristics. Growth companies reinvest their earnings to expand (low/no dividend) and investors pay a premium for that future growth (high P/E)."
-    },
-    {
-        q: "A company's P/E ratio is high compared to its industry, but its Dividend Yield is also significantly higher than average. What does this MOST likely indicate about the company?",
-        c: [
-            "The company is likely a mature 'Utility' or 'Value' stock with slowing growth but strong cash flows",
-            "The company is a 'High-Growth' startup reinvesting all profits into R&D",
-            "The stock is fundamentally undervalued and represents a 'Strong Buy' for aggressive investors",
-            "The company is currently in a state of 'Liquidation' and returning all capital to shareholders"
-        ],
-        a: 0,
-        f: "Logic: Application. A high P/E usually means growth, but a high dividend yield usually means maturity. In utilities, investors pay a premium for steady dividends, leading to this 'all-plausible' conflict."
-    },
-    {
-        q: "If the Consumer Price Index (CPI) is rising at 4% annually while the nominal return on a 10-year Treasury note is 3.5%, what is the 'Real Rate of Return' for an investor in that note?",
-        c: [
-            "-0.5% (Negative)",
-            "0.5% (Positive)",
-            "7.5% (Total)",
-            "3.5% (Nominal)"
-        ],
-        a: 0,
-        f: "Logic: Calculation Application. Real Return = Nominal Return - Inflation (3.5% - 4% = -0.5%). This is the 'Purchasing Power Risk' trap."
-    },
-    {
-        q: "A corporation decides to issue a 2-for-1 stock split. Which of the following balance sheet items will experience a CHANGE as a direct result of this action?",
-        c: [
-            "The par value of the common stock",
-            "The total shareholders' equity",
-            "The company's working capital",
-            "The retained earnings balance"
-        ],
-        a: 0,
-        f: "Logic: Application. A stock split is a 'paper' change. Equity, working capital, and retained earnings stay the same; only the number of shares and the par value (cut in half) change."
-    },
-    {
-        q: "Which of the following scenarios would lead to an 'Inverted Yield Curve'?",
-        c: [
-            "The Federal Reserve aggressively raises short-term rates to combat inflation while investors seek safety in long-term bonds",
-            "The government decreases spending, causing long-term interest rates to rise faster than short-term rates",
-            "The economy enters a period of rapid expansion with high demand for short-term commercial loans",
-            "The U.S. Dollar weakens, causing foreign investors to dump long-term Treasuries"
-        ],
-        a: 0,
-        f: "Logic: Macroeconomic Application. Inversion happens when the Fed pushes the 'front end' (short-term) up, but the 'back end' (long-term) stays low due to recession fears."
-    },
-    {
-        q: "An investor is using the 'Rule of 72' to evaluate an investment. If the investment is expected to double in 6 years, what is the required annual rate of return?",
-        c: [
-            "12%",
-            "6%",
-            "7.2%",
-            "10%"
-        ],
-        a: 0,
-        f: "Logic: Math Application. 72 / 6 = 12%. This is a foundational 'math' question often found in Section 1."
-    },
-    {
-        q: "A company's 'Total Asset Turnover' ratio has increased, while its 'Net Profit Margin' has decreased. If 'Total Assets' remained constant, what is the MOST likely conclusion?",
-        c: [
-            "The company is selling more products but making less profit on each sale",
-            "The company is selling fewer products but increasing its prices",
-            "The company has paid off all of its long-term debt",
-            "The company's P/E ratio will automatically increase"
-        ],
-        a: 0,
-        f: "Logic: Interpretation. Asset Turnover = Sales / Assets. If it goes up, Sales went up. If Profit Margin is down, they are less efficient despite higher volume."
-    },
-    {
-        q: "Which of the following would be considered a 'Leading' economic indicator by the Conference Board?",
-        c: [
-            "The Index of Consumer Expectations",
-            "The Average Prime Rate charged by banks",
-            "Commercial and industrial loans outstanding",
-            "The Consumer Price Index for services"
-        ],
-        a: 0,
-        f: "Logic: Category Application. Consumer expectations are forward-looking (Leading). Prime rate and loans are Lagging."
-    },
-    {
-        q: "An IAR is looking at a company's Cash Flow Statement. Which section would contain the information regarding the payment of cash dividends to shareholders?",
-        c: [
-            "Financing Activities",
-            "Operating Activities",
-            "Investing Activities",
-            "Equity Activities"
-        ],
-        a: 0,
-        f: "Logic: Financial Statement Application. Dividends involve the 'financing' of the company (dealing with shareholders/debt holders), so they go under Financing Activities."
-    },
-    {
-        q: "In a 'Deflationary' environment, which of the following is the MOST significant risk to a borrower with a fixed-rate loan?",
-        c: [
-            "The 'Real' burden of the debt increases as the value of money rises",
-            "The interest rate on the loan will automatically reset to a higher level",
-            "The borrower will be unable to find new lenders for future projects",
-            "The market value of the collateral will increase faster than the debt"
-        ],
-        a: 0,
-        f: "Logic: Economic Risk. In deflation, money is worth more tomorrow. Paying back a fixed amount of 'expensive' money is harder for the borrower."
-    },
-    {
-        q: "An analyst is calculating the 'Quick Ratio' for a retail company. The company has $100k in Cash, $50k in Accounts Receivable, $200k in Inventory, and $100k in Current Liabilities. What is the Quick Ratio?",
-        c: [
-            "1.5 to 1",
-            "3.5 to 1",
-            "1.0 to 1",
-            "2.5 to 1"
-        ],
-        a: 0,
-        f: "Logic: Math Application. Quick Ratio = (Cash + AR) / Current Liabilities. ($100k + $50k) / $100k = 1.5. Inventory is EXCLUDED."
-    },
-    {
-        q: "If the 'Spread' between the 2-year Treasury and the 10-year Treasury narrows from 150 basis points to 10 basis points, the yield curve is said to be:",
-        c: ["Flattening", "Steepening", "Inverting", "Normalizing"],
-        a: 0,
-        f: "Logic: Curve Observation. When the gap (spread) between short and long rates gets smaller, the curve is flattening."
-    },
-    {
-        q: "Which of the following yield curves is typically considered a 'Leading Indicator' of an impending economic expansion?",
-        c: ["A steeply upward-sloping curve", "A flat curve", "An inverted curve", "A humped curve"],
-        a: 0,
-        f: "Logic: Cycle Application. A steep curve suggests investors expect higher growth and inflation in the future, signaling expansion."
-    },
-    {
-        q: "If interest rates are expected to fall, which bond would experience the LARGEST percentage increase in price?",
-        c: ["A 30-year Zero-Coupon Bond", "A 30-year Bond with a 10% coupon", "A 5-year Zero-Coupon Bond", "A 1-year Treasury Bill"],
-        a: 0,
-        f: "Logic: Duration Application. Longest maturity + Lowest coupon (Zero) = Highest Duration (Sensitivity to rates)."
-    },
-    {
-        q: "A client is concerned about 'Reinvestment Risk.' In which interest rate environment is this risk the HIGHEST?",
-        c: ["Falling interest rates", "Rising interest rates", "Stable interest rates", "Inverted interest rates"],
-        a: 0,
-        f: "Logic: Risk Application. If rates fall, the cash you get from coupons must be reinvested into new bonds that pay lower yields."
-    },
-    {
-        q: "The 'Real' interest rate is calculated by:",
-        c: ["Subtracting the inflation rate from the nominal interest rate", "Adding the inflation rate to the nominal interest rate", "Dividing the nominal rate by the Consumer Price Index", "Multiplying the risk-free rate by the Beta of the market"],
-        a: 0,
-        f: "Logic: Math Application. Real = Nominal - Inflation."
-    },
-    {
-        q: "Which of the following would be an expected result of the Federal Reserve implementing 'Tight' monetary policy?",
-        c: ["Short-term interest rates increase and the money supply contracts", "Short-term interest rates decrease and the money supply expands", "Long-term bond prices increase as inflation expectations rise", "The US Dollar weakens against foreign currencies"],
-        a: 0,
-        f: "Logic: Fed Policy Application. Tightening (Hawkish) means higher rates and less cash in the system."
-    },
-    {
-        q: "An investor buys a bond with a 5% coupon at par. One year later, similar bonds are yielding 7%. If the investor sells the bond now, they will experience:",
-        c: ["A capital loss", "A capital gain", "No change in principal value", "An increase in their yield-to-maturity"],
-        a: 0,
-        f: "Logic: Inverse Relationship. Rates went UP (5 to 7), so Bond Price went DOWN (Capital Loss)."
-    },
-    {
-        q: "What does a 'Humped' yield curve typically indicate?",
-        c: ["A period of transition where interest rate policy is uncertain", "A guaranteed immediate recession", "A period of high long-term inflation", "A period of rapid economic growth"],
-        a: 0,
-        f: "Logic: Curve Nuance. A humped curve (where mid-term rates are highest) usually happens when the market is transitioning between normal and inverted states."
-    },
-    {
-        q: "The 'Discount Rate' charged by the Federal Reserve is the rate at which:",
-        c: ["Member banks can borrow directly from the Federal Reserve", "Banks charge each other for overnight loans of reserves", "The US Treasury sells new debt to the public", "Investment advisers discount future cash flows for DCF"],
-        a: 0,
-        f: "Logic: Definition Trap. Don't confuse the Fed's 'Discount Rate' with the 'Discount Rate' used in DCF math."
-    },
-    {
-        q: "In an environment with an Inverted Yield Curve, a bank's 'Net Interest Margin' (profitability) is most likely to:",
-        c: ["Decrease, because banks 'borrow short and lend long'", "Increase, because short-term loan rates are higher", "Remain stable because the Fed controls bank spreads", "Increase, because depositors will seek long-term savings"],
-        a: 0,
-        f: "Logic: Business Application. Banks pay short-term rates to depositors and collect long-term rates from borrowers. If short-term rates are higher (Inversion), their profit disappears."
-    },
-    {
-        q: "In a 'Normal Distribution' (Bell Curve), what percentage of data points fall within ONE standard deviation of the mean?",
-        c: ["68%", "95%", "99%", "50%"],
-        a: 0,
-        f: "Logic: Stats Rule. 1 SD = 68%. 2 SD = 95%. 3 SD = 99%."
-    },
-    {
-        q: "If a set of annual returns for a fund are 10%, 10%, 15%, 20%, and -5%, what is the 'Mode' of this data set?",
-        c: ["10%", "15%", "10% (Average)", "20%"],
-        a: 0,
-        f: "Logic: Definition. Mode = Most frequent number (10% appears twice)."
-    },
-    {
-        q: "The 'Median' return for a data set is defined as:",
-        c: ["The middle value when all returns are ranked from lowest to highest", "The sum of all returns divided by the number of years", "The difference between the highest and lowest return", "The return that occurred most frequently"],
-        a: 0,
-        f: "Logic: Definition. Median = Middle."
-    },
-    {
-        q: "Which of the following measures 'Total Risk' or the dispersion of returns around the mean?",
-        c: ["Standard Deviation", "Beta", "Mean", "R-Squared"],
-        a: 0,
-        f: "Logic: Definition. Standard Deviation is the 'Risk' metric for total volatility."
-    },
-    {
-        q: "If an investment has a Mean return of 10% and a Standard Deviation of 5%, what is the range of returns you would expect to see 95% of the time?",
-        c: ["0% to 20%", "5% to 15%", "-5% to 25%", "10% to 15%"],
-        a: 0,
-        f: "Logic: Stats Application. 95% = 2 Standard Deviations. 10% +/- (2 * 5%) = 0% to 20%."
-    },
-    {
-        q: "The 'Geometric Mean' is often preferred over the 'Arithmetic Mean' for measuring investment returns because it:",
-        c: ["Accounts for the effects of compounding over time", "Is easier to calculate with a basic calculator", "Ignores years with negative returns", "Always results in a higher number than the arithmetic mean"],
-        a: 0,
-        f: "Logic: Calculation Nuance. Geometric = Time-weighted/Compounded. Arithmetic = Simple average."
-    },
-    {
-        q: "A 'Positive Correlation' (Coefficient of +1.0) between two stocks means that:",
-        c: ["The two stocks move in the exact same direction at the same time", "One stock moves up when the other stock moves down", "The two stocks have no statistical relationship", "Both stocks are guaranteed to provide a positive return"],
-        a: 0,
-        f: "Logic: Definition. +1 = Mirror movement."
-    },
-    {
-        q: "An investor seeking 'Diversification' should look for assets with a correlation coefficient that is:",
-        c: ["Low or Negative (closer to -1.0)", "High and Positive (closer to +1.0)", "Exactly 0.0", "Always equal to the market's Beta"],
-        a: 0,
-        f: "Logic: Portfolio Application. You want things that DON'T move together so when one is down, the other is up."
-    },
-    {
-        q: "The 'Range' of a data set is calculated by:",
-        c: ["Subtracting the lowest value from the highest value", "Averaging all data points", "Finding the most frequent data point", "Calculating the square root of the variance"],
-        a: 0,
-        f: "Logic: Definition. Range = High - Low."
-    },
-    {
-        q: "Which of the following describes a 'Skewed' distribution?",
-        c: ["A distribution where the mean, median, and mode are not equal", "A perfectly symmetrical bell curve", "A distribution where all data points are the same", "A distribution with a standard deviation of zero"],
-        a: 0,
-        f: "Logic: Stats Definition. If it's not a perfect bell curve, it's skewed."
-    },
-    {
-        q: "If a stock has a 'Beta' of 0.0, this means the stock's returns are:",
-        c: ["Uncorrelated with the overall market", "Guaranteed to be 0%", "Risk-free (like a T-Bill)", "Always moving in the opposite direction of the market"],
-        a: 0,
-        f: "Logic: Beta Application. 0 Beta means it doesn't care what the S&P 500 is doing."
-    },
-    {
-        q: "R-Squared measures:",
-        c: ["The percentage of a fund's movements that can be explained by movements in its benchmark index", "The total return of a fund minus the risk-free rate", "The probability that a company will go bankrupt within one year", "The dividend yield of a stock relative to its industry peers"],
-        a: 0,
-        f: "Logic: Definition. R-Squared shows how 'correlated' the fund is to the index."
-    },
-    {
-        q: "If a fund has an R-Squared of 95%, an IAR should use which metric to evaluate its risk?",
-        c: ["Beta", "Standard Deviation", "Alpha", "Range"],
-        a: 0,
-        f: "Logic: Tool Selection. High R-Squared means it follows the index, so Beta is a reliable measure of risk."
-    },
-    {
-        q: "Which of the following is the square root of the variance?",
-        c: ["Standard Deviation", "Mean", "Median", "Correlation Coefficient"],
-        a: 0,
-        f: "Logic: Definition. Variance = SD Squared. Therefore, SD = Square Root of Variance."
-    },
-    {
-        q: "An 'Outlier' in a data set will have the LARGEST impact on which of the following?",
-        c: ["The Mean", "The Median", "The Mode", "The Standard Deviation (relative to the Median)"],
-        a: 0,
-        f: "Logic: Stats Application. One huge number (like a 1,000% return) will pull the 'Average' (Mean) up significantly, even if the 'Middle' (Median) stays the same."
-    },
-    {
-        q: "A 'Probability Distribution' shows:",
-        c: ["All possible outcomes and the likelihood of each occurring", "The historical returns of the S&P 500 over 50 years", "The current interest rates offered by major commercial banks", "The net worth requirements for all accredited investors"],
-        a: 0,
-        f: "Logic: Definition. Probability = Chance of X happening."
-    },
-    {
-        q: "If the 'Expected Return' of a portfolio is 10%, this represents:",
-        c: ["The weighted average of the probable returns of the individual assets", "The minimum return guaranteed by the IAR", "The return achieved in the previous calendar year", "The risk-free rate plus the total standard deviation"],
-        a: 0,
-        f: "Logic: Definition. Expected return is a 'forecast' based on weights."
-    },
-    {
-        q: "Which of the following is a 'Univariate' analysis?",
-        c: ["Analyzing the returns of a single stock over time", "Analyzing the relationship between interest rates and bond prices", "Analyzing the correlation between gold and the US Dollar", "Analyzing the impact of the Fed's move on the S&P 500"],
-        a: 0,
-        f: "Logic: Definition. Uni = One. One variable."
-    },
-    {
-        q: "The 'Risk-Adjusted Return' is most commonly measured by which of the following ratios?",
-        c: ["Sharpe Ratio", "P/E Ratio", "Current Ratio", "Debt-to-Equity Ratio"],
-        a: 0,
-        f: "Logic: Definition. Sharpe = Return per unit of risk."
-    },
-    {
-        q: "In a perfectly symmetrical 'Normal Distribution,' which of the following is TRUE?",
-        c: ["The Mean, Median, and Mode are all equal", "The Standard Deviation is zero", "The Beta is exactly 1.0", "The Range is infinite"],
-        a: 0,
-        f: "Logic: Stats Rule. On a perfect bell curve, the average, the middle, and the most frequent are all the same point."
-    }
-],
-[ // PILLAR 2: INVESTMENT VEHICLE CHARACTERISTICS (SIMULATION MODE)
-    {
-        q: "A US-based investor is seeking diversification and buys an ADR representing a German automotive company. The German stock price rises by 10% in Euros, but the Euro weakens by 12% against the US Dollar during the same period. What is the impact on the investor's ADR value?",
-        c: [
-            "The ADR value will decrease in US Dollar terms",
-            "The ADR value will increase because the German stock rose",
-            "The ADR value will remain unchanged because it trades on a US exchange",
-            "The ADR value will increase by exactly 2% (the net difference)"
-        ],
-        a: 0,
-        f: "Logic: Application. Currency Risk. Even though the stock rose 10%, the 12% drop in the currency's value more than offset the gain, resulting in a net loss for the US investor."
-    },
-    {
-        q: "An investor owns a 6% convertible bond with a conversion price of $40. The underlying common stock is currently trading at $50 per share. If the bond is currently trading at its 'parity price,' what is its market value?",
-        c: [
-            "$1,250",
-            "$1,000",
-            "$1,200",
-            "$800"
-        ],
-        a: 0,
-        f: "Logic: Math Application. Conversion Ratio = $1,000 / $40 = 25 shares. Parity Price = 25 shares * $50 = $1,250."
-    },
-    {
-        q: "Which of the following pooled investment vehicles is characterized by a fixed portfolio of bonds that is not actively managed and eventually liquidates on a pre-set date?",
-        c: [
-            "Unit Investment Trust (UIT)",
-            "Open-End Mutual Fund",
-            "Closed-End Management Company",
-            "Exchange Traded Fund (ETF)"
-        ],
-        a: 0,
-        f: "Logic: Characteristic Nuance. UITs are 'supervised' but not 'managed.' They have a fixed portfolio and a defined 'termination date' where they pay out the remaining principal."
-    },
-    {
-        q: "An investor is in a high federal tax bracket (37%) and lives in a state with no income tax. Which security would likely provide the HIGHEST after-tax return?",
-        c: [
-            "A Municipal Bond issued within their home state",
-            "A Corporate Bond yielding 2% more than the Municipal Bond",
-            "A US Treasury Bond yielding 1% more than the Municipal Bond",
-            "A Preferred Stock with a high dividend yield"
-        ],
-        a: 0,
-        f: "Logic: Application. For high-bracket investors, the tax-free nature of Municipal Bonds usually beats the higher 'nominal' yields of taxable corporate or Treasury bonds."
-    },
-    {
-        q: "A client wants an investment that provides exposure to the real estate market, trades on an exchange like a stock, and passes through at least 90% of its taxable income to shareholders. Which vehicle fits this description?",
-        c: [
-            "REIT (Real Estate Investment Trust)",
-            "DPP (Direct Participation Program)",
-            "RELIP (Real Estate Limited Partnership)",
-            "Variable Annuity with a Real Estate sub-account"
-        ],
-        a: 0,
-        f: "Logic: Characteristics. REITs must distribute 90% of income to avoid corporate taxation and they are liquid (trade on exchanges)."
-    },
-    {
-        q: "An investor buys a 'Callable' bond at a premium. Which of the following yields will be the LOWEST?",
-        c: [
-            "Yield to Call (YTC)",
-            "Yield to Maturity (YTM)",
-            "Current Yield",
-            "Nominal Yield (Coupon)"
-        ],
-        a: 0,
-        f: "Logic: Yield application. For a bond at a premium, the further you 'pull' the price toward par, the more it hurts the yield. Since 'Call' happens sooner than 'Maturity,' YTC is the lowest/worst."
-    },
-    {
-        q: "Which type of life insurance policy allows the policyholder to skip premium payments, adjust the death benefit, and direct cash value into a 'Separate Account' containing equities?",
-        c: [
-            "Variable Universal Life (VUL)",
-            "Variable Life",
-            "Universal Life",
-            "Whole Life"
-        ],
-        a: 0,
-        f: "Logic: Complex Product Application. 'Variable' = Separate Account (Equities). 'Universal' = Flexible premiums/death benefit. Only VUL does both."
-    },
-    {
-        q: "A 'Closed-End' Management Company differs from an 'Open-End' Mutual Fund because the Closed-End fund:",
-        c: [
-            "Can trade at a price above or below its Net Asset Value (NAV)",
-            "Is required to redeem shares within 7 days of a request",
-            "Continually issues new shares to any investor who wants them",
-            "Does not charge a 12b-1 fee"
-        ],
-        a: 0,
-        f: "Logic: Characteristic. Closed-End funds trade on supply/demand on an exchange, so price is independent of NAV. Open-End funds MUST trade at NAV (plus sales charges)."
-    },
-    {
-        q: "An investor sells a 'Covered Call' on a stock they already own. What is the primary objective of this strategy?",
-        c: [
-            "To generate income from the premium received",
-            "To protect against a massive drop in the stock price",
-            "To speculate on a significant upward movement in the stock",
-            "To eliminate the need for a margin account"
-        ],
-        a: 0,
-        f: "Logic: Options Application. Covered calls are for 'Income' (collecting the premium). They only provide very limited protection (the amount of the premium)."
-    },
-    {
-        q: "Under the Investment Company Act of 1940, what is the maximum percentage of a mutual fund's Board of Directors that can be 'interested persons' (insiders)?",
-        c: [
-            "60%",
-            "40%",
-            "50%",
-            "75%"
-        ],
-        a: 0,
-        f: "Logic: Regulatory Nuance. At least 40% of the board MUST be independent (non-interested). Therefore, a maximum of 60% can be insiders."
-    },
-    {
-        q: "A bond is trading at a discount. Which of the following represents the correct order of yields from LOWEST to HIGHEST?",
-        c: ["Nominal Yield, Current Yield, Yield to Maturity, Yield to Call", "Yield to Call, Yield to Maturity, Current Yield, Nominal Yield", "Current Yield, Nominal Yield, Yield to Maturity, Yield to Call", "Nominal Yield, Yield to Maturity, Current Yield, Yield to Call"],
-        a: 0,
-        f: "Logic: Yield See-Saw. For a discount bond, the further you go toward the 'end' (Maturity or Call), the more the discount is 'earned,' which increases the yield. Nominal is always fixed on the certificate."
-    },
-    {
-        q: "If an IAR expects interest rates to rise significantly over the next 24 months, which bond strategy would be MOST appropriate for a client seeking to minimize principal volatility?",
-        c: ["Investing in short-term bonds with high coupons", "Investing in long-term zero-coupon bonds", "Investing in long-term bonds with low coupons", "Investing in a bond ladder with maturities exceeding 20 years"],
-        a: 0,
-        f: "Logic: Duration Application. Short-term + High Coupon = Lowest Duration. This combination is the least sensitive to interest rate hikes."
-    },
-    {
-        q: "An investor holds a 'Step-Up' bond. During a period of rising interest rates, how does this feature benefit the investor compared to a standard fixed-rate bond?",
-        c: ["The coupon rate will increase at pre-set intervals, partially offsetting the loss in market value", "The bond will automatically be converted into common stock to capture equity growth", "The investor can force the issuer to redeem the bond at par value at any time", "The bond's duration becomes zero, eliminating interest rate risk"],
-        a: 0,
-        f: "Logic: Feature Application. Step-up bonds have coupons that increase over time. This makes them more resilient in rising rate environments than a flat-coupon bond."
-    },
-    {
-        q: "Which of the following describes the 'Convexity' of a bond?",
-        c: ["The measure of the change in a bond's duration as interest rates change", "The total interest paid over the life of the bond", "The relationship between a bond's coupon and its par value", "The probability that the issuer will call the bond before maturity"],
-        a: 0,
-        f: "Logic: Technical Definition. While Duration measures price sensitivity, Convexity measures how much that sensitivity (Duration) changes. It is a more accurate measure for large interest rate swings."
-    },
-    {
-        q: "A municipal 'Revenue Bond' is considered to have more credit risk than a 'General Obligation' (GO) bond because:",
-        c: ["Revenue bonds are backed only by the specific income of a project, not by taxing power", "Revenue bonds are exempt from federal taxes, while GO bonds are not", "GO bonds are only issued by the federal government", "Revenue bonds have a shorter maturity than GO bonds"],
-        a: 0,
-        f: "Logic: Credit Analysis. GO = Backed by full faith, credit, and TAXING power (very safe). Revenue = Backed only by bridge tolls, hospital fees, etc. (riskier)."
-    },
-    {
-        q: "An investor is looking at a corporate bond with a 'Put' feature. This feature is MOST advantageous to the investor when:",
-        c: ["Interest rates rise", "Interest rates fall", "The issuer's credit rating improves", "The bond is trading at a high premium"],
-        a: 0,
-        f: "Logic: Feature Application. A 'Put' allows the investor to sell the bond back to the issuer at par. If rates rise and the bond price drops, the investor can 'Put' the bond and reinvest in new, higher-yielding bonds."
-    },
-    {
-        q: "The 'Tax-Equivalent Yield' of a 4% Municipal bond for an investor in a 35% tax bracket is:",
-        c: ["6.15%", "5.40%", "2.60%", "4.00%"],
-        a: 0,
-        f: "Logic: Math Application. Formula = Muni Yield / (1 - Tax Bracket). 0.04 / (1 - 0.35) = 0.04 / 0.65 = 6.15%."
-    },
-    {
-        q: "Which of the following is a 'Money Market' instrument?",
-        c: ["Commercial Paper", "A 10-year Treasury Note", "Preferred Stock", "A 30-year Corporate Bond"],
-        a: 0,
-        f: "Logic: Definition Application. Money market instruments are high-quality debt with maturities of ONE YEAR or less. Commercial paper fits; the others are too long-term."
-    },
-    {
-        q: "A bond's 'Credit Spread' represents the difference between:",
-        c: ["The yield on a corporate bond and a Treasury bond of the same maturity", "The bid price and the ask price in the secondary market", "The nominal yield and the current yield", "The coupon rate and the federal funds rate"],
-        a: 0,
-        f: "Logic: Definition. The spread shows the 'extra' yield you get for taking on corporate risk over 'risk-free' Treasuries."
-    },
-    {
-        q: "If a bond is 'Insured' by an entity like AMBAC or FGIC, the bond's credit rating is typically based on:",
-        c: ["The claims-paying ability of the insurer", "The underlying credit of the municipality", "The total value of the project's revenue", "The current interest rate environment"],
-        a: 0,
-        f: "Logic: Application. Insurance 'wraps' the bond, giving it the higher rating of the insurance company itself."
-    },
-    {
-        q: "A client owns 100 shares of XYZ stock at $50 and is concerned about a short-term market correction. Which of the following would provide the MOST protection for the client’s position?",
-        c: ["Buying 1 XYZ Put option", "Selling 1 XYZ Call option", "Buying 1 XYZ Call option", "Selling 1 XYZ Put option"],
-        a: 0,
-        f: "Logic: Strategy Application. A 'Protective Put' acts like an insurance policy. It gives the client the right to sell the stock at a fixed price regardless of how low it falls."
-    },
-    {
-        q: "An IAR recommends a 'Straddle' strategy to a client. This indicates the IAR believes the underlying stock will experience:",
-        c: ["Significant volatility, but the direction is unknown", "Little to no movement in price", "A steady, slow increase in value", "A guaranteed drop due to poor earnings"],
-        a: 0,
-        f: "Logic: Strategy Application. A straddle (buying a call and a put) pays off if the stock moves big in EITHER direction."
-    },
-    {
-        q: "Which of the following is a characteristic of 'Warrants' that distinguishes them from 'Rights'?",
-        c: ["Warrants are long-term and usually have an exercise price above the current market value", "Warrants are short-term and allow shareholders to maintain their proportionate ownership", "Warrants are only issued to existing shareholders of record", "Warrants cannot be traded in the secondary market"],
-        a: 0,
-        f: "Logic: Differentiating Vehicles. Rights = Short-term/Below market (issued to keep ownership). Warrants = Long-term/Above market (issued as a 'sweetener' for bonds)."
-    },
-    {
-        q: "If an investor is 'Short' a stock, which option position would they use to hedge against a rise in the stock's price?",
-        c: ["Long Call", "Short Call", "Long Put", "Short Put"],
-        a: 0,
-        f: "Logic: Hedging Application. If you are short stock, you lose if it goes UP. A Long Call gives you the right to buy it back at a fixed price, capping your losses."
-    },
-    {
-        q: "The 'Intrinsic Value' of a Put option is:",
-        c: ["The amount by which the strike price exceeds the market price of the stock", "The amount of time remaining until the option expires", "The total premium paid for the option", "The volatility of the underlying stock"],
-        a: 0,
-        f: "Logic: Option Math. Intrinsic value is 'In-the-money' value. For a Put, it's worth money if the market price is BELOW the strike price."
-    },
-    {
-        q: "An investor writes (sells) an 'Uncovered' (Naked) Call. The investor's maximum potential loss is:",
-        c: ["Unlimited", "The premium received", "The strike price minus the premium", "The market price of the stock"],
-        a: 0,
-        f: "Logic: Risk Analysis. If you sell a call without owning the stock, and the stock goes to infinity, you have to buy it at infinity and sell it at the strike price. That is unlimited loss."
-    },
-    {
-        q: "Which of the following represents the 'Time Value' of an option premium?",
-        c: ["The Premium minus the Intrinsic Value", "The Strike Price minus the Market Price", "The Market Price minus the Premium", "The Beta of the stock multiplied by the days to expiration"],
-        a: 0,
-        f: "Logic: Option Math. Premium = Intrinsic Value + Time Value. Therefore, Time Value is whatever is left after you subtract the 'real' value."
-    },
-    {
-        q: "An 'Index Option' differs from a 'Stock Option' because, upon exercise, the index option is settled in:",
-        c: ["Cash", "The underlying shares of all companies in the index", "Shares of the index ETF", "A combination of gold and T-Bills"],
-        a: 0,
-        f: "Logic: Settlement Nuance. You can't deliver 'the S&P 500' in a box. Index options settle in cash the next business day."
-    },
-    {
-        q: "A 'Leap' is a type of option that has an expiration of up to:",
-        c: ["39 months", "9 months", "12 months", "24 months"],
-        a: 0,
-        f: "Logic: Definition. LEAPS (Long-term Equity Anticipation Securities) are long-term options."
-    },
-    {
-        q: "Under the 'Options Disclosure Document' (ODD) rules, when must the ODD be delivered to the client?",
-        c: ["At or before the time the account is approved for options trading", "Within 15 days of the first trade", "Only if the client requests it in writing", "At the end of the first month of trading"],
-        a: 0,
-        f: "Logic: Regulatory Nuance. The ODD is a 'pre-approval' requirement."
-    },
-    {
-        q: "A client is looking to invest $500,000 in a mutual fund and intends to hold the position for at least 10 years. Which share class is likely the MOST appropriate?",
-        c: ["Class A Shares", "Class B Shares", "Class C Shares", "No-Load Shares with a 1% 12b-1 fee"],
-        a: 0,
-        f: "Logic: Application. Class A shares have an upfront load but lower annual fees. For large amounts (breakpoints) and long time horizons, A shares are almost always the cheapest total cost."
-    },
-    {
-        q: "Which of the following is a UNIQUE characteristic of an Exchange Traded Fund (ETF) compared to an Open-End Mutual Fund?",
-        c: ["ETFs can be traded throughout the day on an exchange", "ETFs must calculate their NAV at least once per day", "ETFs are required to pay out 90% of their income", "ETFs are always actively managed by a team of professionals"],
-        a: 0,
-        f: "Logic: Vehicle Comparison. Mutual funds only trade once a day at the 4 PM close. ETFs trade like stocks all day."
-    },
-    {
-        q: "A mutual fund's 'Expense Ratio' is calculated by dividing the fund's operating expenses by its:",
-        c: ["Average Net Assets", "Total Sales Revenue", "Market Capitalization", "Public Offering Price"],
-        a: 0,
-        f: "Logic: Calculation. Expense Ratio = Expenses / Assets. It tells the investor how much of their money is being eaten by overhead."
-    },
-    {
-        q: "Under the '7-Day Redemption' rule of the Investment Company Act of 1940, a mutual fund must:",
-        c: ["Send payment to a redeeming shareholder within 7 days of the request", "Allow shareholders to cancel a purchase within 7 days with no penalty", "Rebalance the portfolio every 7 days to match the index", "Notify the SEC if the NAV drops by more than 7% in a week"],
-        a: 0,
-        f: "Logic: Regulatory Nuance. This is a liquidity protection rule for investors."
-    },
-    {
-        q: "A 'Letter of Intent' (LOI) for a mutual fund purchase is valid for a period of:",
-        c: ["13 months", "9 months", "24 months", "6 months"],
-        a: 0,
-        f: "Logic: Definition. An LOI allows an investor to get a breakpoint discount by promising to invest more over 13 months."
-    },
-    {
-        q: "Which of the following would DECREASE a mutual fund's Net Asset Value (NAV) per share?",
-        c: ["The fund pays out a dividend or capital gain distribution to shareholders", "The market value of the securities in the portfolio increases", "A new investor purchases shares of the fund", "The fund manager sells a security for a profit but keeps the cash in the fund"],
-        a: 0,
-        f: "Logic: NAV Application. When a fund 'pays out' cash, that cash leaves the fund, so the share price (NAV) drops by the amount of the payout."
-    },
-    {
-        q: "A 'Breakpoint Sale' is considered a prohibited practice because it involves:",
-        c: ["Selling just enough of a fund to avoid reaching a discount threshold", "Selling shares of a fund after the 4 PM close but at that day's NAV", "Failing to disclose the 12b-1 fees of a fund", "Comparing a mutual fund to a bank CD"],
-        a: 0,
-        f: "Logic: Prohibited Practice. An agent should never sell 'just below' a breakpoint; they must inform the client of the available discount."
-    },
-    {
-        q: "The 'Public Offering Price' (POP) of a mutual fund is equal to:",
-        c: ["NAV + Sales Charge", "NAV - Redemption Fee", "Total Assets / Shares Outstanding", "The closing price on the NYSE"],
-        a: 0,
-        f: "Logic: Math. POP is what the customer pays; it includes the load."
-    },
-    {
-        q: "A mutual fund that charges a 12b-1 fee of 0.75% and a sales load of 0.25% is allowed to call itself a:",
-        c: ["Load Fund", "No-Load Fund", "Management-Free Fund", "Index Fund"],
-        a: 0,
-        f: "Logic: Regulatory Nuance. To be called 'No-Load,' a fund's 12b-1 fee cannot exceed 0.25%."
-    },
-    {
-        q: "A 'Contingent Deferred Sales Charge' (CDSC) is most commonly associated with which share class?",
-        c: ["Class B Shares", "Class A Shares", "Class C Shares", "Institutional Shares"],
-        a: 0,
-        f: "Logic: Definition. B shares have no 'front-end' load but have a 'back-end' load (CDSC) that disappears over time."
-    },
-    {
-        q: "An investor resides in a state with a high income tax and is considering a 'Double-Exempt' municipal bond. If the investor is also subject to the Alternative Minimum Tax (AMT), which of the following should be the LARGEST concern for the IAR?",
-        c: ["The bond may be a Private Activity Bond, making the interest taxable for AMT purposes", "The bond will be subject to federal income tax regardless of its municipal status", "The bond's Yield-to-Call will be significantly higher than the Yield-to-Maturity", "The bond's capital gains will be taxed at the investor's ordinary income rate"],
-        a: 0,
-        f: "Logic: Application. Private Activity Bonds are municipal issues that benefit private entities (like stadiums). While normally tax-free, their interest is a 'tax preference item' and is taxable for investors subject to the AMT."
-    },
-    {
-        q: "A client in the 32% tax bracket is comparing a 4.5% Corporate Bond to a 3.2% Municipal Bond. Based on the 'Tax-Equivalent Yield' calculation, which statement is TRUE?",
-        c: ["The Municipal Bond is superior because its tax-equivalent yield is 4.71%", "The Corporate Bond is superior because its after-tax yield is 3.5%", "Both bonds provide the exact same after-tax return to the investor", "The Corporate Bond is superior because its tax-equivalent yield is 6.6%"],
-        a: 0,
-        f: "Logic: Math Application. 3.2% / (1 - 0.32) = 4.71%. Since 4.71% is higher than the corporate bond's 4.5%, the Muni is the better choice."
-    },
-    {
-        q: "Which of the following is a characteristic of a 'Variable-Rate Demand Obligation' (VRDO)?",
-        c: ["It has a fluctuating interest rate and a 'put' feature that allows the holder to sell the bond back to the issuer at par", "It pays a fixed coupon but the principal value adjusts monthly based on the CPI", "It is a long-term bond that can only be sold in the secondary market at a significant discount", "It is a type of zero-coupon bond issued by a municipality to fund public schools"],
-        a: 0,
-        f: "Logic: Characteristic. VRDOs offer long-term municipal yields with short-term liquidity due to the 'put' feature."
-    },
-    {
-        q: "An investor is looking for 'Industrial Development Bonds' (IDBs). These are primarily backed by:",
-        c: ["Lease payments made by the corporation using the facility", "The full taxing power of the municipality that issued the bonds", "Sales tax revenue collected within the specific industrial zone", "Federal grants provided by the Department of Commerce"],
-        a: 0,
-        f: "Logic: Definition. IDBs are a type of revenue bond where the 'revenue' is the rent paid by a private company."
-    },
-    {
-        q: "If a municipal bond is 'Pre-Refunded,' the issuer has:",
-        c: ["Set aside funds in an escrow account to pay off the bond at the earliest call date", "Defaulted on the interest payments and is restructuring the debt", "Converted the bond into common stock to reduce interest expenses", "Issued new bonds at a higher interest rate to replace the old ones"],
-        a: 0,
-        f: "Logic: Definition. Pre-refunding (defeasance) effectively turns the muni bond into an AAA-rated security because it is now backed by government securities in escrow."
-    },
-    {
-        q: "An investor in a 'Non-Qualified' Variable Annuity decides to take a partial withdrawal before age 59½. How will this withdrawal be taxed?",
-        c: ["LIFO (Last-In, First-Out): Earnings are withdrawn first and taxed as ordinary income, plus a 10% penalty", "FIFO (First-In, First-Out): Cost basis is withdrawn first and is tax-free", "The entire withdrawal is taxed as a long-term capital gain", "The withdrawal is tax-free, but the remaining death benefit is reduced proportionately"],
-        a: 0,
-        f: "Logic: Tax Application. Annuity withdrawals are taxed LIFO. You must pay taxes on the 'growth' (earnings) before you can touch your original 'seed' money."
-    },
-    {
-        q: "A client owns an 'Equity-Indexed Annuity' with a 70% 'Participation Rate' and a 10% 'Cap.' If the underlying index rises by 20%, what interest rate will be credited to the client's account?",
-        c: ["10%", "14%", "20%", "7%"],
-        a: 0,
-        f: "Logic: Math Application. 20% growth * 70% participation = 14%. However, the 10% CAP limits the maximum gain. Therefore, the client gets 10%."
-    },
-    {
-        q: "Which of the following is a MAJOR risk of a 'Variable' Life Insurance policy that is NOT present in a 'Whole' Life Insurance policy?",
-        c: ["The cash value may decrease to zero due to poor performance in the separate account", "The premiums may increase significantly as the insured gets older", "The death benefit is fixed and cannot grow over time", "The policy is not eligible for loans against the cash value"],
-        a: 0,
-        f: "Logic: Risk Comparison. In Variable Life, the policyholder assumes the investment risk. In Whole Life, the insurance company guarantees a minimum cash value."
-    },
-    {
-        q: "When a Variable Annuity is 'Annuitized' under a 'Life with Period Certain' option, the insurance company will pay:",
-        c: ["For the rest of the annuitant's life, with a guarantee of payments for a minimum number of years to a beneficiary", "Only for a fixed number of years, regardless of how long the annuitant lives", "The entire account balance in a single lump sum to the annuitant", "Until the original principal is exhausted, at which point payments cease"],
-        a: 0,
-        f: "Logic: Payout Application. This option provides a 'safety net' for heirs while still guaranteeing income for life."
-    },
-    {
-        q: "An investor is considering a 'Variable Universal Life' (VUL) policy. The 'Universal' component of this policy primarily refers to:",
-        c: ["The ability to adjust the premium payments and the death benefit amount", "The fact that the policy is accepted as collateral by all major banks", "The guarantee that the cash value will grow at a fixed annual rate", "The inclusion of a long-term care rider at no additional cost"],
-        a: 0,
-        f: "Logic: Definition. Universal = Flexible. Variable = Market Risk."
-    },
-    {
-        q: "In a 'Direct Participation Program' (DPP), what is the primary tax benefit to the limited partners?",
-        c: ["Passive losses can be used to offset passive income", "Investors receive a 10% federal tax credit on all initial capital contributions", "All distributions are taxed at the lower long-term capital gains rate", "Investors are exempt from the Alternative Minimum Tax (AMT)"],
-        a: 0,
-        f: "Logic: Tax Application. DPPs 'pass through' both gains and losses. However, the 'Passive Loss' rule means you can only use those losses to cancel out other passive gains (not your salary)."
-    },
-    {
-        q: "A 'Hedge Fund' is typically structured as a limited partnership to avoid:",
-        c: ["Registration under the Investment Company Act of 1940", "The payment of capital gains taxes by the fund manager", "Federal oversight by the Department of Labor", "The requirement to provide an annual prospectus to investors"],
-        a: 0,
-        f: "Logic: Regulatory Nuance. By staying small (under 100 investors) and limiting themselves to 'Accredited Investors,' they avoid the strict rules that govern mutual funds."
-    },
-    {
-        q: "An investor in a 'Limited Partnership' (LP) is concerned about their 'Basis.' If the partnership takes on a 'Non-Recourse' loan in a real estate program, the investor's basis will:",
-        c: ["Increase", "Decrease", "Remain the same", "Become negative"],
-        a: 0,
-        f: "Logic: Advanced LP Rule. In Real Estate only, non-recourse debt (where the lender can't sue the partners personally) still increases the investor's tax basis."
-    },
-    {
-        q: "Which of the following is the MOST liquid investment vehicle?",
-        c: ["An Exchange-Traded REIT", "A Non-Traded REIT", "A Direct Participation Program in oil and gas", "A Hedge Fund with a 2-year lock-up period"],
-        a: 0,
-        f: "Logic: Liquidity Comparison. If it is 'Exchange-Traded,' you can sell it in seconds during market hours."
-    },
-    {
-        q: "A client wants to invest in a 'Blind Pool' partnership. This means:",
-        c: ["The specific properties or assets to be purchased have not yet been identified", "The investor is not allowed to see the fund's financial statements", "The fund manager is not required to be a registered IAR", "The partnership is exempt from all state 'Blue Sky' laws"],
-        a: 0,
-        f: "Logic: Definition. You are 'blind' to what is actually in the pool at the time you write the check."
-    },
-    {
-        q: "An investor is considering an Exchange-Traded Note (ETN) that tracks the performance of a commodity index. What is the PRIMARY risk that distinguishes an ETN from an Exchange-Traded Fund (ETF)?",
-        c: [
-            "Credit Risk: The ETN is an unsecured debt obligation of the issuing bank",
-            "Market Risk: The commodity index is more volatile than the S&P 500",
-            "Tracking Error: ETNs rarely match the performance of their index",
-            "Liquidity Risk: ETNs cannot be traded on an exchange during market hours"
-        ],
-        a: 0,
-        f: "Logic: Underlying Structure. An ETF owns the underlying assets (stocks/bonds). An ETN owns nothing; it is a 'promise to pay' based on an index. If the issuer fails, the investor loses their principal regardless of index performance."
-    },
-    {
-        q: "A 'Derivative' security, such as a call option, derives its value primarily from:",
-        c: [
-            "The price movements of an underlying asset",
-            "The credit rating of the Options Clearing Corporation (OCC)",
-            "The interest rate spread between LIBOR and the Fed Funds Rate",
-            "The total volume of shares traded on the NYSE"
-        ],
-        a: 0,
-        f: "Logic: Definition. Derivatives have no intrinsic value of their own; their value is 'derived' from the performance of a stock, bond, or index."
-    },
-    {
-        q: "An investor owns a 'Collateralized Mortgage Obligation' (CMO). The security is backed by:",
-        c: [
-            "A pool of mortgages organized into 'tranches' with different risk profiles",
-            "The full faith and credit of the US Treasury",
-            "The physical assets of the commercial banks that issued the mortgages",
-            "A diversified portfolio of Real Estate Investment Trusts (REITs)"
-        ],
-        a: 0,
-        f: "Logic: Underlying Asset. CMOs are asset-backed securities where the underlying 'assets' are the monthly principal and interest payments from homeowners."
-    },
-    {
-        q: "In the event of a corporate liquidation, which of the following has the SENIOR-most claim on the company's assets?",
-        c: [
-            "Secured Bondholders",
-            "Unsecured Debenture holders",
-            "Preferred Shareholders",
-            "Common Shareholders"
-        ],
-        a: 0,
-        f: "Logic: Priority of Claims. Secured debt (backed by specific collateral like a building) is always paid first. Common stock is 'residual' and is paid last."
-    },
-    {
-        q: "A 'Ginnie Mae' (GNMA) pass-through certificate is unique among mortgage-backed securities because it is:",
-        c: [
-            "Backed by the full faith and credit of the US Government",
-            "Exempt from all federal and state income taxes",
-            "Subject to zero prepayment risk",
-            "Only available to 'Qualified' institutional investors"
-        ],
-        a: 0,
-        f: "Logic: Backing Nuance. Fannie Mae and Freddie Mac are 'Government Sponsored' (implied backing), but Ginnie Mae is the only one with an EXPLICIT US Government guarantee."
-    },
-    {
-        q: "Which of the following describes the 'Parity' of a convertible bond?",
-        c: [
-            "The price at which the value of the bond is equal to the market value of the shares it can be converted into",
-            "The interest rate at which the bond's yield equals the dividend yield of the stock",
-            "The point at which the bond's credit rating is upgraded to investment grade",
-            "The total number of shares an investor receives upon conversion"
-        ],
-        a: 0,
-        f: "Logic: Valuation Basis. Parity is the mathematical 'break-even' point between the debt instrument and the equity instrument."
-    },
-    {
-        q: "A 'Participating' Preferred Stock is one that:",
-        c: [
-            "Provides a fixed dividend plus a share of corporate profits under certain conditions",
-            "Allows the holder to vote in the election of the Board of Directors",
-            "Can be exchanged for common stock at the option of the issuer",
-            "Mandates that any missed dividends must be paid before common dividends"
-        ],
-        a: 0,
-        f: "Logic: Characteristic. Most preferred stock is 'fixed.' Participating stock allows the investor to 'participate' in the company's success beyond the fixed rate."
-    },
-    {
-        q: "What is the underlying 'security' for a Variable Annuity's performance?",
-        c: [
-            "The sub-accounts within the insurance company's Separate Account",
-            "The insurance company's General Account assets",
-            "A portfolio of high-yield corporate bonds",
-            "The Dow Jones Industrial Average"
-        ],
-        a: 0,
-        f: "Logic: Structure. In a variable product, the 'backing' is the Separate Account, which is why the investor assumes all the market risk."
-    },
-    {
-        q: "Which of the following is a characteristic of 'Equipment Trust Certificates'?",
-        c: [
-            "They are backed by physical assets like airplanes or railroad cars",
-            "They are unsecured promises to pay issued by transportation companies",
-            "They are short-term money market instruments used for payroll",
-            "They are only issued by the federal government to fund infrastructure"
-        ],
-        a: 0,
-        f: "Logic: Asset-Backed. These are secured bonds. If the company defaults, the bondholders can literally take the airplanes and sell them."
-    },
-    {
-        q: "An investor is comparing a 'Money Market' fund to a 'Bank CD.' The Money Market fund's value is based on:",
-        c: [
-            "A portfolio of short-term, high-quality debt that aims to maintain a $1.00 NAV",
-            "The FDIC insurance limit of $250,000",
-            "The profitability of the brokerage firm offering the fund",
-            "The current price of 30-year Treasury Bonds"
-        ],
-        a: 0,
-        f: "Logic: Underlying Basis. Money markets are investments in debt; CDs are bank deposits. Only the CD has the FDIC 'backing.'"
-    }
-],
-[ // PILLAR 3: CLIENT INVESTMENT RECOMMENDATIONS AND STRATEGIES (SIMULATION MODE)
-    {
-        q: "A high-net-worth client with a $10 million portfolio has a 20-year time horizon and a primary objective of capital appreciation. The client is willing to accept significant volatility for the chance of outsized returns. Which of the following is the MOST suitable recommendation?",
-        c: [
-            "A sector-specific Unit Investment Trust (UIT) focused on emerging technology",
-            "A portfolio of investment-grade municipal bonds to maximize tax-free income",
-            "A laddered portfolio of 1-year to 5-year Certificates of Deposit (CDs)",
-            "A balanced fund consisting of 60% blue-chip stocks and 40% Treasury bonds"
-        ],
-        a: 0,
-        f: "Logic: Suitability Application. While a UIT has high fees and is unmanaged, it is the only choice that aligns with 'Significant Volatility' and 'Capital Appreciation.' The others are too conservative for this specific client's profile."
-    },
-    {
-        q: "An investor is using the Sharpe Ratio to compare two portfolios. Portfolio A has a higher total return than Portfolio B, but Portfolio B has a higher Sharpe Ratio. What is the most accurate interpretation of this data?",
-        c: [
-            "Portfolio B provided a better risk-adjusted return per unit of volatility",
-            "Portfolio A is objectively better because the total return is higher",
-            "Portfolio B must have a higher Beta than Portfolio A",
-            "Portfolio A has less unsystematic risk than Portfolio B"
-        ],
-        a: 0,
-        f: "Logic: Formula Interpretation. The Sharpe Ratio measures return relative to Standard Deviation (Total Risk). A higher ratio means the manager was more efficient with the risk they took, regardless of the raw return number."
-    },
-    {
-        q: "A client recently retired and requires $3,000 in monthly income to cover living expenses. They have a moderate risk tolerance and are concerned about the rising cost of living. Which strategy is MOST appropriate?",
-        c: [
-            "A combination of high-dividend-paying stocks and intermediate-term corporate bonds",
-            "Placing the entire portfolio into a liquid Money Market fund",
-            "Purchasing a 30-year Zero-Coupon Treasury bond",
-            "Investing exclusively in small-cap growth stocks to outpace inflation"
-        ],
-        a: 0,
-        f: "Logic: Objective Balancing. The client needs 'Income' (Dividends/Bonds) but also 'Inflation Protection' (Stocks). Choice A is the only one that addresses both needs."
-    },
-    {
-        q: "Under the Capital Asset Pricing Model (CAPM), if a stock's 'Expected Return' is calculated to be 12%, but the stock actually returns 15%, the difference of 3% is known as:",
-        c: ["Alpha", "Beta", "Standard Deviation", "The Market Risk Premium"],
-        a: 0,
-        f: "Logic: Definition Application. Alpha is the 'excess return'—the performance that cannot be explained by market movement (Beta). Positive alpha means the manager 'beat' the expected risk-adjusted return."
-    },
-    {
-        q: "A client has a 'Strategic Asset Allocation' strategy. After a significant market rally in equities, the portfolio's stock weight has increased from 60% to 70%. What action will the client most likely take?",
-        c: [
-            "Sell equities and buy bonds to return to the original 60/40 target",
-            "Maintain the 70% equity weight to 'ride the momentum' of the bull market",
-            "Sell the entire portfolio and move to cash until the market stabilizes",
-            "Change the target allocation to 70/30 to reflect the new market reality"
-        ],
-        a: 0,
-        f: "Logic: Strategy Application. Strategic allocation is passive and involves 'Rebalancing' back to the original targets, regardless of market sentiment."
-    },
-    {
-        q: "Which of the following metrics would an IAR use to determine the 'Total Risk' of an un-diversified portfolio consisting of only three stocks?",
-        c: ["Standard Deviation", "Beta", "Correlation Coefficient", "Alpha"],
-        a: 0,
-        f: "Logic: Tool Selection. Because the portfolio is NOT diversified, it contains both systematic and unsystematic risk. Beta only measures systematic risk; Standard Deviation is the only metric that captures the 'Total Risk' (Total Volatility)."
-    },
-    {
-        q: "An investor is concerned about 'Business Risk' in their portfolio. Which of the following strategies is the MOST effective way to mitigate this specific risk?",
-        c: ["Diversifying across different industries and sectors", "Buying Treasury bonds instead of corporate bonds", "Purchasing 'Put' options on the S&P 500 index", "Investing only in 'Blue Chip' stocks with high credit ratings"],
-        a: 0,
-        f: "Logic: Risk Mitigation. Business risk is 'Unsystematic' (specific to one company/industry). Diversification is the primary tool used to eliminate unsystematic risk."
-    },
-    {
-        q: "A 'Tactical Asset Allocation' strategy is considered:",
-        c: [
-            "Active management that seeks to capitalize on short-term market inefficiencies",
-            "Passive management that relies on a long-term 'buy and hold' philosophy",
-            "A strategy focused exclusively on minimizing tax liabilities",
-            "A strategy that never changes the percentage of assets held in each class"
-        ],
-        a: 0,
-        f: "Logic: Differentiating Strategies. Tactical = Active/Short-term. Strategic = Passive/Long-term."
-    },
-    {
-        q: "If a portfolio has a Beta of 1.5, what should the investor expect to happen if the overall market increases by 10%?",
-        c: [
-            "The portfolio should increase by 15%",
-            "The portfolio should increase by 10% plus the risk-free rate",
-            "The portfolio should increase by 5%",
-            "The portfolio's value will remain unchanged because it is diversified"
-        ],
-        a: 0,
-        f: "Logic: Beta Math. 1.5 (Beta) * 10% (Market Move) = 15%."
-    },
-    {
-        q: "A client is looking for 'Current Income' and 'Safety of Principal.' Which of the following is the LEAST suitable recommendation?",
-        c: ["Aggressive Growth Mutual Fund", "Short-term Treasury Note", "Bank Certificate of Deposit", "Money Market Fund"],
-        a: 0,
-        f: "Logic: Negative Suitability. Growth funds have high principal risk and typically pay little to no income, making them the opposite of what this client asked for."
-    }
-],
-[ // PILLAR 4: LAWS, REGULATIONS, AND GUIDELINES (SIMULATION MODE)
-    {
-        q: "An Investment Adviser Representative (IAR) is registered in State A but has no place of business in State B. The IAR has 4 retail clients in State B. According to the Uniform Securities Act, must the IAR register in State B?",
-        c: [
-            "No, because the IAR falls under the 'de minimis' exemption for having fewer than 6 retail clients in a state where they have no office",
-            "Yes, because the IAR has retail clients in the state and there is no 'de minimis' exemption for IARs",
-            "No, because the IAR is already registered in their home state",
-            "Yes, but only if the IAR's firm is a Federal Covered Adviser"
-        ],
-        a: 0,
-        f: "Logic: Registration Nuance. The 'de minimis' rule allows an IA or IAR to have up to 5 retail clients in a state without registering, provided they have no physical office (place of business) in that state."
-    },
-    {
-        q: "A Broker-Dealer is registered in State X. It has a physical branch office in State Y but only deals with institutional clients in State Y. Does the Broker-Dealer need to register in State Y?",
-        c: [
-            "Yes, because the Broker-Dealer has a place of business in State Y",
-            "No, because the Broker-Dealer only deals with institutional clients",
-            "No, because the 'de minimis' rule applies to Broker-Dealers with fewer than 5 clients",
-            "Yes, but only if they also employ more than 10 agents in State Y"
-        ],
-        a: 0,
-        f: "Logic: The 'Place of Business' Rule. Institutional exemptions and de minimis rules ONLY apply if the firm has NO office in the state. Once you open a door (place of business), you MUST register, regardless of who your clients are."
-    },
-    {
-        q: "The Administrator has the power to issue a 'Cease and Desist' order. Which of the following is TRUE regarding this power?",
-        c: [
-            "The Administrator can issue the order without a prior hearing",
-            "The order is only valid if confirmed by a court of law within 48 hours",
-            "The order can only be issued if the IAR has already been convicted of a felony",
-            "The Administrator must provide 15 days' notice before the order takes effect"
-        ],
-        a: 0,
-        f: "Logic: Regulatory Authority. Administrators can issue Cease and Desist orders 'summarily' (immediately) to stop a violation. However, they cannot issue an 'Injunction'—only a court can do that."
-    },
-    {
-        q: "An Investment Adviser (IA) wishes to charge a performance-based fee. According to the Investment Advisers Act of 1940, this is permitted ONLY if the client:",
-        c: [
-            "Is a 'Qualified Client' with at least $1.1M AUM or a $2.2M Net Worth (excluding primary residence)",
-            "Is an 'Accredited Investor' with an annual income of at least $200,000",
-            "Provides written consent and has at least 10 years of trading experience",
-            "Is a non-profit organization or a government entity"
-        ],
-        a: 0,
-        f: "Logic: Fee Nuance. Performance fees are restricted to protect smaller investors. You must meet the higher 'Qualified Client' threshold, and you cannot count the equity in your home toward that net worth."
-    },
-    {
-        q: "Under the Uniform Securities Act, a 'Federal Covered Security' is exempt from state registration. Which of the following is a Federal Covered Security?",
-        c: [
-            "A stock listed on the New York Stock Exchange (NYSE)",
-            "An IPO of a local biotechnology company sold only within one state",
-            "A municipal bond issued by a small city to residents of that city only",
-            "A security issued by a non-profit religious organization"
-        ],
-        a: 0,
-        f: "Logic: Federal Coverage. Securities listed on national exchanges (NYSE, NASDAQ) are 'Federal Covered' because they are already regulated at the federal level. States cannot require them to register (though they may request a 'notice filing')."
-    },
-    {
-        q: "An agent of a Broker-Dealer is convicted of a non-securities-related felony 8 years ago. Can the Administrator deny this agent's registration?",
-        c: [
-            "Yes, the Administrator can deny registration for any felony conviction within the last 10 years",
-            "No, because the felony was not related to the securities industry",
-            "Yes, but only if the agent is also under a current 'SRO' suspension",
-            "No, because the conviction occurred more than 5 years ago"
-        ],
-        a: 0,
-        f: "Logic: Statutory Disqualification. The '10-year rule' applies to ANY felony (securities-related or not) and any MISDEMEANOR involving securities or money."
-    },
-    {
-        q: "An Investment Adviser is deemed to have 'Custody' of client funds if they:",
-        c: [
-            "Possess the client's login credentials and have the authority to withdraw funds to a third party",
-            "Have 'Discretionary Authority' to buy and sell stocks in the client's account",
-            "Receive a check made out to a third party and forward it within 3 days",
-            "Charge a management fee that is automatically deducted from the account"
-        ],
-        a: 0,
-        f: "Logic: Custody vs. Discretion. Discretion is just the power to trade. Custody is the power to take the money out. Holding login credentials that allow third-party transfers is a major 'Custody' trigger."
-    },
-    {
-        q: "When an IAR leaves a 'State-Registered' Investment Adviser to join another firm, who must notify the Administrator?",
-        c: [
-            "The Investment Adviser (the firm)",
-            "The IAR (the individual)",
-            "Both the Investment Adviser and the IAR",
-            "Neither, as long as the IAR's registration is still active"
-        ],
-        a: 0,
-        f: "Logic: Notification Rules. For state-registered firms, the FIRM must notify the Admin. If the IAR knows the firm didn't do it, they must. (Compare to BDs, where both the Agent and the BD must notify)."
-    },
-    {
-        q: "Which of the following is NOT considered a 'Security' under the Uniform Securities Act?",
-        c: [
-            "A Fixed Annuity contract",
-            "A Variable Life Insurance policy",
-            "An interest in a multi-level marketing (MLM) program",
-            "A warehouse receipt for a commodity"
-        ],
-        a: 0,
-        f: "Logic: The 'Non-Security' List. Fixed products (Annuities/Life Insurance) are insurance, not securities. Variable products ARE securities because they have market risk."
-    },
-    {
-        q: "An Investment Adviser must provide a 'Brochure' (Form ADV Part 2A) to a prospective client:",
-        c: [
-            "At or prior to the time of entering into an advisory contract",
-            "Within 48 hours after the client signs the contract",
-            "Only if the client's account balance exceeds $500,000",
-            "At the end of the first fiscal quarter of the relationship"
-        ],
-        a: 0,
-        f: "Logic: Disclosure Rules. The client must see the 'resume' of the firm (the Brochure) before or at the moment they sign up."
-    },
-    {
-        q: "A Broker-Dealer receives a large 'limit order' to buy XYZ stock at $50. Before executing the client's order, the firm buys XYZ stock for its own account at $49.95. This prohibited practice is known as:",
-        c: ["Front-running", "Churning", "Matched Trading", "Painting the Tape"],
-        a: 0,
-        f: "Logic: Ethics Application. Front-running is using non-public knowledge of a client's upcoming trade to profit on your own account first."
-    },
-    {
-        q: "An Administrator may conduct an audit of a registered Investment Adviser's records:",
-        c: [
-            "At any time, within or outside the state, without prior notice",
-            "Only during normal business hours and with at least 48 hours' notice",
-            "Only if a formal written complaint has been filed by a client",
-            "Once per year, during a scheduled 'Blue Sky' window"
-        ],
-        a: 0,
-        f: "Logic: Power of the Admin. To protect the public, the Admin has 'Subpoena Power' and can walk in for a surprise audit at any time."
-    },
-    {
-        q: "Which of the following is an example of an 'Unethical Practice' regarding client confidentiality?",
-        c: [
-            "Discussing a client's portfolio with the client's spouse without written authorization",
-            "Sharing client information with the IRS in response to a formal summons",
-            "Providing client data to a third-party performance-reporting software the IA uses",
-            "Consulting with an attorney regarding a client's legal dispute with the firm"
-        ],
-        a: 0,
-        f: "Logic: Privacy Nuance. Even a spouse is a 'third party.' Without written consent, you cannot discuss the account with them. However, you MUST comply with legal summons (IRS/Court)."
-    },
-    {
-        q: "A 'Federal Covered Adviser' is a firm that:",
-        c: [
-            "Is registered with the SEC and has over $110 million in assets under management",
-            "Is registered with at least 15 different state Administrators",
-            "Exclusively manages accounts for the US Federal Government",
-            "Is exempt from all anti-fraud provisions of the USA"
-        ],
-        a: 0,
-        f: "Logic: Definition. Firms with >$110M AUM MUST register with the SEC (Federal). Firms with <$100M AUM generally register with the states."
-    },
-    {
-        q: "An agent of a Broker-Dealer is allowed to share in the profits and losses of a client's account only if:",
-        c: [
-            "The agent has written permission from the client and the Broker-Dealer",
-            "The agent is a family member of the client",
-            "The agent contributes at least 50% of the initial capital",
-            "Sharing in profits is strictly prohibited for all agents under the USA"
-        ],
-        a: 0,
-        f: "Logic: Profit Sharing. Agents CAN share (unlike IARs, who are generally forbidden), but only with written permission from the boss and the customer."
-    },
-    {
-        q: "Under the 'Prudent Investor Act,' a trustee's primary responsibility is to:",
-        c: [
-            "Manage the portfolio's overall risk-to-return profile rather than looking at individual investments in isolation",
-            "Guarantee that the trust never experiences a loss of principal",
-            "Invest only in 'Legal List' securities approved by the state",
-            "Maximize short-term income for the current beneficiaries"
-        ],
-        a: 0,
-        f: "Logic: Modern Portfolio Theory in Law. The 'Prudent' rule says you judge the WHOLE portfolio. A risky stock might be prudent if it helps diversify the rest of the trust."
-    },
-    {
-        q: "If an IAR is found to have violated the anti-fraud provisions of the USA, the Administrator can take which of the following actions?",
-        c: [
-            "Revoke the IAR's registration and impose a fine",
-            "Sentence the IAR to up to 3 years in prison",
-            "Order the IAR to pay treble (triple) damages to all affected clients",
-            "Confiscate the IAR's personal assets to satisfy client losses"
-        ],
-        a: 0,
-        f: "Logic: Administrative Power. The Admin is a regulator, not a judge. They can take away your license (revoke) and fine you, but only a court can send you to jail."
-    },
-    {
-        q: "A 'Notice Filing' is required for which of the following entities?",
-        c: [
-            "Federal Covered Advisers doing business in a state",
-            "Small, state-registered investment advisers",
-            "Broker-Dealers with fewer than 5 clients in a state",
-            "Agents who only sell exempt securities"
-        ],
-        a: 0,
-        f: "Logic: Notice Filing. Federal Covered Advisers don't 'register' with the state, but they must 'notice file' (pay a fee and send copies of SEC docs) to let the state know they are there."
-    },
-    {
-        q: "An Investment Adviser is required to maintain their 'Books and Records' for a period of:",
-        c: ["5 years, with the first 2 years in an easily accessible location", "3 years, with all records kept on-site", "Permanently, as long as the firm is in business", "10 years, in accordance with the felony look-back rule"],
-        a: 0,
-        f: "Logic: Record Keeping. The IA rule is '5 and 2.' (Note: Broker-Dealers are usually '3 and 2')."
-    },
-    {
-        q: "A 'Solicitor' for an Investment Adviser is someone who:",
-        c: [
-            "Refers clients to an IA for a fee and must be registered as an IAR in most states",
-            "Only handles the legal filings for the firm's SEC registration",
-            "Is responsible for cold-calling prospects to sell individual stocks",
-            "Manages the firm's internal compliance and payroll"
-        ],
-        a: 0,
-        f: "Logic: Solicitors. If you get paid to find clients for an IA, you are 'engaging in the advisory business' and generally need to register as an IAR."
-    },
-    {
-        q: "An Investment Adviser (IA) has no place of business in State A. The firm's only clients in State A are three individual retail investors and two local banks. Under the Uniform Securities Act, which statement is TRUE?",
-        c: [
-            "The IA is exempt from registration in State A because it has no place of business and fewer than 6 retail clients",
-            "The IA must register in State A because it has more than 5 total clients in the state",
-            "The IA must register because any number of retail clients triggers registration",
-            "The IA is only exempt if it is a Federal Covered Adviser"
-        ],
-        a: 0,
-        f: "Logic: De Minimis Application. Institutional clients (banks) are ignored for the 'De Minimis' count. Since there are only 3 retail clients and NO place of business, the firm qualifies for the exemption. If they had even a small satellite office in State A, they would have to register regardless of the client count."
-    },
-    {
-        q: "A Broker-Dealer has no office in State B. Its only clients in State B are other Broker-Dealers and institutional insurance companies. According to the Uniform Securities Act, the Broker-Dealer:",
-        c: [
-            "Is NOT required to register in State B",
-            "Must register in State B because it is conducting securities business",
-            "Must register because the 'De Minimis' exemption only applies to Investment Advisers",
-            "Must register if any of the institutional clients are also Federal Covered"
-        ],
-        a: 0,
-        f: "Logic: Broker-Dealer Exemptions. Under the USA, if a BD has NO office in a state and ONLY deals with institutional clients (BDs, banks, insurance companies), they are NOT defined as a BD in that state and do not need to register."
-    },
-    {
-        q: "An Investment Adviser is registered with the SEC and has $500 million in AUM. One of its IARs works out of a home office in State C, serving only 2 retail clients. Which registration requirement applies to the IAR?",
-        c: [
-            "The IAR must register in State C because they have a place of business there",
-            "The IAR is exempt from state registration because the firm is Federal Covered",
-            "The IAR only needs to register if they serve more than 5 retail clients (De Minimis)",
-            "The IAR must register with the SEC instead of the state"
-        ],
-        a: 0,
-        f: "Logic: IAR of a Federal Covered Adviser. IARs of SEC-registered firms only register in states where they have a 'Place of Business.' Since the home office counts as a place of business, registration is required regardless of the number of clients."
-    },
-    {
-        q: "The Administrator may by order deny, suspend, or revoke any registration if the applicant has been 'subject to a foreign securities regulator's disciplinary action' within the past:",
-        c: ["5 years", "10 years", "2 years", "15 years"],
-        a: 1,
-        f: "Logic: Statutory Disqualification. Just like domestic felonies, foreign securities-related disciplinary actions have a 10-year 'look-back' period for disqualification."
-    },
-    {
-        q: "Under the Uniform Securities Act, an 'Offer to Sell' is made in a state if the offer:",
-        c: [
-            "Originates from the state or is directed to and received in the state",
-            "Is seen by a resident of the state via a national television broadcast",
-            "Is published in a newspaper where more than 2/3 of its circulation is outside the state",
-            "Is made via a radio program originating in a neighboring state"
-        ],
-        a: 0,
-        f: "Logic: Jurisdiction. An offer is 'in the state' if it starts there or ends there. National media (TV, Radio, Newspapers with wide out-of-state circulation) are generally exempt from being considered an offer in every state they reach."
-    },
-    {
-        q: "An Investment Adviser is considered to have 'Custody' if it inadvertently receives client securities and does not return them to the sender within:",
-        c: ["3 business days", "24 hours", "7 calendar days", "48 hours"],
-        a: 0,
-        f: "Logic: Custody Rule. To avoid being deemed as having custody, an IA must return 'mis-delivered' assets within 3 business days."
-    },
-    {
-        q: "An Investment Advisory contract MUST contain a provision stating that:",
-        c: [
-            "The IA will not be compensated on the basis of a share of capital gains in the account",
-            "The IA may assign the contract to another firm without client consent",
-            "The IA will be held harmless for any losses resulting from market volatility",
-            "The IA is permitted to share in the profits of the account if the client provides verbal consent"
-        ],
-        a: 0,
-        f: "Logic: Contractual Requirements. Performance fees (sharing in gains) are generally prohibited. Also, contracts CANNOT be assigned without consent, and 'hedge clauses' (holding the IA harmless for everything) are illegal."
-    },
-    {
-        q: "A state-registered Investment Adviser that has 'Custody' of client funds is typically required to maintain a minimum net worth of:",
-        c: ["$35,000", "$10,000", "$50,000", "$100,000"],
-        a: 0,
-        f: "Logic: Financial Requirements. USA rules: Custody = $35k Net Worth. Discretion only = $10k Net Worth."
-    },
-    {
-        q: "An IAR is granted 'Verbal Discretion' over a client's account. According to the North American Securities Administrators Association (NASAA) rules, this verbal authority is valid for:",
-        c: [
-            "10 business days following the first discretionary trade",
-            "48 hours",
-            "Until the end of the calendar year",
-            "Verbal discretion is never permitted; it must be in writing prior to any trade"
-        ],
-        a: 0,
-        f: "Logic: Verbal Discretion Nuance. Unlike Broker-Dealers (who need it in writing *before* trading), IARs can use verbal discretion for up to 10 business days, after which it must be in writing."
-    },
-    {
-        q: "If an Investment Adviser's 'Net Worth' falls below the state-required minimum, when must the firm notify the Administrator?",
-        c: ["By the close of business on the next business day", "Immediately (within 2 hours)", "Within 15 days", "At the time of the annual renewal"],
-        a: 0,
-        f: "Logic: Notification. This is a 'fiscal emergency'—the Admin must be told by the end of the next business day."
-    },
-    {
-        q: "Which of the following 'Soft Dollar' arrangements between an Investment Adviser and a Broker-Dealer is PERMITTED under Section 28(e) of the Securities Exchange Act of 1934?",
-        c: [
-            "The BD provides the IA with specialized research reports and analytical software",
-            "The BD pays the rent for the IA's office space in exchange for trade flow",
-            "The BD provides the IA with new office furniture and computer hardware",
-            "The BD pays for the IA's travel and hotel expenses for a conference"],
-        a: 0,
-        f: "Logic: Soft Dollars. Soft dollars must benefit the CLIENT (research/software helps the IA pick better stocks). Paying for rent, furniture, or travel only benefits the IA and is prohibited."
-    },
-    {
-        q: "An IAR is also a licensed insurance agent. They recommend that a client liquidate a high-quality mutual fund to purchase a high-commission universal life insurance policy. This may be a violation of the 'Fiduciary Duty' unless:",
-        c: [
-            "The conflict of interest and the commission are fully disclosed to the client in writing",
-            "The insurance policy provides a higher death benefit than the mutual fund's value",
-            "The client has a net worth of at least $1 million",
-            "The IAR waives the investment advisory fee for that quarter"
-        ],
-        a: 0,
-        f: "Logic: Disclosure of Conflict. As a Fiduciary, an IAR can have conflicts, but they MUST be disclosed. If the client knows you're making a commission and still wants the policy, it is permitted."
-    },
-    {
-        q: "A Broker-Dealer executes a series of trades between its own accounts to give the appearance of high trading volume in a specific stock. This prohibited practice is known as:",
-        c: ["Painting the Tape", "Front-running", "Shadowing", "Back-dating"],
-        a: 0,
-        f: "Logic: Market Manipulation. Creating a false appearance of activity (to trick others into buying) is called 'Painting the Tape.' Matching orders between accounts is 'Wash Trading.'"
-    },
-    {
-        q: "An Administrator wishes to conduct an investigation into an IAR suspected of fraud. To gather evidence, the Administrator has the power to:",
-        c: [
-            "Subpoena witnesses and require the production of books and records",
-            "Arrest the IAR and hold them in custody for 48 hours",
-            "Permanently bar the IAR without providing an opportunity for a hearing",
-            "Confiscate the IAR's passport to prevent them from leaving the state"
-        ],
-        a: 0,
-        f: "Logic: Administrative Power. Subpoena power is the primary tool for investigations. Only a court can arrest or issue an injunction."
-    },
-    {
-        q: "According to the Uniform Securities Act, the 'Statute of Limitations' for a civil lawsuit seeking damages for a securities violation is:",
-        c: [
-            "3 years from the violation or 2 years from discovery, whichever comes first",
-            "5 years from the violation or 3 years from discovery",
-            "10 years regardless of when the violation was discovered",
-            "1 year from the date of the trade"
-        ],
-        a: 0,
-        f: "Logic: Time Limits. USA Civil rule: 3 years from the event / 2 years from discovery. (Federal rule is often 3 and 1)."
-    },
-    {
-        q: "If an IAR is found guilty in a criminal court of a 'willful violation' of the Uniform Securities Act, they can face maximum penalties of:",
-        c: [
-            "A $5,000 fine and 3 years in prison",
-            "A $10,000 fine and 5 years in prison",
-            "A $1,000 fine and 1 year in prison",
-            "The Administrator does not have the power to seek criminal penalties"
-        ],
-        a: 0,
-        f: "Logic: Criminal Penalties. USA Criminal rule: '3-5-0' (3 years in prison, $5,000 fine, 0 jail if you prove you had no knowledge of the rule)."
-    }
-]
-];
-
-// --- 2. ENGINE ---
-let audioCtx;
-let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0;
-let appMode = 'sprint';
-let currentScores = [0,0,0,0];
-
-function setMode(m) {
-    appMode = m;
-    document.getElementById('mode-sprint').className = m === 'sprint' ? 'mode-btn active' : 'mode-btn';
-    document.getElementById('mode-sim').className = m === 'sim' ? 'mode-btn active' : 'mode-btn';
-}
-
-function start(i) {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    
-    currentPillar = i;
-    let source = (appMode === 'sim') ? simLib : sprintLib;
-
-    // --- ENSURE THESE NUMBERS ARE IN THIS EXACT ORDER ---
-    // i=0 (Econ) -> 8
-    // i=1 (Vehicles) -> 17
-    // i=2 (Strategy) -> 30
-    // i=3 (Regs) -> 45
-    let count = (appMode === 'sim') ? [8, 17, 30, 45][i] : 25;
-    
-    // Safety check to prevent the "10 question" bug
-    if (appMode === 'sim' && i === 2) {
-        console.log("Simulating Strategy: Pulling 30 questions.");
-    }
-
-    // ... rest of your shuffle and slice logic
-    activeSet = [...source[i]].sort(() => 0.5 - Math.random()).slice(0, count);
-    idx = 0; sessionScore = 0;
-    
-    document.getElementById('menu').style.display = 'none';
-    document.getElementById('game').style.display = 'block';
-    show();
-}
-function show() {
-    const q = activeSet[idx];
-    
-    // Scramble the button positions (Choice Scrambler)
-    let scrambledChoices = q.c.map((text, i) => ({ text, originalIndex: i }));
-    scrambledChoices.sort(() => 0.5 - Math.random());
-
-    let h = `<div class="q-text">${q.q}</div>`;
-    scrambledChoices.forEach(choice => {
-        h += `<button class="ans-btn" onclick="check(${choice.originalIndex}, this)">${choice.text}</button>`;
-    });
-
-    document.getElementById('q-area').innerHTML = h;
-    document.getElementById('feedback').style.display = 'none';
-    document.getElementById('next').style.display = 'none';
-    document.getElementById('status-line').innerText = `${appMode.toUpperCase()} PHASE: GATE ${idx + 1} OF ${activeSet.length}`;
-}
-
-function check(selectedIdx, btn) {
-    const q = activeSet[idx];
-    const isCorrect = (selectedIdx === q.a);
-    const btns = document.getElementsByClassName('ans-btn');
-    
-    if (isCorrect) {
-        btn.style.background = "#e8f5e9";
-        btn.style.borderColor = "#2e7d32";
-        sessionScore++;
-        playTone(600, 0.1);
-    } else {
-        btn.style.background = "#ffebee";
-        btn.style.borderColor = "#c62828";
-        playTone(200, 0.2);
-    }
-
-    document.getElementById('feedback').innerHTML = `<strong>${isCorrect ? '✅ GO' : '❌ ERROR'}</strong>: ${q.f}`;
-    document.getElementById('feedback').style.display = 'block';
-    document.getElementById('next').style.display = 'block';
-    for (let b of btns) b.disabled = true;
-}
-
-function next() {
-    idx++;
-    if (idx < activeSet.length) show(); else endSession();
-}
-
-function endSession() {
-    const pct = Math.round((sessionScore / activeSet.length) * 100);
-    // Keep the highest score achieved in this session
-    currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
-    document.getElementById('game').style.display = 'none';
-    document.getElementById('menu').style.display = 'block';
-    updateFuel();
-}
-
-function updateFuel() {
-    const avg = Math.round(currentScores.reduce((a,b)=>a+b, 0) / 4);
-    document.getElementById('fuel-fill').style.width = avg + '%';
-    document.getElementById('total-text').innerText = `FLIGHT READINESS: ${avg}% (GOAL: 73%)`;
-    
-    currentScores.forEach((s, i) => {
-        const el = document.getElementById(`s${i}`);
-        // This ensures it says "Ready: 85%" instead of just a raw number like "1"
-        el.innerText = s > 0 ? `Ready: ${s}%` : "PENDING";
-        el.style.color = s >= 73 ? "#2e7d32" : "#666";
-    });
-
-    if (avg >= 73 && currentScores.every(s => s >= 50)) {
-        document.getElementById('rocket').classList.add('takeoff');
-    }
-}
-function playTone(freq, dur) {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    osc.connect(g); g.connect(audioCtx.destination);
-    osc.frequency.value = freq;
-    g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-    osc.start(); osc.stop(audioCtx.currentTime + dur);
-}
-
-window.onload = updateFuel;
-</script>
-</body>
-</html>
+[ // PILLAR 1
+    {q: "Which return calculation is used strictly to evaluate a manager's performance by ignoring the timing of investor deposits?", c: ["Time-Weighted Return", "Dollar-Weighted Return"], a: 0, f: "Logic: Time-Weighted measures manager skill by neutralizing cash flow impact; however, Dollar-Weighted measures the investor's actual IRR, which is heavily influenced by their own timing of deposits and withdrawals."},
+    {q: "An IAR is reviewing a client's 'Net Worth.' On which financial statement is this found, and what does it represent?", c: ["Balance Sheet (Equity)", "Income Statement (Net Income)"], a: 0, f: "Logic: The Balance Sheet is a 'Snapshot' of what is owned (Assets) minus what is owed (Liabilities); however, the Income Statement is a 'Video' showing the flow of profits/losses over a period of time."},
+    {q: "Which form of the Efficient Market Hypothesis (EMH) suggests that fundamental analysis cannot provide an edge because all public info is already priced in?", c: ["Semi-Strong Form", "Weak Form"], a: 0, f: "Logic: Semi-Strong says public info is already reflected, meaning only 'inside information' provides an edge; however, Weak Form only accounts for past price history, implying fundamental research could still work."},
+    {q: "If a project has an Internal Rate of Return (IRR) higher than the company's cost of capital, the Net Present Value (NPV) will be:", c: ["Positive (greater than zero)", "Zero"], a: 0, f: "Logic: Positive NPV means the project earns more than it costs to fund; however, if IRR equals the cost of capital, the NPV is exactly zero (the break-even point)."},
+    {q: "The Sharpe Ratio is the standard for measuring risk-adjusted return. What does it use as its measure of risk?", c: ["Standard Deviation (Total Risk)", "Beta (Market Risk)"], a: 0, f: "Logic: Sharpe looks at efficiency relative to total volatility (Standard Deviation); however, Beta is only used for Systematic (Market) risk, typically in the CAPM formula."},
+    {q: "Which economic indicator is considered 'Leading' because it predicts future business activity?", c: ["Building Permits", "Average Prime Rate"], a: 0, f: "Logic: Permits signal future labor and material spending; however, the Prime Rate is 'Lagging' because banks only change it after the Fed has already moved rates."},
+    {q: "An Inverted Yield Curve occurs when the 'Front End' of the curve is higher than the 'Back End.' This signals:", c: ["Spiking short-term rates / Recession fears", "Economic expansion"], a: 0, f: "Logic: Inversion means the Fed is tightening short rates while investors buy long bonds for safety; however, a Normal (Upward) curve indicates a healthy, expanding economy."},
+    {q: "Which ratio is the most 'stringent' test of a company's ability to pay debt because it ignores slow-moving assets?", c: ["Quick Ratio (Acid Test)", "Current Ratio"], a: 0, f: "Logic: The Quick Ratio subtracts Inventory from current assets because you can't sell a warehouse of goods 'instantly'; however, the Current Ratio includes everything, which can hide liquidity issues."},
+    {q: "When inflation is rising, which 'Real' measurement decreases for an investor holding a fixed-rate bond?", c: ["Purchasing Power", "Nominal Interest"], a: 0, f: "Logic: Purchasing Power is the 'Real' value of the dollar; however, Nominal Interest is the fixed coupon percentage, which stays the same even as its value erodes."},
+    {q: "A stock with a Beta of 1.2 is expected to move how much relative to the S&P 500?", c: ["20% more volatile than the market", "20% less volatile than the market"], a: 0, f: "Logic: 1.0 is the benchmark market speed; however, anything above 1.0 is a 'multiplier' of market movement (1.2 = 120% of the market)."},
+    {q: "Which measurement calculates the 'excess return' a manager achieved that cannot be explained by market movement?", c: ["Alpha", "Beta"], a: 0, f: "Logic: Alpha is the 'bonus' return attributed to the manager's skill; however, Beta is just the 'systematic' movement you get for simply being in the market."},
+    {q: "Current Assets minus Current Liabilities equals which liquidity measure?", c: ["Working Capital", "Net Worth"], a: 0, f: "Logic: Working Capital is the cash available for day-to-day operations; however, Net Worth (Assets - Total Liabilities) is the long-term equity of the owners."},
+    {q: "Which accounting method results in the highest reported 'Net Income' during a period of rising prices?", c: ["FIFO (First-In, First-Out)", "LIFO (Last-In, First-Out)"], a: 0, f: "Logic: FIFO sells the 'oldest/cheapest' inventory first, resulting in lower costs and higher paper profits; however, LIFO sells the 'newest/expensive' stuff, which lowers profit and taxes."},
+    {q: "The 'Security Market Line' (SML) is a visual representation of which model?", c: ["CAPM (Capital Asset Pricing Model)", "MPT (Modern Portfolio Theory)"], a: 0, f: "Logic: SML plots expected return against Beta (Systematic risk); however, MPT uses the 'Efficient Frontier' to plot return against Standard Deviation (Total risk)."},
+    {q: "A company with high P/E and P/B ratios but a low dividend yield is likely a:", c: ["Growth Stock", "Value Stock"], a: 0, f: "Logic: Growth stocks trade at a premium because earnings are expected to explode, so they reinvest all cash; however, Value stocks trade 'cheap' and usually pay higher dividends."},
+    {q: "If the U.S. Dollar is 'Strong' against the Euro, what is the most likely trade outcome?", c: ["U.S. exports become more expensive (Bad for Trade)", "U.S. exports become cheaper"], a: 0, f: "Logic: A strong dollar means foreigners need more of their currency to buy our goods; however, it makes foreign imports much cheaper for American consumers."},
+    {q: "Which Fed rate is set by commercial banks rather than the Federal Reserve Board?", c: ["Fed Funds Rate", "Discount Rate"], a: 0, f: "Logic: Fed Funds is the market rate banks charge each other for overnight loans; however, the Discount Rate is the only rate the Fed sets directly for loans to banks."},
+    {q: "What is the 'Geometric Mean' of a return series (e.g., 10%, -5%, 20%) used for?", c: ["Time-weighted compounded return", "The simple arithmetic average"], a: 0, f: "Logic: Geometric mean accounts for the 'math of a loss' (it's harder to recover from -50%); however, arithmetic mean is just a simple sum-and-divide that overstates performance."},
+    {q: "Standard Deviation measures the dispersion of returns around which point?", c: ["The Mean (Average)", "The Beta"], a: 0, f: "Logic: Standard Deviation shows how far results stray from the 'average' (the center of the bell curve); however, Beta only measures movement relative to an outside index."},
+    {q: "In a 'Stagflation' environment, an economy experiences high inflation and:", c: ["High Unemployment (Stagnant Growth)", "Low Interest Rates"], a: 0, f: "Logic: Stagflation is the 'Worst Case Scenario' where prices go up but the job market is dead; however, normal inflation usually happens during high-growth periods."},
+    {q: "Which metric represents the 'Internal Rate of Return' (IRR) for a bond held to its final maturity?", c: ["Yield to Maturity (YTM)", "Nominal Yield (Coupon)"], a: 0, f: "Logic: YTM accounts for all interest plus the gain/loss of the discount/premium over time; however, the Nominal Yield is just the fixed rate printed on the paper."},
+    {q: "The 'Dividend Discount Model' (DDM) is used to find which value of a stock?", c: ["Intrinsic Value (Fair Price)", "Current Yield"], a: 0, f: "Logic: DDM values a stock by discounting all future dividends back to today; however, Current Yield is just a simple ratio of the annual dividend divided by the current price."},
+    {q: "Which branch of government is responsible for 'Monetary Policy' (Interest rates/Money supply)?", c: ["The Federal Reserve", "Congress"], a: 0, f: "Logic: The central bank (Fed) uses open market operations to steer the economy; however, Congress handles 'Fiscal Policy' (Taxing and Spending)."},
+    {q: "A correlation coefficient of -1.0 between two assets provides what benefit?", c: ["Maximum Diversification", "Maximum Performance"], a: 0, f: "Logic: -1.0 means when one goes up, the other goes down exactly the same amount, canceling out volatility; however, a correlation of +1.0 offers no diversification benefit."},
+    {q: "Rule of 72: If an investment earns 6% annually, it will double in how many years?", c: ["12 years", "6 years"], a: 0, f: "Logic: 72 divided by the growth rate equals the doubling time; however, 72 divided by the years equals the required rate to double."},
+    {q: "In the 'Discounted Cash Flow' (DCF) model, if market interest rates rise, what happens to the theoretical price of a bond?", c: ["The price decreases", "The price increases"], a: 0, f: "Logic: Rising rates increase the discount rate (the denominator), making future cash flows worth less today; however, falling rates make future cash flows more valuable, pushing prices up."},
+    {q: "Which financial ratio measures a company's 'Leverage' by comparing borrowed funds to owner-invested funds?", c: ["Debt-to-Equity Ratio", "Total Asset Turnover"], a: 0, f: "Logic: Debt-to-Equity shows how much risk the company takes via borrowing; however, Asset Turnover measures efficiency in using assets to generate sales."},
+    {q: "According to the 'Strong Form' of EMH, which type of information can an investor use to achieve superior returns?", c: ["None (Information is already priced in)", "Inside Information"], a: 0, f: "Logic: Strong Form argues that even non-public (inside) info is already reflected in the stock price; however, Semi-Strong Form argues that inside info is the ONLY way to get an edge."},
+    {q: "What is the primary difference between GDP and GNP?", c: ["Geography vs. Citizenship", "Inflation-adjusted vs. Nominal"], a: 0, f: "Logic: GDP measures activity within U.S. borders regardless of the worker's nationality; however, GNP measures activity by U.S. citizens regardless of where they are in the world."},
+    {q: "Which measurement is the square root of the variance?", c: ["Standard Deviation", "Range"], a: 0, f: "Logic: Standard Deviation is the mathematical square root of variance, measuring total dispersion; however, Range is simply the difference between the highest and lowest data points."},
+    {q: "If an investor is 'Risk Averse,' they would prefer a portfolio located on the Efficient Frontier with:", c: ["Lower Standard Deviation", "Higher Alpha"], a: 0, f: "Logic: Risk-averse investors prioritize safety (low volatility) even if it means lower returns; however, aggressive investors seek higher returns and accept the risk."},
+    {q: "Which indicator move confirms that the economy has already changed direction?", c: ["Lagging Indicator", "Coincident Indicator"], a: 0, f: "Logic: Lagging indicators (like duration of unemployment) show where we've been; however, Coincident indicators move exactly with the economy in real-time."},
+    {q: "The 'Risk-Free Rate' used in Sharpe Ratio and CAPM calculations is traditionally based on:", c: ["91-day Treasury Bills", "30-year Treasury Bonds"], a: 0, f: "Logic: T-Bills have virtually no interest rate or default risk due to their short maturity; however, 30-year bonds have massive interest rate risk."},
+    {q: "A company's 'Quick Ratio' is 1.2 and its 'Current Ratio' is 2.5. This large gap is caused by:", c: ["High Inventory levels", "High Accounts Payable"], a: 0, f: "Logic: The Quick Ratio ignores inventory because it is hard to liquidate quickly; however, the Current Ratio includes it, creating the gap."},
+    {q: "Which economic phase is characterized by 'Trough' activity transitioning into growth?", c: ["Expansion", "Contraction"], a: 0, f: "Logic: Expansion follows the Trough (the bottom); however, Contraction follows the Peak (the top)."},
+    {q: "Does 'Disinflation' mean that prices are falling?", c: ["No (Prices are rising, but slower)", "Yes"], a: 0, f: "Logic: Disinflation is a slowing of the inflation rate (e.g., 5% down to 2%); however, Deflation is an actual decrease in the price level (negative inflation)."},
+{
+  q: "Does 'Disinflation' mean that prices are falling?", 
+  c: ["The rate of inflation is slowing but remains positive", "The general price level is experiencing an absolute decline"], 
+  a: 0, 
+  f: "Logic: Disinflation is a slowing of the inflation rate (e.g., 5% down to 2%); however, Deflation is an actual decrease in the price level (negative inflation)."
+},
+    {q: "Which valuation model determines the required return by adding the Risk-Free rate to the (Beta * Market Risk Premium)?", c: ["CAPM", "Dividend Discount Model"], a: 0, f: "Logic: CAPM is the formula for expected return based on systematic risk; however, DDM values a stock based only on the present value of its dividends."},
+    {q: "Total Assets minus Total Liabilities equals:", c: ["Shareholders' Equity (Net Worth)", "Working Capital"], a: 0, f: "Logic: This is the basic accounting equation for what the owners 'own' free and clear; however, Working Capital only looks at short-term assets and debts."},
+    {q: "A stock with a Beta of 1.0 will move:", c: ["In tandem with the S&P 500", "Twice as fast as the market"], a: 0, f: "Logic: 1.0 is the benchmark for the market system; however, a Beta of 2.0 would move twice as fast as the market."},
+@@ -126,7 +131,7 @@
+    {q: "If a company has a P/E ratio of 10 and Earnings Per Share (EPS) of $5.00, what is the stock price?", c: ["$50.00", "$2.00"], a: 0, f: "Logic: Price = P/E Ratio multiplied by EPS; however, Yield = Dividend divided by Price."},
+    {q: "Which return measure accounts for the 'Time Value of Money' by finding the rate that makes the PV of inflows equal to the initial cost?", c: ["Internal Rate of Return (IRR)", "Total Return"], a: 0, f: "Logic: IRR is a DCF-based 'break-even' yield; however, Total Return is just the raw gain/loss without discounting for time."},
+    {q: "A 'Defensive' stock is most likely found in which industry?", c: ["Tobacco or Utilities", "Steel or Automobiles"], a: 0, f: "Logic: Defensive stocks sell necessities that people buy even in recessions; however, Cyclical stocks (Steel/Cars) rely on a strong economy."},
+    {q: "Which metric measures the dispersion of a set of data points around their 'Median'?", c: ["None (Dispersion is measured around the Mean)", "Standard Deviation"], a: 0, f: "Logic: Standard Deviation always measures dispersion from the Mean (average); however, the Range just looks at the gap between high and low."},
+    {q: "Which metric measures the dispersion of a set of data points around their 'Median'?", c: ["None", "Standard Deviation"], a: 0, f: "Logic: Standard Deviation always measures dispersion from the Mean (average); however, the Range just looks at the gap between high and low."},
+    {q: "An investor seeking 'Maximum Capital Appreciation' would likely prioritize which metric?", c: ["High Beta", "High Dividend Yield"], a: 0, f: "Logic: Aggressive growth requires high sensitivity to market upswings (High Beta); however, income investors prioritize High Yield."},
+    {q: "The 'Consumer Price Index' (CPI) is the primary measure of:", c: ["Inflation", "Economic Growth"], a: 0, f: "Logic: CPI tracks the cost of a basket of consumer goods; however, GDP tracks the total output of those goods."},
+    {q: "If an analyst wants to know how a fund is 'Correlated' to its benchmark, they look at:", c: ["R-Squared", "Alpha"], a: 0, f: "Logic: R-Squared shows the percentage of movement explained by the benchmark (correlation); however, Alpha shows the movement that the benchmark CANNOT explain."},
+@@ -325,7 +330,7 @@
+    {q: "SIMPLE IRAs are restricted to businesses with a maximum of how many employees?", c: ["100 employees", "500 employees"], a: 0, f: "Logic: SIMPLE stands for 'Savings Incentive Match for Employees' of small businesses; however, larger firms typically utilize 401(k) plans."},
+    {q: "What is the mandatory age to begin Required Minimum Distributions (RMDs) under current SECURE 2.0 legislation?", c: ["Age 73", "Age 70.5"], a: 0, f: "Logic: The law pushed the age back to allow more growth; however, don't forget that Roth IRA original owners are exempt from RMDs entirely."},
+    {q: "Which Medicare part covers hospital stays and is generally free to those who paid into the system?", c: ["Part A", "Part B"], a: 0, f: "Logic: A is for All-in (Hospital); however, Part B is for Body (Outpatient/Doctor) and requires a monthly premium."},
+    {q: "Does a 'Step-up in Basis' apply when a client gifts stock to a charity?", c: ["No (The charity gets the donor's basis)", "Yes"], a: 0, f: "Logic: Charities carry over the original cost basis; however, gifting appreciated stock to a charity is still smart because the donor gets a deduction for the Full Market Value."},
+    {q: "Does a 'Step-up in Basis' apply when a client gifts stock to a charity?", c: ["No", "Yes"], a: 0, f: "Logic: Charities carry over the original cost basis; however, gifting appreciated stock to a charity is still smart because the donor gets a deduction for the Full Market Value."},
+    {q: "A client who believes they can 'out-trade' the market despite high fees and taxes is exhibiting:", c: ["Overconfidence Bias", "Herding"], a: 0, f: "Logic: Overconfidence leads to excessive trading and lower net returns; however, Herding is the tendency to follow the crowd into whatever is currently 'hot'."},
+    {q: "Which ratio identifies the 'break-even' percentage of a real estate project or capital investment?", c: ["Internal Rate of Return (IRR)", "Net Present Value (NPV)"], a: 0, f: "Logic: IRR is the rate that results in an NPV of zero; however, NPV itself is a dollar amount, not a percentage."},
+    {q: "A 'Per Stirpes' distribution in a Will means assets go to:", c: ["The children of a deceased beneficiary", "The other surviving siblings only"], a: 0, f: "Logic: Per Stirpes keeps the money in that specific 'family branch'; however, 'Per Capita' would divide the money equally among all surviving members."},
+@@ -391,7 +396,12 @@
+    {q: "An individual represents a Broker-Dealer in the sale of exempt U.S. Government bonds to retail clients. Is this person required to register as an Agent?", c: ["Yes (BD representatives are always agents)", "No (Exempt securities exclude agents)"], a: 0, f: "Logic: If you work for a Broker-Dealer, you are an Agent regardless of what you sell; however, if you work for an Issuer (like the Treasury), selling exempt securities would exclude you from registration."},
+    {q: "A clerk at a Broker-Dealer describes the 'benefits of a specific mutual fund' to a caller to generate interest. Does this clerk need to register?", c: ["Yes (Solicitation requires registration)", "No (Excluded as clerical/administrative)"], a: 0, f: "Logic: Describing investment benefits is 'solicitation.' Once a clerk moves beyond administrative tasks (like taking a phone number), they lose their exclusion; however, true clerical staff do not register."},
+    {q: "Under the Uniform Securities Act (USA), how long must an Investment Adviser (IA) maintain records of a business-related blog post or social media ad?", c: ["5 years total", "3 years total"], a: 0, f: "Logic: IAs follow the '5 and 2' rule (5 years total, 2 years in-office) for all advertisements, including digital posts; however, Broker-Dealers typically follow a 3-year recordkeeping rule."},
+    {q: "An individual represents an Issuer selling its own stock to existing employees, and no commission is paid. Is this person an Agent?", c: ["No (Excluded)", "Yes"], a: 0, f: "Logic: Representing an Issuer in a transaction with existing employees where NO commission is paid is a specific exclusion from the Agent definition; however, if a commission is paid, registration is required."},
+   {
+    q: "An individual represents an Issuer selling its own stock to existing employees, and no commission is paid. Is this person an Agent?", 
+    c: ["The individual is excluded from the definition of an agent in this specific transaction", "The individual must register as an agent because the transaction involves retail investors"], 
+    a: 0, 
+    f: "Logic: Representing an Issuer in a transaction with existing employees where NO commission is paid is a specific exclusion from the Agent definition; however, if a commission is paid, registration is required."
+},
+    {q: "A Broker-Dealer has no office in State A, but has one existing retail client who is on a 2-week vacation in State A. Does the BD need to register in State A?", c: ["No (Snowbird/Vacation Exemption)", "Yes"], a: 0, f: "Logic: The 'Snowbird' rule allows firms to deal with existing clients on vacation in a new state without registering; however, if the client moves permanently, the firm has 30 days to register."},
+    {q: "An Investment Adviser (IA) is deemed to have 'Custody' if they mistakenly receive a client check and do not return it within:", c: ["3 Business Days", "24 Hours"], a: 0, f: "Logic: The 72-hour (3 business day) window is the safe harbor to avoid being 'deemed' to have custody; however, checks made out to third parties must be forwarded within the same 3-day window."},
+    {q: "Which law created the SEC and regulates the secondary market (Exchanges and People)?", c: ["Securities Exchange Act of 1934", "Securities Act of 1933"], a: 0, f: "Logic: The 1934 Act polices the 'People and Places' (Exchanges/Dealers); however, the 1933 Act is the 'Paper Act' that regulates new issues (Prospectuses)."},
+@@ -419,11 +429,21 @@
+    {q: "The Investment Adviser 'Brochure' (Part 2A) must be delivered to a client at least how many hours before the contract is signed?", c: ["48 hours (if withdrawal is allowed within 5 days)", "24 hours"], a: 0, f: "Logic: State-registered IAs must follow the 48-hour rule or allow a 5-day penalty-free withdrawal; however, Federal IAs only need to provide it 'at or before' the contract signing."},
+    {q: "A person paid to refer clients to an Investment Adviser (a Solicitor) is generally required to register as:", c: ["An IAR", "An Agent"], a: 0, f: "Logic: Most states define 'soliciting' as an advisory function; however, a person referring clients to a Broker-Dealer would need to register as an Agent."},
+    {q: "What is the '3-5-0' rule for CRIMINAL violations of the Uniform Securities Act?", c: ["3 years prison, $5,000 fine, 0 jail if no knowledge", "5 years prison, $3,000 fine"], a: 0, f: "Logic: The criminal penalty is 3 years/$5k, but you can't go to jail if you prove you didn't know the specific rule you broke; however, you still pay the fine."},
+    {q: "Is a 'Bank' defined as a Broker-Dealer under the Uniform Securities Act?", c: ["No (Banks are specifically excluded)", "Yes"], a: 0, f: "Logic: Banks, Savings Institutions, and Trust Companies are not BDs by statute; however, their 'wholly owned subsidiaries' (like a separate brokerage arm) MUST register."},
+    {
+    q: "Is a 'Bank' defined as a Broker-Dealer under the Uniform Securities Act?", 
+    c: ["Banks, savings institutions, and trust companies are specifically excluded from the definition", "Banks must register as broker-dealers if they offer interest-bearing accounts to the public"], 
+    a: 0, 
+    f: "Logic: Banks, Savings Institutions, and Trust Companies are not BDs by statute; however, their 'wholly owned subsidiaries' (like a separate brokerage arm) MUST register."
+},
+    {q: "If an IAR suspects an elderly client is being financially exploited, they should:", c: ["Place a temporary hold on disbursements", "Liquidate the account for safety"], a: 0, f: "Logic: Regulations allow for a 'hold' to investigate exploitation; however, an IAR can never liquidate an account without specific client instructions or a POA."},
+    {q: "Under Reg S-P (Privacy), a 'Consumer' must receive a privacy notice:", c: ["Before the firm shares their info with outsiders", "Every single year"], a: 0, f: "Logic: Consumers only get a notice if you plan to disclose their data; however, 'Customers' (ongoing relationships) must get an initial notice and an annual notice regardless of sharing."},
+    {q: "An Agent fails to mention a 'Material Fact' (like a major risk) when selling a stock. This is:", c: ["Omission (Fraud)", "Churning"], a: 0, f: "Logic: Leaving out an important risk is just as illegal as lying about a gain; however, Churning is specifically about the frequency of trades."},
+    {q: "Can the Administrator deny registration simply because an applicant was suspended by a foreign securities regulator?", c: ["Yes (Foreign SRO actions count)", "No"], a: 0, f: "Logic: Foreign disciplinary actions carry the same weight as domestic ones for statutory disqualification; however, the action must have happened within the last 10 years."},
+   {
+    q: "Can the Administrator deny registration simply because an applicant was suspended by a foreign securities regulator?", 
+    c: ["The Administrator may consider foreign disciplinary actions that occurred within the last 10 years", "The Administrator is limited to reviewing domestic violations of state and federal securities laws"], 
+    a: 0, 
+    f: "Logic: Foreign disciplinary actions carry the same weight as domestic ones for statutory disqualification; however, the action must have happened within the last 10 years."
+},
+    {q: "A Broker-Dealer executes a trade between its own accounts to give the appearance of high volume. This is:", c: ["Painting the Tape / Wash Trading", "Front-running"], a: 0, f: "Logic: Faking volume is market manipulation; however, Front-running is placing your own trade before a client's large block order."},
+    {q: "What happens to a Power of Attorney (POA) if the client dies?", c: ["It is cancelled immediately", "It survives for 3 business days"], a: 0, f: "Logic: All POAs (including Durable) expire at the moment of death; however, a 'Durable' POA is unique because it survives the client's mental incapacity (dementia/coma)."},
+    {q: "An IAR works for a Federal Covered IA and has a place of business in State A, but only serves institutional clients (banks). Do they register in State A?", c: ["Yes (Place of Business rule)", "No (Institutional exemption)"], a: 0, f: "Logic: For Federal IARs, a physical 'Place of Business' overrides everything; they must register in that state; however, if they had NO office and only institutional clients, they would be exempt."},
+@@ -439,7 +459,12 @@
+    {q: "An IAR uses a pseudonym or 'handle' on X/Twitter to solicit business. This is allowed:", c: ["Only if the handle is registered and supervised by the firm", "Always"], a: 0, f: "Logic: Firms must supervise all business-related digital communications regardless of the name used; however, personal non-business posts are generally not subject to IA recordkeeping."},
+    {q: "Which official is the 'primary cop' responsible for enforcing the Uniform Securities Act?", c: ["The Administrator", "The Attorney General"], a: 0, f: "Logic: The Administrator (or Commissioner) is the specific regulator for the USA; however, the Attorney General usually handles the actual criminal prosecution in a courtroom."},
+    {q: "If an Agent's Broker-Dealer has its registration revoked by the state, what is the status of the Agent's license?", c: ["It is suspended (Inactive)", "It remains active if the Agent is innocent"], a: 0, f: "Logic: An Agent's license is only effective while they are associated with a registered firm; however, the Agent can reactivate their license by associating with a new BD within 30 days."},
+    {q: "Is an Investment Adviser (IA) required to register in a state if they only advise 'Institutional' clients like insurance companies and banks?", c: ["No (Institutional Exemption)", "Yes"], a: 0, f: "Logic: Dealing strictly with professionals (institutions) removes the need for state registration; however, as soon as you have even ONE retail client and no De Minimis, you must register."},
+    {
+    q: "Is an Investment Adviser (IA) required to register in a state if they only advise 'Institutional' clients like insurance companies and banks?", 
+    c: ["The IA is exempt from registration provided they have no physical place of business in the state", "The IA must register if the total number of institutional clients in the state exceeds five"], 
+    a: 0, 
+    f: "Logic: Dealing strictly with professionals (institutions) removes the need for state registration; however, as soon as you have even ONE retail client and no De Minimis, you must register."
+},,
+    {q: "Which law is known as the 'Paper Act' and requires the delivery of a Prospectus for all new issues?", c: ["Securities Act of 1933", "Securities Exchange Act of 1934"], a: 0, f: "Logic: The 1933 Act focuses on the full disclosure of 'new' securities entering the market; however, the 1934 Act polices the people and places where 'old' stocks trade."},
+    {q: "An IAR gives a speech at a public seminar and recommends three specific small-cap stocks. Is this considered an 'Advertisement'?", c: ["Yes (Any public recommendation is an ad)", "No (Only written material counts)"], a: 0, f: "Logic: IA advertising rules include any communication directed to more than one person that offers advisory services; however, a private one-on-one meeting is generally not an ad."},
+    {q: "If an individual represents an Issuer in a transaction that is 'Exempt' (like a private placement), do they need to register as an Agent?", c: ["No (Exempt transaction exclusion)", "Yes"], a: 0, f: "Logic: Representing the Issuer in an exempt transaction excludes the person from the Agent definition; however, representing a Broker-Dealer in the same transaction ALWAYS requires registration."},
+@@ -470,13 +495,18 @@
+    {q: "What is the 'statutory disqualification' period for a felony conviction?", c: ["10 Years", "5 Years"], a: 0, f: "Logic: Any felony in the last decade allows the Admin to deny registration; however, the crime must also be disclosed on the U4 even if it was 20 years ago."},
+    {q: "An IA uses 'Discretion' to buy 1,000 shares of a stock for a client without a written agreement. Is this a violation?", c: ["No (If written authority is obtained within 10 days)", "Yes"], a: 0, f: "Logic: Advisory rules allow 'Verbal Discretion' for the first 10 days only; however, Broker-Dealers MUST have written authority BEFORE the first trade."},
+    {q: "Which law polices 'Insider Trading' and allows for 'Treble Damages' (3x profit)?", c: ["Insider Trading Act of 1988", "USA"], a: 0, f: "Logic: This specific federal act raised the penalties for cheating; however, the 1934 Act was the original law that made insider trading illegal."},
+    {q: "Can an IA take 'Custody' of client funds if the state has NO rule regarding it?", c: ["Yes (If they notify the Admin)", "No"], a: 0, f: "Logic: If the state is silent, custody is allowed with notice; however, if the state EXPLICITLY prohibits it, no amount of notice makes it legal."},
+    {
+    q: "Can an IA take 'Custody' of client funds if the state has NO rule regarding it?", 
+    c: ["Custody is permitted with notice to the Administrator unless a specific rule prohibits it", "Custody is strictly prohibited unless the state has a formal rule explicitly allowing it"], 
+    a: 0, 
+    f: "Logic: If the state is silent, custody is allowed with notice; however, if the state EXPLICITLY prohibits it, no amount of notice makes it legal."
+},,
+    {q: "A Broker-Dealer has a place of business in State A. They only serve institutional clients. Do they register in State A?", c: ["Yes (Office trigger)", "No"], a: 0, f: "Logic: The 'Institutional' and 'De Minimis' exemptions only apply if you have NO office in the state; however, once you open a door, you must register."},
+    {q: "What is the minimum Net Worth requirement for an IA with 'Custody'?", c: ["$35,000", "$10,000"], a: 0, f: "Logic: High risk requires high collateral; however, having 'Discretion' only requires $10,000."},
+    {q: "An Agent tells a client a stock is 'Guaranteed' against loss by the clearing firm. This is:", c: ["Fraud", "Allowed with a bond"], a: 0, f: "Logic: No one can guarantee market performance; however, you can guarantee the payment of interest on a 'Guaranteed Bond' (backed by a parent company)."},
+    {q: "Is 'Soft Dollar' compensation allowed if it pays for a manager's travel to a research conference?", c: ["No (Only research/tools allowed)", "Yes"], a: 0, f: "Logic: Soft dollars must benefit the client (like software or reports); however, travel, rent, and furniture only benefit the IA and are prohibited."},
+    {q: "How many retail clients trigger Broker-Dealer registration in a state with no office?", c: ["ONE (No De Minimis)", "Six"], a: 0, f: "Logic: BDs are 'transactional' and have zero tolerance; one retail client triggers them; however, IAs have the '5-client' buffer."},
+    {q: "Is a 'Limited Partnership' interest considered a security?", c: ["Yes (Investor is passive)", "No"], a: 0, f: "Logic: If you provide money and someone else does the work, it's a security; however, a 'General Partner' who manages the business is not holding a security."},
+    {q: "Is a 'Limited Partnership' interest considered a security?", c: ["Yes", "No"], a: 0, f: "Logic: If you provide money and someone else does the work, it's a security; however, a 'General Partner' who manages the business is not holding a security."},
+    {q: "Which registration method is used for an IPO being sold in multiple states simultaneously?", c: ["Coordination", "Qualification"], a: 0, f: "Logic: Coordination 'syncs' the SEC and State effective dates; however, 'Qualification' is for 'Intrastate' (single state) offerings and is much harder."},
+    {q: "An IAR inadvertently sees a client's password and uses it to 'help' the client trade. This is:", c: ["Custody and an Unethical Practice", "Good customer service"], a: 0, f: "Logic: Holding login credentials that allow withdrawals/trades is deemed custody; however, you should always use your own 'Discretionary' access instead."},
+    {q: "Under the USA, 'Fraud' requires which of the following?", c: ["A willful attempt to deceive", "The client losing money"], a: 0, f: "Logic: Fraud is about the 'Intent' to lie or omit; however, you can be guilty of fraud even if the client actually makes money on the trade."},
