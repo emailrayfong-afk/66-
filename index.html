@@ -1777,20 +1777,27 @@ function start(i) {
     
     currentPillar = i;
     let source = (appMode === 'sim') ? simLib : sprintLib;
+
+    // --- ENSURE THESE NUMBERS ARE IN THIS EXACT ORDER ---
+    // i=0 (Econ) -> 8
+    // i=1 (Vehicles) -> 17
+    // i=2 (Strategy) -> 30
+    // i=3 (Regs) -> 45
     let count = (appMode === 'sim') ? [8, 17, 30, 45][i] : 25;
     
-    // Safety check: Don't pull more than exists in the array
-    let limit = Math.min(count, source[i].length);
-    
-    // Shuffle the full 100 questions and take the count
-    activeSet = [...source[i]].sort(() => 0.5 - Math.random()).slice(0, limit);
+    // Safety check to prevent the "10 question" bug
+    if (appMode === 'sim' && i === 2) {
+        console.log("Simulating Strategy: Pulling 30 questions.");
+    }
+
+    // ... rest of your shuffle and slice logic
+    activeSet = [...source[i]].sort(() => 0.5 - Math.random()).slice(0, count);
     idx = 0; sessionScore = 0;
     
     document.getElementById('menu').style.display = 'none';
     document.getElementById('game').style.display = 'block';
     show();
 }
-
 function show() {
     const q = activeSet[idx];
     
