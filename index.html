@@ -3272,26 +3272,41 @@ function show() {
 function check(selectedIdx, btn) {
     const q = activeSet[idx];
     const isCorrect = (selectedIdx === q.a);
-    const btns = document.getElementsByClassName('ans-btn');
+    const btns = document.querySelectorAll('.ans-btn');
     
+    // 1. Fixed the variable name here to 'btns'
+    btns.forEach(b => b.disabled = true);
+
     if (isCorrect) {
+        // 2. Selected button turns green
         btn.style.background = "#e8f5e9";
         btn.style.borderColor = "#2e7d32";
+        btn.style.color = "#2e7d32";
         sessionScore++;
         playTone(600, 0.1);
     } else {
+        // 3. Selected button turns red
         btn.style.background = "#ffebee";
         btn.style.borderColor = "#c62828";
+        btn.style.color = "#c62828";
+        
+        // 4. Highlight the correct button in green
+        btns.forEach(b => {
+            // This checks the onclick attribute to find the correct answer index
+            if (b.getAttribute('onclick').includes(`check(${q.a},`)) {
+                b.style.background = "#e8f5e9";
+                b.style.borderColor = "#2e7d32";
+                b.style.color = "#2e7d32";
+                b.style.borderWidth = "3px"; 
+            }
+        });
         playTone(200, 0.2);
     }
 
     document.getElementById('feedback').innerHTML = `<strong>${isCorrect ? '✅ GO' : '❌ ERROR'}</strong>: ${q.f}`;
     document.getElementById('feedback').style.display = 'block';
     document.getElementById('next').style.display = 'block';
-    for (let b of btns) b.disabled = true;
-}
-
-function next() {
+}function next() {
     idx++;
     if (idx < activeSet.length) show(); else endSession();
 }
