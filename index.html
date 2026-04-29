@@ -197,13 +197,15 @@
                 <button class="p-btn" onclick="start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">PENDING</span></button>
             </div>
         </div>
-        <div id="game" style="display:none;">
+<div id="game" style="display:none;">
             <div id="status-line" style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px;"></div>
             <div id="q-area"></div>
             <div id="feedback"></div>
-            <button id="next" class="nav-btn" onclick="next()">NEXT GATE ></button>
+            <div id="action-buttons">
+                <button id="next" class="nav-btn" onclick="next()">NEXT GATE ></button>
+                <button id="mission-log-btn" class="nav-btn" style="display:none; background:#666; margin-top:10px;" onclick="showMissionLog()">📋 VIEW MISSION LOG</button>
+            </div>
         </div>
-    </div>
 
 <script>
 // --- 1. DATA LIBRARIES ---
@@ -3193,160 +3195,398 @@ const simLib = [
     }
 ]
 ]; // SIMULATION LIBRARY COMPLETE
+// ========================================
+// 🚀 ENGINE LOGIC
+// ========================================
+let mode = 'sprint';
+let currentPillar = 0;
+let currentQ = 0;
+let score = 0;
+let pillarScores = [0, 0, 0, 0];
+let pillarCompleted = [false, false, false, false];
+let answered = false;
+let missionLog = [];
+let activeSet = []; 
+let audioContext = null;
 
-// --- 2. ENGINE ---
-let audioCtx;
-let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0;
-let appMode = 'sprint';
-let currentScores = [0,0,0,0];
+function initAudio() {
+    if (!audioContext) {
+        try {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch(e) {
+            console.log('Audio not supported');
+        }
+    }
+}
+
+function playSound(type) {
+    if (!audioContext) return;
+    const osc = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    osc.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    switch(type) {
+        case 'countdown':
+            osc.frequency.value = 800;
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.1);
+            break;
+        case 'liftoff':
+            osc.frequency.value = 200;
+            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 2);
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 2);
+            break;
+        case 'crash':
+            osc.type = 'sawtooth';
+            osc.frequency.value = 100;
+            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.5);
+            break;
+    }
+}
 
 function setMode(m) {
-    appMode = m;
-    // Visual feedback for buttons
-    document.getElementById('mode-sprint').classList.toggle('active', m === 'sprint');
-    document.getElementById('mode-sim').classList.toggle('active', m === 'sim');
+    mode = m; 
+    score = 0;
+    pillarScores = [0, 0, 0, 0];
+    pillarCompleted = [false, false, false, false];
+    missionLog = [];
+    currentPillar = 0;
+    currentQ = 0;
+    answered = false;
+    activeSet = [];
+    
+    updateProgress();
+    
+    for (let i = 0; i < 4; i++) {
+        let statusSpan = document.getElementById(`s${i}`);
+        if (statusSpan) {
+            statusSpan.textContent = 'PENDING';
+            statusSpan.style.color = '';
+        }
+    }
+    
+    let btnSprint = document.getElementById('mode-sprint');
+    let btnSim = document.getElementById('mode-sim');
+    if(btnSprint) btnSprint.classList.toggle('active', m === 'sprint');
+    if(btnSim) btnSim.classList.toggle('active', m === 'sim');
+    
+    const rocket = document.getElementById('rocket');
+    if (rocket) {
+        rocket.className = '';
+        rocket.style.display = 'block';
+        rocket.style.bottom = '10px';
+    }
+    
+    const countdownEl = document.getElementById('countdown');
+    if (countdownEl) {
+        countdownEl.style.display = 'none';
+        countdownEl.textContent = '';
+    }
 }
 
-function endSession() {
-    const pct = Math.round((sessionScore / activeSet.length) * 100);
+function start(pillar) {
+    initAudio(); 
+    currentPillar = pillar;
+    currentQ = 0;
+    score = 0; 
+    answered = false;
+    missionLog = []; 
     
-    // Update the score for the pillar just completed
-    currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
-    
-    // Hide game, show menu
-    document.getElementById('game').style.display = 'none';
-    document.getElementById('menu').style.display = 'block';
-    
-    // CRITICAL: Refresh the fuel and UI without resetting appMode
-    updateFuel();
-    
-    // Ensure the mode buttons still show the correct active state
-    setMode(appMode); 
-}
-
-function start(i) {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    
-    currentPillar = i;
-    let source = (appMode === 'sim') ? simLib : sprintLib;
-    
-    // Safety check for empty arrays
-    if (!source[i] || source[i].length === 0) {
-        alert("Mission Data for this Pillar is currently loading.");
+    if (!simLib[pillar] || simLib[pillar].length === 0) {
+        alert("Pillar " + (pillar + 1) + " data is missing! Check your arrays.");
         return;
     }
-
-    // UPDATED COUNTS: P1: 8, P2: 17, P3: 30, P4: 45
-    let count = (appMode === 'sim') ? [8, 17, 30, 45][i] : 25;
     
-    // This ensures we take the requested count, 
-    // or the maximum available if you haven't pasted all 100 yet
-    let limit = Math.min(count, source[i].length);
+    const count = mode === 'sprint' ? 25 : [8, 17, 30, 45][pillar];
+    const sourceLib = simLib[pillar];
     
-    activeSet = [...source[i]].sort(() => 0.5 - Math.random()).slice(0, limit);
-    idx = 0; sessionScore = 0;
+    let shuffled = [...sourceLib].sort(() => 0.5 - Math.random());
+    activeSet = shuffled.slice(0, Math.min(count, shuffled.length));
     
     document.getElementById('menu').style.display = 'none';
     document.getElementById('game').style.display = 'block';
-    show();
-}
-function show() {
-    const q = activeSet[idx];
     
-    // Scramble the button positions (Choice Scrambler)
-    let scrambledChoices = q.c.map((text, i) => ({ text, originalIndex: i }));
-    scrambledChoices.sort(() => 0.5 - Math.random());
+    // Ensure the log button is hidden at the start of a pillar
+    document.getElementById('mission-log-btn').style.display = 'none';
+    
+    showQuestion();
+}
 
-    let h = `<div class="q-text">${q.q}</div>`;
-    scrambledChoices.forEach(choice => {
-        h += `<button class="ans-btn" onclick="check(${choice.originalIndex}, this)">${choice.text}</button>`;
+function showQuestion() {
+    const q = activeSet[currentQ];
+    const total = activeSet.length;
+    
+    const modeLabel = mode === 'sprint' ? 'SPRINT' : 'SIMULATION';
+    document.getElementById('status-line').textContent = `${modeLabel} MODE | GATE ${currentQ + 1} of ${total}`;
+    
+    let choicesToDisplay = [];
+    
+    if (mode === 'sprint') {
+        let wrongAnswers = [];
+        for (let i = 0; i < q.c.length; i++) {
+            if (i !== q.a) {
+                wrongAnswers.push({ text: q.c[i], originalIndex: i });
+            }
+        }
+        wrongAnswers.sort(() => 0.5 - Math.random());
+        let selectedWrong = wrongAnswers[0];
+        
+        choicesToDisplay = [
+            { text: q.c[q.a], originalIndex: q.a },
+            selectedWrong
+        ];
+    } else {
+        choicesToDisplay = q.c.map((text, i) => ({ text, originalIndex: i }));
+    }
+    
+    choicesToDisplay.sort(() => 0.5 - Math.random());
+    
+    let html = `<div class="q-text">${q.q}</div>`;
+    choicesToDisplay.forEach(choice => {
+        html += `<button class="ans-btn" data-index="${choice.originalIndex}" onclick="checkAnswer(${choice.originalIndex}, this)">${choice.text}</button>`;
     });
-
-    document.getElementById('q-area').innerHTML = h;
+    
+    document.getElementById('q-area').innerHTML = html;
     document.getElementById('feedback').style.display = 'none';
     document.getElementById('next').style.display = 'none';
-    document.getElementById('status-line').innerText = `${appMode.toUpperCase()} PHASE: GATE ${idx + 1} OF ${activeSet.length}`;
+    answered = false;
 }
 
-function check(selectedIdx, btn) {
-    const q = activeSet[idx];
-    const isCorrect = (selectedIdx === q.a);
-    const btns = document.querySelectorAll('.ans-btn');
+function checkAnswer(selected, btnElement) {
+    if (answered) return;
+    answered = true;
     
-    // 1. Fixed the variable name here to 'btns'
-    btns.forEach(b => b.disabled = true);
-
+    const q = activeSet[currentQ];
+    const buttons = document.querySelectorAll('.ans-btn');
+    const isCorrect = (selected === q.a);
+    
+    buttons.forEach(btn => btn.disabled = true);
+    
     if (isCorrect) {
-        // 2. Selected button turns green
-        btn.style.background = "#e8f5e9";
-        btn.style.borderColor = "#2e7d32";
-        btn.style.color = "#2e7d32";
-        sessionScore++;
-        playTone(600, 0.1);
+        btnElement.classList.add('correct');
+        score++; 
+        document.getElementById('feedback').innerHTML = `✅ CORRECT!<br><br>${q.f}`;
+        document.getElementById('feedback').style.background = '#e8f5e9';
+        document.getElementById('feedback').style.borderColor = '#2e7d32';
+        playSound('countdown');
     } else {
-        // 3. Selected button turns red
-        btn.style.background = "#ffebee";
-        btn.style.borderColor = "#c62828";
-        btn.style.color = "#c62828";
+        btnElement.classList.add('wrong');
         
-        // 4. Highlight the correct button in green
-        btns.forEach(b => {
-            // This checks the onclick attribute to find the correct answer index
-            if (b.getAttribute('onclick').includes(`check(${q.a},`)) {
-                b.style.background = "#e8f5e9";
-                b.style.borderColor = "#2e7d32";
-                b.style.color = "#2e7d32";
-                b.style.borderWidth = "3px"; 
+        buttons.forEach(btn => {
+            if (parseInt(btn.getAttribute('data-index')) === q.a) {
+                btn.classList.add('correct');
+                btn.style.opacity = '0.8';
+                btn.style.border = '2px solid #2e7d32';
             }
         });
-        playTone(200, 0.2);
-    }
 
-    document.getElementById('feedback').innerHTML = `<strong>${isCorrect ? '✅ GO' : '❌ ERROR'}</strong>: ${q.f}`;
+        document.getElementById('feedback').innerHTML = `❌ INCORRECT<br><br>${q.f}`;
+        document.getElementById('feedback').style.background = '#ffebee';
+        document.getElementById('feedback').style.borderColor = '#c62828';
+        playSound('crash');
+    }
+    
+    missionLog.push({
+        question: q.q,
+        yourAnswer: q.c[selected] || "Unknown",
+        correctAnswer: q.c[q.a],
+        isCorrect: isCorrect,
+        feedback: q.f,
+        pillar: `Pillar ${currentPillar + 1}`
+    });
+    
     document.getElementById('feedback').style.display = 'block';
     document.getElementById('next').style.display = 'block';
-}function next() {
-    idx++;
-    if (idx < activeSet.length) show(); else endSession();
 }
 
-function endSession() {
-    const pct = Math.round((sessionScore / activeSet.length) * 100);
-    // Keep the highest score achieved in this session
-    currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
-    document.getElementById('game').style.display = 'none';
-    document.getElementById('menu').style.display = 'block';
-    updateFuel();
-}
-
-function updateFuel() {
-    const avg = Math.round(currentScores.reduce((a,b)=>a+b, 0) / 4);
-    document.getElementById('fuel-fill').style.width = avg + '%';
-    document.getElementById('total-text').innerText = `FLIGHT READINESS: ${avg}% (GOAL: 73%)`;
-    
-    currentScores.forEach((s, i) => {
-        const el = document.getElementById(`s${i}`);
-        // This ensures it says "Ready: 85%" instead of just a raw number like "1"
-        el.innerText = s > 0 ? `Ready: ${s}%` : "PENDING";
-        el.style.color = s >= 73 ? "#2e7d32" : "#666";
-    });
-
-    if (avg >= 73 && currentScores.every(s => s >= 50)) {
-        document.getElementById('rocket').classList.add('takeoff');
+function next() {
+    currentQ++;
+    if (currentQ < activeSet.length) {
+        showQuestion();
+    } else {
+        endPillar();
     }
 }
-function playTone(freq, dur) {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    osc.connect(g); g.connect(audioCtx.destination);
-    osc.frequency.value = freq;
-    g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-    osc.start(); osc.stop(audioCtx.currentTime + dur);
+
+function endPillar() {
+    const total = activeSet.length;
+    const percent = Math.round((score / total) * 100);
+    
+    pillarScores[currentPillar] = percent;
+    pillarCompleted[currentPillar] = true;
+    
+    const modeText = mode === 'sprint' ? 'PILLAR' : 'SIMULATION';
+    
+    let completionHTML = '<div style="text-align:center; padding:30px;">';
+    completionHTML += '<h2 style="color: var(--nasa-blue);">' + modeText + ' ' + (currentPillar + 1) + ' COMPLETE</h2>';
+    completionHTML += '<div style="font-size:48px; margin:20px 0;">' + percent + '%</div>';
+    completionHTML += '<div style="font-size:18px;">Score: ' + score + '/' + total + '</div>';
+    completionHTML += '</div>';
+    
+    document.getElementById('q-area').innerHTML = completionHTML;
+    document.getElementById('feedback').style.display = 'none';
+    
+    // Manage the static buttons
+    let nextBtn = document.getElementById('next');
+    nextBtn.innerHTML = 'RETURN TO MENU';
+    nextBtn.onclick = returnToMenu;
+    nextBtn.style.display = 'block';
+    
+    // Show the Mission Log button
+    document.getElementById('mission-log-btn').style.display = 'block';
+    
+    updateProgress(); 
+    checkMissionComplete();
 }
 
-window.onload = updateFuel;
+function showMissionLog() {
+    let logHTML = '<h2 style="color: var(--nasa-blue); text-align:center;">📋 MISSION LOG</h2>';
+    logHTML += '<div style="max-height:400px; overflow-y:auto; padding:10px;">';
+    
+    missionLog.forEach((entry, i) => {
+        const statusColor = entry.isCorrect ? '#2e7d32' : '#c62828';
+        const statusIcon = entry.isCorrect ? '✅' : '❌';
+        
+        logHTML += `
+            <div style="border-left: 4px solid ${statusColor}; padding:10px; margin:10px 0; background:#f9f9f9;">
+                <div style="font-weight:bold; color:${statusColor};">${statusIcon} Question ${i + 1} - ${entry.pillar}</div>
+                <div style="margin:5px 0; font-size:14px;">${entry.question}</div>
+                <div style="margin:5px 0; font-size:13px;">
+                    <strong>Your Answer:</strong> ${entry.yourAnswer}<br>
+                    <strong>Correct Answer:</strong> ${entry.correctAnswer}
+                </div>
+                <div style="margin:5px 0; font-size:12px; color:#666;">${entry.feedback}</div>
+            </div>
+        `;
+    });
+    
+    logHTML += '</div>';
+    
+    document.getElementById('q-area').innerHTML = logHTML;
+    
+    // Hide the Mission Log button while we are already looking at it
+    document.getElementById('mission-log-btn').style.display = 'none';
+    
+    // Make sure the Return to Menu button is visible
+    let nextBtn = document.getElementById('next');
+    nextBtn.style.display = 'block';
+    nextBtn.innerHTML = 'RETURN TO MENU';
+    nextBtn.onclick = returnToMenu;
+}
+
+function returnToMenu() {
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('menu').style.display = 'block';
+    
+    // Reset the Next button for the next round
+    let nextBtn = document.getElementById('next');
+    nextBtn.onclick = next; 
+    nextBtn.style.display = 'none'; 
+    nextBtn.innerHTML = 'NEXT GATE >';
+    
+    // Hide the Mission Log button
+    document.getElementById('mission-log-btn').style.display = 'none';
+    
+    pillarScores.forEach((score, i) => {
+        if (pillarCompleted[i]) {
+            let sEl = document.getElementById(`s${i}`);
+            if(sEl) {
+                sEl.textContent = `${score}% ✓`;
+                sEl.style.color = '#2e7d32';
+            }
+        }
+    });
+}
+
+function updateProgress() {
+    const SIM_WEIGHTS = [8, 17, 30, 45];
+    const totalQuestions = mode === 'sprint' 
+        ? (25 * 4) 
+        : SIM_WEIGHTS.reduce((a,b) => a+b, 0);
+    
+    const completedQuestions = pillarScores.reduce((sum, score, i) => {
+        const pillarLength = mode === 'sprint' ? 25 : SIM_WEIGHTS[i];
+        return sum + Math.round((score / 100) * pillarLength);
+    }, 0);
+    
+    const percent = totalQuestions > 0 ? Math.round((completedQuestions / totalQuestions) * 100) : 0;
+    
+    let fuelFill = document.getElementById('fuel-fill');
+    let totalText = document.getElementById('total-text');
+    if (fuelFill) fuelFill.style.width = percent + '%';
+    if (totalText) totalText.textContent = `FLIGHT READINESS: ${percent}%`;
+}
+
+function checkMissionComplete() {
+    const allComplete = pillarCompleted.every(completed => completed === true);
+    if (!allComplete) return;
+    
+    const totalScore = pillarScores.reduce((sum, score) => sum + score, 0) / 4;
+    const passingScore = 73;
+    
+    if (totalScore >= passingScore) {
+        launchRocket();
+    } else {
+        crashRocket();
+    }
+}
+
+function launchRocket() {
+    const rocket = document.getElementById('rocket');
+    const countdownEl = document.getElementById('countdown');
+    countdownEl.style.display = 'block';
+    rocket.classList.add('shake');
+    
+    let count = 5;
+    countdownEl.textContent = count;
+    playSound('countdown');
+    
+    const countdownInterval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdownEl.textContent = count;
+            playSound('countdown');
+        } else {
+            countdownEl.textContent = 'LIFTOFF!';
+            playSound('liftoff');
+            setTimeout(() => {
+                rocket.classList.remove('shake');
+                rocket.classList.add('takeoff');
+                setTimeout(() => {
+                    countdownEl.style.display = 'none';
+                    countdownEl.textContent = '';
+                }, 2000);
+            }, 500);
+            clearInterval(countdownInterval);
+        }
+    }, 1000);
+}
+
+function crashRocket() {
+    const rocket = document.getElementById('rocket');
+    const countdownEl = document.getElementById('countdown');
+    countdownEl.style.display = 'block';
+    countdownEl.textContent = 'MISSION FAILED';
+    countdownEl.style.color = '#c62828';
+    
+    playSound('crash');
+    rocket.classList.add('crash');
+    
+    setTimeout(() => {
+        countdownEl.style.display = 'none';
+        rocket.style.display = 'none';
+    }, 1500);
+}
+
+window.onload = updateProgress;
 </script>
 </body>
 </html>
