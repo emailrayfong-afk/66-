@@ -3654,6 +3654,12 @@ function launchRocket() {
     const countdownEl = document.getElementById('countdown');
     const hud = document.querySelector('.hud');
     
+    // Hide buttons so the sequence can play uninterrupted
+    const nextBtn = document.getElementById('next');
+    const logBtn = document.getElementById('mission-log-btn');
+    if (nextBtn) nextBtn.style.display = 'none';
+    if (logBtn) logBtn.style.display = 'none';
+    
     countdownEl.style.display = 'block';
     
     // Screen Shake engaged
@@ -3680,6 +3686,10 @@ function launchRocket() {
                 setTimeout(() => {
                     countdownEl.style.display = 'none';
                     countdownEl.textContent = '';
+                    
+                    // Restore buttons after successful liftoff
+                    if (nextBtn) nextBtn.style.display = 'block';
+                    if (logBtn) logBtn.style.display = 'block';
                 }, 2000);
             }, 500);
             clearInterval(countdownInterval);
@@ -3692,6 +3702,12 @@ function crashRocket() {
     const countdownEl = document.getElementById('countdown');
     const hud = document.querySelector('.hud');
     
+    // Hide buttons so the sequence can play uninterrupted
+    const nextBtn = document.getElementById('next');
+    const logBtn = document.getElementById('mission-log-btn');
+    if (nextBtn) nextBtn.style.display = 'none';
+    if (logBtn) logBtn.style.display = 'none';
+
     countdownEl.style.display = 'block';
     countdownEl.textContent = 'MISSION FAILED';
     countdownEl.style.color = '#c62828';
@@ -3708,6 +3724,10 @@ function crashRocket() {
         countdownEl.style.display = 'none';
         rocket.style.display = 'none';
         rocket.classList.remove('crash'); 
+        
+        // Restore buttons after crash
+        if (nextBtn) nextBtn.style.display = 'block';
+        if (logBtn) logBtn.style.display = 'block';
     }, 1500);
 }
 
