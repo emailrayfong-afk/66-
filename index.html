@@ -1286,6 +1286,29 @@ const simLib = [
         a: 0,
         f: "Logic: Currency Risk. The 12% currency drop offsets the 10% stock gain, resulting in a net loss in USD."
     },
+{
+        q: "An investor is considering a 'Viatical Settlement.' What is the PRIMARY risk associated with this investment vehicle?",
+        c: ["Longevity Risk", "Interest Rate Risk", "Credit Risk of the Issuer", "Call Risk"],
+        a: 0,
+        f: "Logic: In a viatical settlement, the investor buys a life insurance policy from a terminally ill person. If the person lives longer than expected (Longevity Risk), the investor must pay more premiums, lowering the internal rate of return (IRR)."
+    },
+    {
+        q: "Which characteristic is TRUE regarding a 'Special Purpose Acquisition Company' (SPAC)?",
+        c: [
+            "It is a 'blank check' company that raises capital to acquire an existing private company",
+            "It is a type of decentralized cryptocurrency with no central issuer",
+            "It is a municipal bond used specifically for infrastructure in space hubs",
+            "It is a life insurance policy that offers no cash value or death benefit"
+        ],
+        a: 0,
+        f: "Logic: SPACs are formed to raise money via an IPO specifically to buy an existing business, effectively taking that business public through a merger."
+    },
+    {
+        q: "A 'Principal Protected Note' (PPN) is a structured product that typically combines a zero-coupon bond with:",
+        c: ["An option position to provide growth potential", "A portfolio of high-yield junk bonds", "A whole life insurance policy", "A physical gold reserve held in escrow"],
+        a: 0,
+        f: "Logic: PPNs provide safety via the bond and 'upside' via the option. However, they are still unsecured debt of the issuing bank and carry credit risk."
+    },
     {
         q: "An investor owns a 6% convertible bond with a conversion price of $40. Underlying stock is at $50. What is the parity price?",
         c: ["$1,250", "$1,000", "$1,200", "$800"],
@@ -1887,6 +1910,30 @@ const simLib = [
         c: ["A sector-specific UIT focused on emerging technology", "A portfolio of investment-grade municipal bonds", "A laddered portfolio of short-term CDs", "A balanced fund with 60% blue-chip stocks and 40% bonds"],
         a: 0,
         f: "Logic: While aggressive, the UIT aligns with high risk tolerance and a capital appreciation objective over a long horizon."
+    },
+{
+        q: "A qualified Employee Stock Ownership Plan (ESOP) is technically categorized as which type of retirement plan?",
+        c: ["Defined Contribution Plan", "Defined Benefit Plan", "Non-Qualified Deferred Compensation Plan", "Profit-Sharing Pension Plan"],
+        a: 0,
+        f: "Logic: ESOPs are defined contribution plans where the employer contributes company stock. They are not defined benefit plans because they do not guarantee a specific monthly payout."
+    },
+    {
+        q: "An IAR is reviewing a client’s retirement portfolio and notes that 90% of the assets are held in a single ESOP. Which risk represents the most immediate suitability concern?",
+        c: ["Concentration Risk", "Interest Rate Risk", "Legislative Risk", "Market Timing Risk"],
+        a: 0,
+        f: "Logic: ESOPs create extreme concentration. If the employer fails, the client risks losing both their current income (job) and their retirement savings simultaneously."
+    },
+    {
+        q: "In 2026, an individual wishes to give the maximum tax-free gift to their five grandchildren without filing a gift tax return. What is the total amount they can give?",
+        c: ["$95,000", "$19,000", "$38,000", "$90,000"],
+        a: 0,
+        f: "Logic: For 2026, the annual exclusion is $19,000 per recipient. $19,000 * 5 grandchildren = $95,000."
+    },
+    {
+        q: "A client designates their children as beneficiaries 'Per Stirpes.' If one child predeceases the client, where does that child's share go?",
+        c: ["To the deceased child's own descendants (grandchildren)", "To the surviving siblings only", "Back into the client's general estate", "To the state's treasury fund"],
+        a: 0,
+        f: "Logic: 'Per Stirpes' (by the branch) ensures the assets stay within that specific family line rather than being split among survivors."
     },
     {
         q: "Portfolio A has a higher total return than Portfolio B, but Portfolio B has a higher Sharpe Ratio. What is the interpretation?",
@@ -2494,6 +2541,28 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: The 'de minimis' rule allows up to 5 retail clients in a state without registration, provided there is no physical office."
+    },
+{
+        q: "Under the modernized SEC Marketing Rule, an Investment Adviser (IA) may use a 'Testimonial' in an advertisement only if they prominently disclose:",
+        c: [
+            "Whether the promoter is a client and if they were compensated",
+            "The promoter's specific net worth and credit score",
+            "The IAR's personal historical performance over 10 years",
+            "The exact number of other clients that the promoter has referred"
+        ],
+        a: 0,
+        f: "Logic: The new rule allows testimonials but requires 'clear and prominent' disclosure regarding the promoter's client status and any cash or non-cash compensation paid."
+    },
+    {
+        q: "What are the maximum criminal penalties for a willful violation of the Uniform Securities Act at the state level?",
+        c: [
+            "$5,000 fine and 3 years in prison",
+            "$10,000 fine and 5 years in prison",
+            "$1,000 fine and 1 year in prison",
+            "$5,000 fine and 5 years in prison"
+        ],
+        a: 0,
+        f: "Logic: State law follows the '5-5-3' rule: 5-year statute of limitations, $5,000 max fine, and 3-year max prison sentence."
     },
     {
         q: "A Broker-Dealer has a physical branch in State Y but only deals with institutional clients there. Does the BD need to register in State Y?",
