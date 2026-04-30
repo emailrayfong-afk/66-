@@ -621,7 +621,64 @@ const simLib = [
         c: ["Value", "Growth", "Speculative", "High Beta"],
         a: 0,
         f: "Logic: Value investors look for 'bargains' (Low P/B) and are often rewarded with higher income (High Yield) while waiting for the price to rise."
-    },  
+    },{
+    q: "A company has Total Assets of $500,000 and Total Liabilities of $300,000. What is the company's Shareholders' Equity (Net Worth)?",
+    c: ["$200,000", "$800,000", "$300,000", "$500,000"],
+    a: 0,
+    f: "Logic: The Balance Sheet Equation is Assets = Liabilities + Shareholders' Equity. Therefore, Equity = Assets - Liabilities ($500k - $300k = $200k)."
+},
+{
+    q: "Which of the following is categorized as a 'Current Liability' on the balance sheet?",
+    c: ["Accounts Payable", "Marketable Securities", "Equipment", "Retained Earnings"],
+    a: 0,
+    f: "Logic: Current Liabilities are debts due within one year. Accounts Payable is a standard short-term debt, while the others are assets or equity."
+},
+{
+    q: "A firm's 'Retained Earnings' are found in which section of the Balance Sheet?",
+    c: ["Shareholders' Equity", "Current Assets", "Long-term Liabilities", "Intangible Assets"],
+    a: 0,
+    f: "Logic: Retained Earnings represent the cumulative profits kept by the company (not paid as dividends) and belong to the owners (Equity)."
+},
+{
+    q: "Which item is considered an 'Intangible Asset'?",
+    c: ["Copyrights and Patents", "Inventory", "Accounts Receivable", "Cash Equivalents"],
+    a: 0,
+    f: "Logic: Intangible assets lack physical substance but provide long-term value, such as intellectual property (Patents) or Goodwill."
+}, {
+    q: "A client wants to have exactly $121,000 in 2 years for a specific project. If they can earn a 10% annual return, how much must they invest today (PV)?",
+    c: ["$100,000", "$110,000", "$90,000", "$101,000"],
+    a: 0,
+    f: "Logic: PV = FV / (1 + r)^n. Here, $121,000 / (1.10 * 1.10) = $121,000 / 1.21 = $100,000."
+},
+{
+    q: "An investor buys 100 shares of TJG at $75/share (BV). One year later, the stock is $67.50 (EV). During the year, the stock paid $3.00 in total dividends. What is the Total Return?",
+    c: ["-6%", "-9%", "-10%", "-4%"],
+    a: 0,
+    f: "Logic: Total Return = [(EV - BV) + Income] / BV. [($67.50 - $75.00) + $3.00] / $75 = -$4.50 / $75 = -0.06 or -6%."
+},
+{
+    q: "A zero-coupon bond with a face value of $1,000 matures in 1 year. If the current market interest rate is 5%, what is the Present Value (market price) of the bond?",
+    c: ["$952.38", "$950.00", "$1,050.00", "$900.00"],
+    a: 0,
+    f: "Logic: PV = $1,000 / (1 + 0.05)^1 = $1,000 / 1.05 = $952.38."
+}, {
+    q: "A stock's price falls from $75 to $67.50 in Q1, but pays a $0.75 dividend during the period. What is the stock's SIMPLE annualized total return?",
+    c: ["-36%", "-31.43%", "-9%", "+4%"],
+    a: 0,
+    f: "Logic: Quarterly loss is -$6.75 ($7.50 drop offset by $0.75 div). -$6.75 / $75 = -9% quarterly. Simple annualize: -9% * 4 = -36%."
+},
+{
+    q: "If an investment has a positive Net Present Value (NPV), the Profitability Index (PI) will be:",
+    c: ["Greater than 1.0", "Less than 1.0", "Equal to 0.0", "Negative"],
+    a: 0,
+    f: "Logic: NPV and PI are related. If the present value of cash flows exceeds the cost (Positive NPV), the ratio (PI) must be greater than 1.0."
+},
+{
+    q: "A project has an NPV of $5,000 and a market price (cost) of $50,000. What is the Profitability Index?",
+    c: ["1.10", "0.10", "1.50", "1.00"],
+    a: 0,
+    f: "Logic: PI = (NPV + Cost) / Cost. ($5,000 + $50,000) / $50,000 = 1.10. It shows $1.10 of value created for every $1.00 spent."
+},
     {
         q: "A grandmother wants to provide her grandson with a monthly allowance of $500 in perpetuity. If she's assuming a 3% annual rate of return, how much must she invest today?",
         c: ["$200,000", "$166,667", "$180,000", "$150,000"],
@@ -1066,7 +1123,89 @@ const simLib = [
             "The ADR value will increase because the German stock rose",
             "The ADR value will remain unchanged because it trades on a US exchange",
             "The ADR value will increase by exactly 2% (the net difference)"
-        ],
+        ],{
+    q: "In a Variable Annuity, the performance of the 'Separate Account' directly affects which of the following?",
+    c: ["The value of the accumulation units", "The insurance company's general account", "The guaranteed minimum interest rate", "The agent's commission rate"],
+    a: 0,
+    f: "Logic: Unlike a fixed annuity, the separate account's performance fluctuates with the market, directly changing the value of the investor's accumulation units."
+},{
+    q: "What is a unique characteristic of an Equity-Indexed Annuity (EIA) compared to a Variable Annuity?",
+    c: [
+        "It has a guaranteed minimum return or 'floor'",
+        "It requires the delivery of a prospectus",
+        "The investor bears all of the investment risk",
+        "It is strictly regulated as a security"
+    ],
+    a: 0,
+    f: "Logic: EIAs are fixed annuities with a 'floor' (usually 0% or 1-3%) that protects against market losses, whereas Variable Annuities can drop to zero."
+},
+{
+    q: "In an Equity-Indexed Annuity, the 'Participation Rate' refers to:",
+    c: [
+        "The percentage of the index's gain that is credited to the account",
+        "The maximum interest rate the account can earn in a year",
+        "The amount of commission paid to the insurance agent",
+        "The frequency with which interest is credited to the contract"
+    ],
+    a: 0,
+    f: "Logic: If the index rises 10% and the participation rate is 80%, the client is credited with 8% interest."
+},
+{
+    q: "A client owns an EIA with an 80% participation rate and a 10% 'Cap.' If the underlying index rises 20%, what interest is credited?",
+    c: ["10%", "16%", "20%", "8%"],
+    a: 0,
+    f: "Logic: 20% gain * 80% participation = 16%. However, since the CAP is 10%, the client only receives 10%."
+},
+{
+    q: "Which method of indexing credits interest based on the highest value the index reached during the year compared to the start?",
+    c: ["High-Water Mark", "Point-to-Point", "Annual Reset", "Geometric Mean"],
+    a: 0,
+    f: "Logic: The High-Water Mark method looks at the index value at various points and uses the highest point to determine the gain."
+},{
+    q: "A futures contract is different than a cash forward contract because the futures contract:",
+    c: [
+        "May be offset on the exchange where the contract was established",
+        "Is a personal transaction between a buyer and a seller",
+        "Is not subject to the rules of a futures exchange",
+        "Is always for a specific, non-standardized amount"
+    ],
+    a: 0,
+    f: "Logic: Futures are exchange-traded and liquid, allowing them to be 'offset' (closed) easily. Forwards are private, non-standardized, and illiquid."
+},{
+    q: "Which of the following will a syndicator of a blind pool real estate investment trust (REIT) include in the investment policy statement?",
+    c: [
+        "The estimated location of the real estate purchases",
+        "The estimated timing of the real estate purchases",
+        "A disclosure that investment losses are guaranteed by SIPC",
+        "A statement which breaks down the contributions made by limited partners"
+    ],
+    a: 0,
+    f: "Logic: While specific properties aren't yet identified in a blind pool, the syndicator must still disclose the intended geographic location and type of assets they plan to acquire."
+},
+{
+    q: "Which risk is virtually eliminated in an exchange-traded Futures contract but present in a Forward contract?",
+    c: ["Counterparty (Default) Risk", "Market Risk", "Interest Rate Risk", "Inflation Risk"],
+    a: 0,
+    f: "Logic: The exchange's clearinghouse guarantees futures contracts, whereas forwards are private 'handshake' deals with no central guarantee."
+},
+{
+    q: "An investor makes a partial withdrawal from their non-qualified Variable Annuity. How is this withdrawal taxed?",
+    c: ["LIFO (Earnings first, taxed as ordinary income)", "FIFO (Principal first, tax-free)", "100% as long-term capital gains", "100% tax-free if held for 5 years"],
+    a: 0,
+    f: "Logic: Variable annuities use Last-In, First-Out (LIFO) tax treatment. Earnings come out first and are taxed as ordinary income."
+},
+{
+    q: "A 52-year-old client withdraws funds from their Variable Annuity to pay for a vacation. In addition to ordinary income tax, what else might they face?",
+    c: ["A 10% premature distribution penalty", "A 50% excise tax", "A 15% capital gains surcharge", "No extra charges since they are over 50"],
+    a: 0,
+    f: "Logic: Just like an IRA, distributions from an annuity before age 59.5 are subject to a 10% IRS penalty on the earnings portion."
+},
+{
+    q: "When a Variable Annuity is 'Annuitized,' the number of 'Annuity Units' is:",
+    c: ["Fixed", "Fluctuating based on the S&P 500", "Increasing each month", "Decreasing as payments are made"],
+    a: 0,
+    f: "Logic: Once you annuitize, the number of units becomes fixed, but the dollar value of each unit continues to fluctuate based on the separate account's performance."
+},
         a: 0,
         f: "Logic: Application. Currency Risk. Even though the stock rose 10%, the 12% drop in the currency's value more than offset the gain, resulting in a net loss for the US investor."
     },
@@ -1634,7 +1773,18 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: Beta Math. 1.5 (Beta) * 10% (Market Move) = 15%."
-    },
+    },{
+    q: "A portfolio manager is concerned about broad market volatility affecting a diversified stock portfolio. Which tool is BEST for hedging this systematic risk?",
+    c: ["Selling S&P 500 Index Futures", "Buying shares of a defensive utility stock", "Diversifying into more technology stocks", "Selling a specific company's Put options"],
+    a: 0,
+    f: "Logic: Systematic (market) risk cannot be diversified away. It is hedged using broad tools like Index Futures."
+},
+{
+    q: "Financial futures are primarily used to protect a portfolio against which of the following?",
+    c: ["Systematic Risk", "Business Risk", "Liquidity Risk", "Regulatory Risk"],
+    a: 0,
+    f: "Logic: Futures track broad indices or interest rates, making them tools for market-wide (systematic) risk, not company-specific (business) risk."
+},
     {
         q: "A client is looking for 'Current Income' and 'Safety of Principal.' Which of the following is the LEAST suitable recommendation?",
         c: ["Aggressive Growth Mutual Fund", "Short-term Treasury Note", "Bank Certificate of Deposit", "Money Market Fund"],
@@ -1653,7 +1803,40 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: Registration Nuance. The 'de minimis' rule allows an IA or IAR to have up to 5 retail clients in a state without registering, provided they have no physical office (place of business) in that state."
-    },
+    },{
+    q: "Variable Annuities and Variable Life Insurance policies are required to be sold with which of the following?",
+    c: ["A Prospectus", "A simple verbal disclosure", "A state-issued guarantee", "A fixed-rate certificate"],
+    a: 0,
+    f: "Logic: Because variable products pass investment risk to the owner, they are securities and require a prospectus under the Securities Act of 1933."
+},{
+    q: "Which of the following is a security that is EXEMPT from the prospectus requirements of the Securities Act of 1933?",
+    c: ["Treasury Bonds", "Variable Annuities", "Mutual Funds", "Common Stock IPOs"],
+    a: 0,
+    f: "Logic: While all are securities, Government issues (Treasuries) are exempt from registration and prospectus requirements."
+},{
+    q: "A state-registered Investment Adviser is selling a private placement to a small group of wealthy individuals. Which document is most likely used for disclosure?",
+    c: ["Offering Memorandum", "Prospectus", "Official Statement", "Form ADV Part 1"],
+    a: 0,
+    f: "Logic: Private placements (Reg D) are exempt transactions and use an Offering Memorandum rather than a formal SEC-registered prospectus."
+},
+{
+    q: "Under the Securities Act of 1933, which of the following is considered a 'Non-Exempt' security requiring a prospectus?",
+    c: ["Variable Annuity", "U.S. Treasury Bill", "Municipal Revenue Bond", "Commercial Paper (200-day maturity)"],
+    a: 0,
+    f: "Logic: Variable products are non-exempt because the investor bears the risk. Treasuries, Munis, and short-term commercial paper are exempt from registration."
+},
+{
+    q: "An agent is mailing a 'Red Herring' to potential clients. Which of the following is TRUE?",
+    c: ["It cannot be used to accept orders or deposits", "It includes the final offering price", "It is used only for exempt securities", "It constitutes a formal offer to sell"],
+    a: 0,
+    f: "Logic: A Red Herring (Preliminary Prospectus) is used to gauge interest during the cooling-off period but cannot be used to close a sale or take money."
+},
+{
+    q: "What document is used to provide disclosure for a Municipal Bond in place of a prospectus?",
+    c: ["Official Statement", "Offering Memorandum", "Red Herring", "Form ADV"],
+    a: 0,
+    f: "Logic: Municipalities are exempt issuers. They provide disclosure through an Official Statement."
+},
     {
         q: "A Broker-Dealer is registered in State X. It has a physical branch office in State Y but only deals with institutional clients in State Y. Does the Broker-Dealer need to register in State Y?",
         c: [
