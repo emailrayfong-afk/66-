@@ -11,6 +11,8 @@
             --text-dark: #212121; 
             --sky-blue: #87CEEB;
             --horizon-white: #e1f5fe;
+            --go-green: #2e7d32;
+            --error-red: #c62828;
         }
 
         body { 
@@ -19,6 +21,7 @@
             font-family: 'Helvetica Neue', Arial, sans-serif; 
             padding: 10px; 
             touch-action: manipulation; 
+            overflow-x: hidden;
         }
 
         .hud { 
@@ -28,9 +31,11 @@
             padding: 20px; 
             background: #ffffff; 
             border-radius: 8px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
         }
 
-        /* Blue Sky Background */
+        /* --- Launch Pad & Rocket Styles --- */
         .launch-pad { 
             height: 120px; 
             border-bottom: 2px solid #ddd; 
@@ -48,14 +53,55 @@
             transform: translateX(-50%) rotate(-45deg); 
             font-size: 40px; 
             transition: bottom 3s ease-in, opacity 2s ease-in; 
+            z-index: 5;
         }
 
-        /* Takeoff Animation Logic */
-        .takeoff { 
-            bottom: 1000px !important; 
-            opacity: 0; 
+        #countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            font-weight: bold;
+            color: var(--artemis-red);
+            z-index: 10;
+            display: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
+        /* --- Animation Classes --- */
+        .takeoff { bottom: 1000px !important; opacity: 0; }
+        
+        .shake { animation: shake 0.5s ease-in-out infinite; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%) rotate(-45deg); }
+            25% { transform: translateX(-48%) rotate(-43deg); }
+            75% { transform: translateX(-52%) rotate(-47deg); }
+        }
+
+        .screen-shake { animation: screenShake 0.4s ease-in-out infinite; }
+        @keyframes screenShake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-8px, 4px); }
+            50% { transform: translate(8px, -4px); }
+            75% { transform: translate(-8px, -4px); }
+        }
+
+        .crash { animation: explosion 1s ease-out forwards; }
+        @keyframes explosion {
+            0% { bottom: 10px; transform: translateX(-50%) rotate(-45deg) scale(1); opacity: 1; }
+            50% { transform: translateX(-50%) rotate(180deg) scale(1.5); opacity: 0.5; }
+            100% { bottom: -50px; transform: translateX(-50%) rotate(360deg) scale(0); opacity: 0; }
+        }
+
+        .flash-red { animation: flashRed 0.5s ease-out 3; }
+        @keyframes flashRed {
+            0% { border-color: var(--nasa-blue); }
+            50% { border-color: var(--error-red); box-shadow: 0 0 30px var(--error-red); }
+            100% { border-color: var(--nasa-blue); }
+        }
+
+        /* --- UI Elements --- */
         .fuel-bar { 
             width: 100%; 
             background: #eee; 
@@ -82,9 +128,7 @@
             font-size: 12px; 
             line-height: 30px; 
             font-weight: bold; 
-            top: 0; 
-            left: 0; 
-            z-index: 5; 
+            top: 0; left: 0; z-index: 5; 
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5); 
         }
 
@@ -105,12 +149,10 @@
             cursor: pointer; 
             font-weight: bold; 
             font-size: 12px; 
+            transition: all 0.3s;
         }
 
-        .mode-btn.active { 
-            background: var(--nasa-blue); 
-            color: white; 
-        }
+        .mode-btn.active { background: var(--nasa-blue); color: white; }
 
         .grid { 
             display: grid; 
@@ -127,7 +169,10 @@
             cursor: pointer; 
             font-weight: bold; 
             border-radius: 6px; 
+            transition: all 0.3s;
         }
+
+        .p-btn:hover { background: var(--nasa-blue); color: white; }
 
         .q-text { 
             font-size: 1.1em; 
@@ -148,7 +193,15 @@
             border: 1px solid #ddd; 
             border-radius: 8px; 
             text-align: left; 
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
         }
+
+        .ans-btn:active { transform: scale(0.98); }
+
+        .ans-btn.correct { background: var(--go-green) !important; color: white !important; border-color: var(--go-green); }
+        .ans-btn.wrong { background: var(--error-red) !important; color: white !important; border-color: var(--error-red); }
 
         #feedback { 
             margin: 15px 0; 
@@ -180,7 +233,7 @@
 <body>
     <div class="hud">
         <h1 style="text-align:center; color: var(--nasa-blue);">S66: MISSION COMMAND</h1>
-        <div class="launch-pad"><div id="rocket">🚀</div></div>
+   <div class="launch-pad"><div id="rocket">🚀</div><div id="countdown"></div></div>
         <div class="fuel-bar">
             <div id="total-text">FLIGHT READINESS: 0%</div>
             <div id="fuel-fill"></div>
