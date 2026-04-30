@@ -2,27 +2,182 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: ARTEMIS S66 v18.5</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v18.6</title>
     <style>
-        :root { --nasa-blue: #0b3d91; --artemis-red: #fc3d39; --lunar-grey: #f4f4f4; --text-dark: #212121; }
-        body { background: var(--lunar-grey); color: var(--text-dark); font-family: 'Helvetica Neue', Arial, sans-serif; padding: 10px; touch-action: manipulation; }
-        .hud { border: 3px solid var(--nasa-blue); max-width: 800px; margin: auto; padding: 20px; background: #ffffff; border-radius: 8px; }
-        .launch-pad { height: 120px; border-bottom: 2px solid #ddd; position: relative; margin: 15px 0; background: #eee; overflow: hidden; border-radius: 5px; }
-        #rocket { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%) rotate(-45deg); font-size: 40px; transition: bottom 3s ease-in; }
-        .fuel-bar { width: 100%; background: #eee; border: 1px solid #ccc; height: 30px; margin-top: 5px; position: relative; border-radius: 15px; overflow: hidden; }
-        #fuel-fill { background: var(--nasa-blue); width: 0%; height: 100%; transition: width 0.5s; }
-        #total-text { position: absolute; width: 100%; text-align: center; color: #fff; font-size: 12px; line-height: 30px; font-weight: bold; top: 0; left: 0; z-index: 5; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-        .mode-toggle { display: flex; background: #eee; border-radius: 25px; margin: 15px 0; padding: 5px; }
-        .mode-btn { flex: 1; border: none; background: none; padding: 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        :root { 
+            --nasa-blue: #0b3d91; 
+            --artemis-red: #fc3d39; 
+            --lunar-grey: #f4f4f4; 
+            --text-dark: #212121; 
+            --sky-blue: #87CEEB;
+            --horizon-white: #e1f5fe;
+            --go-green: #2e7d32;
+            --error-red: #c62828;
+        }
+
+        body { 
+            background: var(--lunar-grey); 
+            color: var(--text-dark); 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            padding: 10px; 
+            touch-action: manipulation; 
+            overflow-x: hidden;
+        }
+
+        .hud { 
+            border: 3px solid var(--nasa-blue); 
+            max-width: 800px; 
+            margin: auto; 
+            padding: 20px; 
+            background: #ffffff; 
+            border-radius: 8px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .launch-pad { 
+            height: 120px; 
+            border-bottom: 2px solid #ddd; 
+            position: relative; 
+            margin: 15px 0; 
+            background: linear-gradient(to bottom, var(--sky-blue) 0%, var(--horizon-white) 100%); 
+            overflow: hidden; 
+            border-radius: 5px; 
+        }
+
+        #rocket { 
+            position: absolute; 
+            bottom: 10px; 
+            left: 50%; 
+            transform: translateX(-50%) rotate(-45deg); 
+            font-size: 40px; 
+            transition: bottom 3s ease-in, opacity 2s ease-in; 
+            z-index: 5;
+        }
+
+        .takeoff { bottom: 1000px !important; opacity: 0; }
+        
+        .shake { animation: shake 0.5s ease-in-out infinite; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%) rotate(-45deg); }
+            25% { transform: translateX(-48%) rotate(-43deg); }
+            75% { transform: translateX(-52%) rotate(-47deg); }
+        }
+
+        .fuel-bar { 
+            width: 100%; 
+            background: #eee; 
+            border: 1px solid #ccc; 
+            height: 30px; 
+            margin-top: 5px; 
+            position: relative; 
+            border-radius: 15px; 
+            overflow: hidden; 
+        }
+
+        #fuel-fill { 
+            background: var(--nasa-blue); 
+            width: 0%; 
+            height: 100%; 
+            transition: width 0.5s; 
+        }
+
+        #total-text { 
+            position: absolute; 
+            width: 100%; 
+            text-align: center; 
+            color: #fff; 
+            font-size: 12px; 
+            line-height: 30px; 
+            font-weight: bold; 
+            top: 0; left: 0; z-index: 5; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5); 
+        }
+
+        .mode-toggle { 
+            display: flex; 
+            background: #eee; 
+            border-radius: 25px; 
+            margin: 15px 0; 
+            padding: 5px; 
+        }
+
+        .mode-btn { 
+            flex: 1; 
+            border: none; 
+            background: none; 
+            padding: 12px; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 12px; 
+            transition: all 0.3s;
+        }
+
         .mode-btn.active { background: var(--nasa-blue); color: white; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-        .p-btn { background: #ffffff; border: 2px solid var(--nasa-blue); color: var(--nasa-blue); padding: 15px; cursor: pointer; font-weight: bold; border-radius: 6px; }
-        .q-text { font-size: 1.1em; color: var(--text-dark); margin-bottom: 20px; border-left: 5px solid var(--artemis-red); padding-left: 15px; line-height: 1.5; font-weight: bold; }
-        .ans-btn { display: block; width: 100%; padding: 16px; margin: 8px 0; background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; text-align: left; }
-        #feedback { margin: 15px 0; padding: 15px; border-radius: 8px; font-weight: bold; display: none; background: #f0f4ff; }
-        .nav-btn { background: var(--nasa-blue); color: #fff; font-weight: bold; padding: 18px; border: none; width: 100%; cursor: pointer; border-radius: 8px; display: none; margin-top:10px; }
-        .takeoff { bottom: 1000px !important; }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            margin-top: 10px; 
+        }
+
+        .p-btn { 
+            background: #ffffff; 
+            border: 2px solid var(--nasa-blue); 
+            color: var(--nasa-blue); 
+            padding: 15px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            border-radius: 6px; 
+            transition: all 0.3s;
+        }
+
+        .q-text { 
+            font-size: 1.1em; 
+            color: var(--text-dark); 
+            margin-bottom: 20px; 
+            border-left: 5px solid var(--artemis-red); 
+            padding-left: 15px; 
+            line-height: 1.5; 
+            font-weight: bold; 
+        }
+
+        .ans-btn { 
+            display: block; 
+            width: 100%; 
+            padding: 16px; 
+            margin: 8px 0; 
+            background: #f9f9f9; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            text-align: left; 
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #feedback { 
+            margin: 15px 0; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            display: none; 
+            background: #f0f4ff; 
+        }
+
+        .nav-btn { 
+            background: var(--nasa-blue); 
+            color: #fff; 
+            font-weight: bold; 
+            padding: 18px; 
+            border: none; 
+            width: 100%; 
+            cursor: pointer; 
+            border-radius: 8px; 
+            display: none; 
+            margin-top: 10px; 
+        }
     </style>
 </head>
 <body>
@@ -39,10 +194,10 @@
                 <button id="mode-sim" class="mode-btn" onclick="setMode('sim')">MISSION SIMULATION</button>
             </div>
             <div class="grid">
-                <button class="p-btn" onclick="start(0)">01. ECONOMICS <span id="s0" style="display:block; font-size:10px;">PENDING</span></button>
-                <button class="p-btn" onclick="start(1)">02. VEHICLES <span id="s1" style="display:block; font-size:10px;">PENDING</span></button>
-                <button class="p-btn" onclick="start(2)">03. STRATEGY <span id="s2" style="display:block; font-size:10px;">PENDING</span></button>
-                <button class="p-btn" onclick="start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">PENDING</span></button>
+                <button class="p-btn" onclick="start(0)">01. ECONOMICS <span id="s0" style="display:block; font-size:10px;">0%</span></button>
+                <button class="p-btn" onclick="start(1)">02. VEHICLES <span id="s1" style="display:block; font-size:10px;">0%</span></button>
+                <button class="p-btn" onclick="start(2)">03. STRATEGY <span id="s2" style="display:block; font-size:10px;">0%</span></button>
+                <button class="p-btn" onclick="start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">0%</span></button>
             </div>
         </div>
         <div id="game" style="display:none;">
@@ -52,7 +207,6 @@
             <button id="next" class="nav-btn" onclick="next()">NEXT GATE ></button>
         </div>
     </div>
-
 <script>
 // --- 1. DATA LIBRARIES ---
 // ALL 100 QUESTIONS PER PILLAR ARE NOW CONSOLIDATED HERE
@@ -1900,10 +2054,7 @@ function start(i) {
     let source = (appMode === 'sim') ? simLib : sprintLib;
     let count = (appMode === 'sim') ? [10, 20, 30, 45][i] : 25;
     
-    // Safety check: Don't pull more than exists in the array
-    let limit = Math.min(count, source[i].length);
-    
-    // Shuffle the full 100 questions and take the count
+    let limit = Math.min(count, source[i].length || 1);
     activeSet = [...source[i]].sort(() => 0.5 - Math.random()).slice(0, limit);
     idx = 0; sessionScore = 0;
     
@@ -1913,9 +2064,8 @@ function start(i) {
 }
 
 function show() {
+    if (activeSet.length === 0) { returnToMenu(); return; }
     const q = activeSet[idx];
-    
-    // Scramble the button positions (Choice Scrambler)
     let scrambledChoices = q.c.map((text, i) => ({ text, originalIndex: i }));
     scrambledChoices.sort(() => 0.5 - Math.random());
 
@@ -1957,9 +2107,25 @@ function next() {
     if (idx < activeSet.length) show(); else endSession();
 }
 
+function checkMissionSuccess(pct) {
+    const rocket = document.getElementById('rocket');
+    const passingScore = 73; //
+
+    if (pct >= passingScore) {
+        rocket.classList.add('takeoff');
+        setTimeout(() => { rocket.classList.remove('takeoff'); }, 3000);
+    } else {
+        rocket.classList.add('shake');
+        setTimeout(() => { rocket.classList.remove('shake'); }, 500);
+    }
+}
+
 function endSession() {
     const pct = Math.round((sessionScore / activeSet.length) * 100);
     currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
+    
+    checkMissionSuccess(pct);
+
     document.getElementById('game').style.display = 'none';
     document.getElementById('menu').style.display = 'block';
     updateFuel();
@@ -1972,13 +2138,11 @@ function updateFuel() {
     
     currentScores.forEach((s, i) => {
         const el = document.getElementById(`s${i}`);
-        el.innerText = s + '%';
-        el.style.color = s >= 73 ? "#2e7d32" : "#666";
+        if (el) {
+            el.innerText = s + '%';
+            el.style.color = s >= 73 ? "#2e7d32" : "#666";
+        }
     });
-
-    if (currentScores.every(s => s >= 73)) {
-        document.getElementById('rocket').classList.add('takeoff');
-    }
 }
 
 function playTone(freq, dur) {
