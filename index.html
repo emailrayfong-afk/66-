@@ -2229,40 +2229,35 @@ function setMode(m) {
     document.getElementById('mode-sim').className = m === 'sim' ? 'mode-btn active' : 'mode-btn';
 }
 
-function start(i) {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+function start(pillar) {
+    initAudio(); 
+    currentPillar = pillar;
+    currentQ = 0;
+    score = 0; 
+    answered = false;
+    missionLog = []; 
     
-    currentPillar = i;
-    let source = (appMode === 'sim') ? simLib : sprintLib;
-    let count = (appMode === 'sim') ? [10, 20, 30, 45][i] : 25;
+    // FIX: Select the correct library based on mode
+    const sourceLib = mode === 'sprint' ? sprintLib[pillar] : simLib[pillar];
     
-    let limit = Math.min(count, source[i].length || 1);
-    activeSet = [...source[i]].sort(() => 0.5 - Math.random()).slice(0, limit);
-    idx = 0; sessionScore = 0;
+    if (!sourceLib || sourceLib.length === 0) {
+        alert("Data is missing for Pillar " + (pillar + 1));
+        return;
+    }
+    
+    // FIX: Ensure we don't request more questions than the library has
+    const targetCount = mode === 'sprint' ? 25 : [8, 17, 30, 45][pillar];
+    const actualCount = Math.min(targetCount, sourceLib.length);
+    
+    let shuffled = [...sourceLib].sort(() => 0.5 - Math.random());
+    activeSet = shuffled.slice(0, actualCount);
     
     document.getElementById('menu').style.display = 'none';
     document.getElementById('game').style.display = 'block';
-    show();
+    document.getElementById('mission-log-btn').style.display = 'none';
+    
+    showQuestion();
 }
-
-function show() {
-    if (activeSet.length === 0) { returnToMenu(); return; }
-    const q = activeSet[idx];
-    let scrambledChoices = q.c.map((text, i) => ({ text, originalIndex: i }));
-    scrambledChoices.sort(() => 0.5 - Math.random());
-
-    let h = `<div class="q-text">${q.q}</div>`;
-    scrambledChoices.forEach(choice => {
-        h += `<button class="ans-btn" onclick="check(${choice.originalIndex}, this)">${choice.text}</button>`;
-    });
-
-    document.getElementById('q-area').innerHTML = h;
-    document.getElementById('feedback').style.display = 'none';
-    document.getElementById('next').style.display = 'none';
-    document.getElementById('status-line').innerText = `${appMode.toUpperCase()} PHASE: GATE ${idx + 1} OF ${activeSet.length}`;
-}
-
 function check(selectedIdx, btn) {
     const q = activeSet[idx];
     const isCorrect = (selectedIdx === q.a);
