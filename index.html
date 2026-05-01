@@ -1123,12 +1123,16 @@ const simLib = [
             "The ADR value will increase because the German stock rose",
             "The ADR value will remain unchanged because it trades on a US exchange",
             "The ADR value will increase by exactly 2% (the net difference)"
-        ],{
-    q: "In a Variable Annuity, the performance of the 'Separate Account' directly affects which of the following?",
-    c: ["The value of the accumulation units", "The insurance company's general account", "The guaranteed minimum interest rate", "The agent's commission rate"],
-    a: 0,
-    f: "Logic: Unlike a fixed annuity, the separate account's performance fluctuates with the market, directly changing the value of the investor's accumulation units."
-},{
+        ],
+        a: 0,
+        f: "Logic: Application. Currency Risk. Even though the stock rose 10%, the 12% drop in the currency's value more than offset the gain, resulting in a net loss for the US investor."
+    },
+    {
+        q: "In a Variable Annuity, the performance of the 'Separate Account' directly affects which of the following?",
+        c: ["The value of the accumulation units", "The insurance company's general account", "The guaranteed minimum interest rate", "The agent's commission rate"],
+        a: 0,
+        f: "Logic: Unlike a fixed annuity, the separate account's performance fluctuates with the market, directly changing the value of the investor's accumulation units."
+    },{
     q: "What is a unique characteristic of an Equity-Indexed Annuity (EIA) compared to a Variable Annuity?",
     c: [
         "It has a guaranteed minimum return or 'floor'",
@@ -2238,7 +2242,7 @@ function start(pillar) {
     missionLog = []; 
     
     // FIX: Select the correct library based on mode
-    const sourceLib = mode === 'sprint' ? sprintLib[pillar] : simLib[pillar];
+ const sourceLib = mode === 'sprint' ? sprintLib[pillar] : simLib[pillar];
     
     if (!sourceLib || sourceLib.length === 0) {
         alert("Data is missing for Pillar " + (pillar + 1));
