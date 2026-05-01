@@ -2226,11 +2226,10 @@ const simLib = [
     }
 ]
 ];
-
 // --- 2. ENGINE ---
 let audioCtx;
 let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0;
-let appMode = 'sprint';
+let appMode = 'sprint'; 
 let currentScores = [0,0,0,0];
 
 function setMode(m) {
@@ -2239,24 +2238,31 @@ function setMode(m) {
     document.getElementById('mode-sim').className = m === 'sim' ? 'mode-btn active' : 'mode-btn';
 }
 
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
 function start(pillar) {
     initAudio(); 
     currentPillar = pillar;
-    currentQ = 0;
-    score = 0; 
-    answered = false;
-    missionLog = []; 
+    idx = 0;
+    sessionScore = 0; 
     
-    // FIX: Select the correct library based on mode
- const sourceLib = mode === 'sprint' ? sprintLib[pillar] : simLib[pillar];
+    // FIX: Using correct variable name 'appMode'
+    const sourceLib = appMode === 'sprint' ? sprintLib[pillar] : simLib[pillar];
     
     if (!sourceLib || sourceLib.length === 0) {
         alert("Data is missing for Pillar " + (pillar + 1));
         return;
     }
     
-    // FIX: Ensure we don't request more questions than the library has
-    const targetCount = mode === 'sprint' ? 25 : [8, 17, 30, 45][pillar];
+    // Determine question count
+    const targetCount = appMode === 'sprint' ? 25 : [8, 17, 30, 45][pillar];
     const actualCount = Math.min(targetCount, sourceLib.length);
     
     let shuffled = [...sourceLib].sort(() => 0.5 - Math.random());
@@ -2264,10 +2270,24 @@ function start(pillar) {
     
     document.getElementById('menu').style.display = 'none';
     document.getElementById('game').style.display = 'block';
-    document.getElementById('mission-log-btn').style.display = 'none';
     
     showQuestion();
 }
+
+function showQuestion() {
+    const q = activeSet[idx];
+    document.getElementById('status-line').innerText = `PILLAR 0${currentPillar + 1} | OBJECTIVE ${idx + 1} OF ${activeSet.length}`;
+    
+    let html = `<div class="q-text">${q.q}</div>`;
+    q.c.forEach((choice, i) => {
+        html += `<button class="ans-btn" onclick="check(${i}, this)">${choice}</button>`;
+    });
+    
+    document.getElementById('q-area').innerHTML = html;
+    document.getElementById('feedback').style.display = 'none';
+    document.getElementById('next').style.display = 'none';
+}
+
 function check(selectedIdx, btn) {
     const q = activeSet[idx];
     const isCorrect = (selectedIdx === q.a);
@@ -2281,6 +2301,8 @@ function check(selectedIdx, btn) {
     } else {
         btn.style.background = "#ffebee";
         btn.style.borderColor = "#c62828";
+        // Highlight the correct answer for learning
+        btns[q.a].style.border = "2px solid #2e7d32";
         playTone(200, 0.2);
     }
 
@@ -2292,19 +2314,21 @@ function check(selectedIdx, btn) {
 
 function next() {
     idx++;
-    if (idx < activeSet.length) show(); else endSession();
+    if (idx < activeSet.length) {
+        showQuestion(); 
+    } else {
+        endSession();
+    }
 }
 
 function checkMissionSuccess(pct) {
     const rocket = document.getElementById('rocket');
-    const passingScore = 73; //
-
-    if (pct >= passingScore) {
+    if (pct >= 73) {
         rocket.classList.add('takeoff');
         setTimeout(() => { rocket.classList.remove('takeoff'); }, 3000);
     } else {
         rocket.classList.add('shake');
-        setTimeout(() => { rocket.classList.remove('shake'); }, 500);
+        setTimeout(() => { rocket.classList.remove('shake'); }, 1000);
     }
 }
 
@@ -2320,7 +2344,8 @@ function endSession() {
 }
 
 function updateFuel() {
-    const avg = Math.round(currentScores.reduce((a,b)=>a+b)/4);
+    const total = currentScores.reduce((a, b) => a + b, 0);
+    const avg = Math.round(total / 4);
     document.getElementById('fuel-fill').style.width = avg + '%';
     document.getElementById('total-text').innerText = `FLIGHT READINESS: ${avg}%`;
     
@@ -2344,6 +2369,3 @@ function playTone(freq, dur) {
 }
 
 window.onload = updateFuel;
-</script>
-</body>
-</html>
