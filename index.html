@@ -1117,16 +1117,22 @@ const simLib = [
 ],
 [ // PILLAR 2: INVESTMENT VEHICLE CHARACTERISTICS (SIMULATION MODE)
     {
-        q: "A US-based investor is seeking diversification and buys an ADR representing a German automotive company. The German stock price rises by 10% in Euros, but the Euro weakens by 12% against the US Dollar during the same period. What is the impact on the investor's ADR value?",
-        c: [
-            "The ADR value will decrease in US Dollar terms",
-            "The ADR value will increase because the German stock rose",
-            "The ADR value will remain unchanged because it trades on a US exchange",
-            "The ADR value will increase by exactly 2% (the net difference)"
-        ],
-        a: 0,
-        f: "Logic: Application. Currency Risk. Even though the stock rose 10%, the 12% drop in the currency's value more than offset the gain, resulting in a net loss for the US investor."
-    },
+    q: "A US-based investor is seeking diversification and buys an ADR representing a German automotive company. The German stock price rises by 10% in Euros, but the Euro weakens by 12% against the US Dollar during the same period. What is the impact on the investor's ADR value?",
+    c: [
+        "The ADR value will decrease in US Dollar terms",
+        "The ADR value will increase because the German stock rose",
+        "The ADR value will remain unchanged because it trades on a US exchange",
+        "The ADR value will increase by exactly 2% (the net difference)"
+    ],
+    a: 0,
+    f: "Logic: Application. Currency Risk. Even though the stock rose 10%, the 12% drop in the currency's value more than offset the gain, resulting in a net loss for the US investor."
+},
+{
+    q: "In a Variable Annuity, the performance of the 'Separate Account' directly affects which of the following?",
+    c: ["The value of the accumulation units", "The insurance company's general account", "The guaranteed minimum interest rate", "The agent's commission rate"],
+    a: 0,
+    f: "Logic: Unlike a fixed annuity, the separate account's performance fluctuates with the market, directly changing the value of the investor's accumulation units."
+},
     {
         q: "In a Variable Annuity, the performance of the 'Separate Account' directly affects which of the following?",
         c: ["The value of the accumulation units", "The insurance company's general account", "The guaranteed minimum interest rate", "The agent's commission rate"],
