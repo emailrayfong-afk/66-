@@ -2246,19 +2246,21 @@ function initAudio() {
 function start(pillar) {
     initAudio(); 
     currentPillar = pillar;
-    idx = 0;
-    sessionScore = 0; 
+    currentQ = 0;
+    score = 0; 
+    answered = false;
+    missionLog = []; 
     
-    // FIX: Using correct variable name 'appMode'
-    const sourceLib = appMode === 'sprint' ? sprintLib[pillar] : simLib[pillar];
+    // FIX: This line ensures the game actually uses your 100-question library
+    const sourceLib = (mode === 'sprint') ? sprintLib[pillar] : simLib[pillar];
     
     if (!sourceLib || sourceLib.length === 0) {
-        alert("Data is missing for Pillar " + (pillar + 1));
+        alert("Pillar " + (pillar + 1) + " data is missing! Check your arrays.");
         return;
     }
     
-    // Determine question count
-    const targetCount = appMode === 'sprint' ? 25 : [8, 17, 30, 45][pillar];
+    // Safety check: Don't try to pull 25 questions if the library has fewer
+    const targetCount = mode === 'sprint' ? 25 : [8, 17, 30, 45][pillar];
     const actualCount = Math.min(targetCount, sourceLib.length);
     
     let shuffled = [...sourceLib].sort(() => 0.5 - Math.random());
@@ -2266,6 +2268,7 @@ function start(pillar) {
     
     document.getElementById('menu').style.display = 'none';
     document.getElementById('game').style.display = 'block';
+    document.getElementById('mission-log-btn').style.display = 'none';
     
     showQuestion();
 }
