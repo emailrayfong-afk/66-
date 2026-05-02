@@ -468,6 +468,9 @@ const sprintLib = [
     {q: "Investment Vehicles align capital with:", c: ["Risk/Return goals", "Broker profit"], a: 0, f: "Logic: Tools to solve client puzzles."}
 ], [ // 03. STRATEGY & RECOMMENDATIONS (PILLAR 3)
     {q: "Which risk metric measures 'Total Risk'?", c: ["Standard Deviation", "Beta"], a: 0, f: "Logic: SD covers total volatility."},
+{q: "IAR ensures a complex PPN is suitable for at least some investors. This is:", c: ["Reasonable-Basis", "Customer-Specific"], a: 0, f: "Logic: Reasonable-basis is the 'Product Check'—understanding the vehicle before recommending it."},
+{q: "IAR reviews client tax status and liquidity before a trade. This satisfies:", c: ["Customer-Specific", "Quantitative"], a: 0, f: "Logic: Customer-specific is the 'Person Check'—matching the tool to the individual profile."},
+{q: "IAR recommends 15 trades in a week for a 'Buy and Hold' client. This violates:", c: ["Quantitative", "Reasonable-Basis"], a: 0, f: "Logic: Quantitative is the 'Portfolio Check'—preventing excessive trading (churning)."},
     {q: "According to MPT, an 'Optimal Portfolio' lies on:", c: ["Efficient Frontier", "CML"], a: 0, f: "Logic: Highest return per risk level."},
     {q: "Joint account with unequal ownership?", c: ["TIC", "JTWROS"], a: 0, f: "Logic: TIC allow split ownership."},
     {q: "Roth IRA contributions are:", c: ["After-tax", "Pre-tax"], a: 0, f: "Logic: No upfront deduction."},
@@ -1963,7 +1966,24 @@ const simLib = [
         c: ["A sector-specific UIT focused on emerging technology", "A portfolio of investment-grade municipal bonds", "A laddered portfolio of short-term CDs", "A balanced fund with 60% blue-chip stocks and 40% bonds"],
         a: 0,
         f: "Logic: While aggressive, the UIT aligns with high risk tolerance and a capital appreciation objective over a long horizon."
-    },
+    },{
+    q: "An IAR researches a 'Principal Protected Note' (PPN) but does not fully grasp how the option overlay affects the payout. By recommending it, they violate:",
+    c: ["Reasonable-Basis Suitability", "Customer-Specific Suitability", "Quantitative Suitability", "The Prudent Investor Act"],
+    a: 0,
+    f: "Logic: You cannot have a 'Reasonable Basis' for a recommendation if you do not understand the product's core risks and mechanics."
+},
+{
+    q: "A 30-year-old client with high risk tolerance has 95% of their net worth recommended into one speculative UIT. This recommendation likely violates:",
+    c: ["Quantitative Suitability", "Reasonable-Basis Suitability", "The 12b-1 Fee Rule", "The 1933 Act"],
+    a: 0,
+    f: "Logic: Even if the product fits the client's 'Person Check,' the concentration/volume is unsuitable in the context of their total portfolio."
+},
+{
+    q: "Even with written consent for Agency Cross Trades, an IAR must ensure the frequency of these trades does not lead to a violation of:",
+    c: ["Quantitative Suitability (Churning)", "Front-running", "The Access Person rule", "The 1933 Act"],
+    a: 0,
+    f: "Logic: Fiduciary duty requires that the total volume of trading—regardless of consent—must be suitable for the client's objectives."
+},
 {
         q: "A qualified Employee Stock Ownership Plan (ESOP) is technically categorized as which type of retirement plan?",
         c: ["Defined Contribution Plan", "Defined Benefit Plan", "Non-Qualified Deferred Compensation Plan", "Profit-Sharing Pension Plan"],
