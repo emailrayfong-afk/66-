@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: ARTEMIS S66 v18.5</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v18.8</title>
 <style>
         :root { 
             --nasa-blue: #0b3d91; 
@@ -3601,21 +3601,38 @@ function start(pillar) {
     answered = false;
     missionLog = []; 
     
-    if (!simLib[pillar] || simLib[pillar].length === 0) {
+    // Direct traffic to the correct Q-Bank based on mode
+    const checkLib = mode === 'sprint' ? sprintLib : simLib;
+    
+    if (!checkLib[pillar] || checkLib[pillar].length === 0) {
         alert("Pillar " + (pillar + 1) + " data is missing! Check your arrays.");
+        return;
+    }
+
+    if (pillarCompleted[pillar]) {
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        document.getElementById('status-line').textContent = `PILLAR ${pillar + 1} ACCOMPLISHED`;
+        
+        let html = `<div class="q-text" style="text-align:center;">You have already secured this sector.</div>`;
+        html += `<button class="nav-btn" style="display:block; margin-top:15px; background:#666;" onclick="returnToMenu()">BACK TO MENU</button>`;
+        
+        document.getElementById('q-area').innerHTML = html;
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next').style.display = 'none';
+        document.getElementById('mission-log-btn').style.display = 'none';
         return;
     }
     
     const count = mode === 'sprint' ? 25 : [8, 17, 30, 45][pillar];
-    const sourceLib = simLib[pillar];
+    const sourceLib = checkLib[pillar];
     
+    // True shuffle
     let shuffled = [...sourceLib].sort(() => 0.5 - Math.random());
     activeSet = shuffled.slice(0, Math.min(count, shuffled.length));
     
     document.getElementById('menu').style.display = 'none';
     document.getElementById('game').style.display = 'block';
-    
-    // Ensure the log button is hidden at the start of a pillar
     document.getElementById('mission-log-btn').style.display = 'none';
     
     showQuestion();
@@ -3628,26 +3645,8 @@ function showQuestion() {
     const modeLabel = mode === 'sprint' ? 'SPRINT' : 'SIMULATION';
     document.getElementById('status-line').textContent = `${modeLabel} MODE | GATE ${currentQ + 1} of ${total}`;
     
-    let choicesToDisplay = [];
-    
-    if (mode === 'sprint') {
-        let wrongAnswers = [];
-        for (let i = 0; i < q.c.length; i++) {
-            if (i !== q.a) {
-                wrongAnswers.push({ text: q.c[i], originalIndex: i });
-            }
-        }
-        wrongAnswers.sort(() => 0.5 - Math.random());
-        let selectedWrong = wrongAnswers[0];
-        
-        choicesToDisplay = [
-            { text: q.c[q.a], originalIndex: q.a },
-            selectedWrong
-        ];
-    } else {
-        choicesToDisplay = q.c.map((text, i) => ({ text, originalIndex: i }));
-    }
-    
+    // Simple map works for both 2-choice (Sprint) and 4-choice (Sim)
+    let choicesToDisplay = q.c.map((text, i) => ({ text, originalIndex: i }));
     choicesToDisplay.sort(() => 0.5 - Math.random());
     
     let html = `<div class="q-text">${q.q}</div>`;
@@ -3693,7 +3692,12 @@ function checkAnswer(selected, btnElement) {
         document.getElementById('feedback').style.background = '#ffebee';
         document.getElementById('feedback').style.borderColor = '#c62828';
         playSound('crash');
-    }
+
+        // ADAPTIVE LEARNING: Push missed question to back of the queue
+        if (mode === 'sprint') {
+            activeSet.push(q);
+        }
+    } 
     
     missionLog.push({
         question: q.q,
@@ -3705,7 +3709,11 @@ function checkAnswer(selected, btnElement) {
     });
     
     document.getElementById('feedback').style.display = 'block';
-    document.getElementById('next').style.display = 'block';
+    
+    let nextBtn = document.getElementById('next');
+    nextBtn.style.display = 'block';
+    nextBtn.innerHTML = 'NEXT GATE >';
+    nextBtn.onclick = next;
 }
 
 function next() {
@@ -3735,13 +3743,11 @@ function endPillar() {
     document.getElementById('q-area').innerHTML = completionHTML;
     document.getElementById('feedback').style.display = 'none';
     
-    // Manage the static buttons
     let nextBtn = document.getElementById('next');
     nextBtn.innerHTML = 'RETURN TO MENU';
     nextBtn.onclick = returnToMenu;
     nextBtn.style.display = 'block';
     
-    // Show the Mission Log button
     document.getElementById('mission-log-btn').style.display = 'block';
     
     updateProgress(); 
@@ -3772,11 +3778,8 @@ function showMissionLog() {
     logHTML += '</div>';
     
     document.getElementById('q-area').innerHTML = logHTML;
-    
-    // Hide the Mission Log button while we are already looking at it
     document.getElementById('mission-log-btn').style.display = 'none';
     
-    // Make sure the Return to Menu button is visible
     let nextBtn = document.getElementById('next');
     nextBtn.style.display = 'block';
     nextBtn.innerHTML = 'RETURN TO MENU';
@@ -3787,13 +3790,11 @@ function returnToMenu() {
     document.getElementById('game').style.display = 'none';
     document.getElementById('menu').style.display = 'block';
     
-    // Reset the Next button for the next round
     let nextBtn = document.getElementById('next');
     nextBtn.onclick = next; 
     nextBtn.style.display = 'none'; 
     nextBtn.innerHTML = 'NEXT GATE >';
     
-    // Hide the Mission Log button
     document.getElementById('mission-log-btn').style.display = 'none';
     
     pillarScores.forEach((score, i) => {
@@ -3843,7 +3844,15 @@ function checkMissionComplete() {
 function launchRocket() {
     const rocket = document.getElementById('rocket');
     const countdownEl = document.getElementById('countdown');
+    const hud = document.querySelector('.hud');
+    
+    let nextBtn = document.getElementById('next');
+    let logBtn = document.getElementById('mission-log-btn');
+    if(nextBtn) nextBtn.style.display = 'none';
+    if(logBtn) logBtn.style.display = 'none';
+    
     countdownEl.style.display = 'block';
+    hud.classList.add('screen-shake');
     rocket.classList.add('shake');
     
     let count = 5;
@@ -3858,12 +3867,16 @@ function launchRocket() {
         } else {
             countdownEl.textContent = 'LIFTOFF!';
             playSound('liftoff');
+            hud.classList.remove('screen-shake');
+            
             setTimeout(() => {
                 rocket.classList.remove('shake');
                 rocket.classList.add('takeoff');
                 setTimeout(() => {
                     countdownEl.style.display = 'none';
                     countdownEl.textContent = '';
+                    if(nextBtn) nextBtn.style.display = 'block';
+                    if(logBtn) logBtn.style.display = 'block';
                 }, 2000);
             }, 500);
             clearInterval(countdownInterval);
@@ -3874,16 +3887,30 @@ function launchRocket() {
 function crashRocket() {
     const rocket = document.getElementById('rocket');
     const countdownEl = document.getElementById('countdown');
+    const hud = document.querySelector('.hud');
+    
+    let nextBtn = document.getElementById('next');
+    let logBtn = document.getElementById('mission-log-btn');
+    if(nextBtn) nextBtn.style.display = 'none';
+    if(logBtn) logBtn.style.display = 'none';
+
     countdownEl.style.display = 'block';
     countdownEl.textContent = 'MISSION FAILED';
     countdownEl.style.color = '#c62828';
     
     playSound('crash');
     rocket.classList.add('crash');
+    hud.classList.add('screen-shake');
+    hud.classList.add('flash-red');
     
     setTimeout(() => {
+        hud.classList.remove('screen-shake');
+        hud.classList.remove('flash-red');
         countdownEl.style.display = 'none';
         rocket.style.display = 'none';
+        rocket.classList.remove('crash');
+        if(nextBtn) nextBtn.style.display = 'block';
+        if(logBtn) logBtn.style.display = 'block';
     }, 1500);
 }
 
