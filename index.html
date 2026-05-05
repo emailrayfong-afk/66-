@@ -266,6 +266,12 @@
 const sprintLib = [
 [ // 01. ECONOMICS (PILLAR 1: 100 QUESTIONS)
     {q: "Which return calculation ignores the timing of cash flows?", c: ["Time-weighted", "Dollar-weighted"], a: 0, f: "Logic: Time-weighted measures manager skill; Dollar-weighted measures investor timing."},
+{
+        q: "The Dividend Discount Model (DDM) estimates a stock's intrinsic value based primarily on:", 
+        c: ["The present value of expected future dividends", "The current earnings per share (EPS)"], 
+        a: 0, 
+        f: "Logic: DDM relies strictly on projecting future dividend payments and discounting them back to today's present value, ignoring book value or simple EPS."
+    },
     {q: "Payment / Rate is the formula for which calculation?", c: ["Perpetuity", "Future Value"], a: 0, f: "Logic: Dividing the payout by the rate gives the principal needed for a perpetuity."},
     {q: "DCF is used to calculate which value?", c: ["Present Value", "Stated Value"], a: 0, f: "Logic: Discounted Cash Flow finds what future money is worth today (Present Value)."},
     {q: "What is the 'break-even' rate of a project?", c: ["Internal Rate of Return (IRR)", "Expected Return"], a: 0, f: "Logic: IRR is the rate that makes NPV equal to zero."},
@@ -367,7 +373,17 @@ const sprintLib = [
     {q: "The 'Security Market Line' (SML) is a representation of:", c: ["CAPM", "Efficient Frontier"], a: 0, f: "Logic: The SML plots expected return against Beta."}
 ], [ // 02. INVESTMENT VEHICLES (PILLAR 2)
     {q: "Which vehicle issues 'redeemable' shares and does not trade on an exchange?", c: ["Open-End Mutual Fund", "Closed-End Fund"], a: 0, f: "Logic: Open-end funds are redeemable with the issuer."},
-    {q: "Net Asset Value (NAV) of a mutual fund is calculated how often?", c: ["Daily", "Continuously"], a: 0, f: "Logic: Calculated once per day at market close."},
+    {q: "Net Asset Value (NAV) of a mutual fund is calculated how often?", c: ["Daily", "Continuously"], a: 0, f: "Logic: Calculated once per day at market close."}, {
+        q: "Which derivative contract is traded Over-The-Counter (OTC) and cannot be easily offset?", 
+        c: ["Forward Contracts", "Futures Contracts"], 
+        a: 0, 
+        f: "Logic: Forward contracts are customized, direct agreements without a secondary market. Futures are standardized and exchange-traded, making them very easy to offset."
+    },{
+        q: "Which feature is absent from both variable life insurance and variable annuities?", 
+        c: ["Guaranteed cash values", "Death benefits and named beneficiaries"], 
+        a: 0, 
+        f: "Logic: Because they are 'variable' and tied to market performance in a separate account, neither product can offer guaranteed cash values. The client bears the investment risk."
+    },
     {q: "Which security has most senior claim in liquidation?", c: ["Secured Bond", "Preferred Stock"], a: 0, f: "Logic: Secured debt is paid first."},
     {q: "ADRs facilitate the trading of:", c: ["Foreign stocks in the U.S.", "U.S. stocks in foreign markets"], a: 0, f: "Logic: Buy foreign company shares in USD."},
     {q: "Which interest rate is associated with 'Purchasing Power Risk'?", c: ["Fixed Rate", "Variable Rate"], a: 0, f: "Logic: Fixed rates lose value when inflation rises."},
@@ -467,8 +483,32 @@ const sprintLib = [
     {q: "Income Bond suitable for income?", c: ["No", "Yes"], a: 0, f: "Logic: Only pays if company earns."},
     {q: "Investment Vehicles align capital with:", c: ["Risk/Return goals", "Broker profit"], a: 0, f: "Logic: Tools to solve client puzzles."}
 ], [ // 03. STRATEGY & RECOMMENDATIONS (PILLAR 3)
-    {q: "Which risk metric measures 'Total Risk'?", c: ["Standard Deviation", "Beta"], a: 0, f: "Logic: SD covers total volatility."},
-{q: "IAR ensures a complex PPN is suitable for at least some investors. This is:", c: ["Reasonable-Basis", "Customer-Specific"], a: 0, f: "Logic: Reasonable-basis is the 'Product Check'—understanding the vehicle before recommending it."},
+    {q: "Which risk metric measures 'Total Risk'?", c: ["Standard Deviation", "Beta"], a: 0, f: "Logic: SD covers total volatility."}, {
+        q: "Which concept is a primary focus of behavioral finance rather than traditional finance?", 
+        c: ["Loss Aversion", "Efficient Market Hypothesis"], 
+        a: 0, 
+        f: "Logic: Behavioral finance studies psychological biases like loss aversion. Traditional finance (like EMH) assumes investors are always perfectly rational."
+    },
+{
+        q: "Who acts as the fiduciary responsible for filing an estate's income tax returns and paying its tax liabilities?", 
+        c: [
+            "The administrator or executor", 
+            "The probate court judge"
+        ], 
+        a: 0, 
+        f: "Logic: The administrator or executor has the fiduciary duty to manage the estate's affairs, which explicitly includes filing necessary tax returns and paying debts before distributing assets to the heirs."
+    },{
+        q: "What is the income tax liability for an individual who is the named beneficiary of a life insurance death benefit?", 
+        c: ["Zero; the death benefit is generally income tax-free to the beneficiary.", "The amount exceeding the policy's cost basis is taxed as ordinary income."], 
+        a: 0, 
+        f: "Logic: Life insurance death benefits are generally received income tax-free by the named beneficiary. Taxation usually only applies at the estate level if the deceased owned the policy."
+    },
+{q: "IAR ensures a complex PPN is suitable for at least some investors. This is:", c: ["Reasonable-Basis", "Customer-Specific"], a: 0, f: "Logic: Reasonable-basis is the 'Product Check'—understanding the vehicle before recommending it."},{
+        q: "In estate planning, 'portability' refers to the ability to:", 
+        c: ["Transfer a deceased spouse's unused lifetime exclusion to the survivor", "Double the annual gift tax exclusion while both spouses are alive"], 
+        a: 0, 
+        f: "Logic: Portability applies after death, allowing the surviving spouse to use the deceased's unused lifetime exemption. Doubling the annual exclusion while both are alive is known as 'gift splitting'."
+    },
 {q: "IAR reviews client tax status and liquidity before a trade. This satisfies:", c: ["Customer-Specific", "Quantitative"], a: 0, f: "Logic: Customer-specific is the 'Person Check'—matching the tool to the individual profile."},
 {q: "IAR recommends 15 trades in a week for a 'Buy and Hold' client. This violates:", c: ["Quantitative", "Reasonable-Basis"], a: 0, f: "Logic: Quantitative is the 'Portfolio Check'—preventing excessive trading (churning)."},
     {q: "According to MPT, an 'Optimal Portfolio' lies on:", c: ["Efficient Frontier", "CML"], a: 0, f: "Logic: Highest return per risk level."},
@@ -631,7 +671,34 @@ const simLib = [
         c: ["Value", "Growth", "Speculative", "High Beta"],
         a: 0,
         f: "Logic: Value investors look for 'bargains' (Low P/B) and are often rewarded with higher income (High Yield) while waiting for the price to rise."
-    },      
+    }, {
+        q: "When using the discounted cash flow (DCF) method to value a fixed-income security, if the discount rate used in the calculation is lower than the bond's coupon rate, the resulting present value will be:",
+        c: ["Less than par value", "Equal to par value", "Greater than par value", "Zero"],
+        a: 2,
+        f: "Logic: If the discount rate (required return) is lower than what the bond actually pays (the coupon), the bond is attractive to investors and will be valued at a premium (greater than par)."
+    },{
+        q: "What does the dividend discount model take into account to estimate a company's share price?",
+        c: [
+            "A corporation's book value", 
+            "The earnings per share (EPS) in the most recent 12-month period", 
+            "Interest payments the company is required to make to its bondholders", 
+            "A corporation's expected future dividends and a discount rate"
+        ],
+        a: 3,
+        f: "Logic: The Dividend Discount Model (DDM) determines the intrinsic value of a stock by forecasting its future dividend payments and discounting them back to their present value using a required rate of return."
+    },
+    {
+        q: "An investment adviser strongly believes in the Semi-Strong form of the Efficient Market Hypothesis (EMH). Which of the following strategies is the adviser MOST likely to recommend to a client?",
+        c: ["Active portfolio management using technical analysis", "Active portfolio management using fundamental analysis", "Passive portfolio management using index funds", "Tactical asset allocation using insider information"],
+        a: 2,
+        f: "Logic: The Semi-Strong form of EMH states that all public info (both fundamental and technical) is already priced into the stock. Therefore, active management is useless, and a passive index strategy is best."
+    },
+    {
+        q: "According to the Capital Asset Pricing Model (CAPM), which of the following metrics is used to determine a security's expected return relative to the broader market?",
+        c: ["Standard Deviation", "Alpha", "Beta", "Duration"],
+        a: 2,
+        f: "Logic: CAPM relies on Beta (systematic risk) combined with the risk-free rate to calculate the expected return of an asset."
+    },     
     {
         q: "A stock is trading with a Price-to-Earnings (P/E) ratio of 45 and a Price-to-Book (P/B) ratio of 8.0. Which of the following is the most likely characteristic of this investment?",
         c: [
@@ -1336,11 +1403,52 @@ const simLib = [
 ],
 // PILLAR 1 COMPLETED. READY FOR PILLAR 2 START.
 [ // PILLAR 2: INVESTMENT VEHICLE CHARACTERISTICS (SIMULATION MODE)
-    {
+{
         q: "A US-based investor buys an ADR of a German company. The stock rises 10% in Euros, but the Euro weakens 12% against the USD. What is the impact?",
         c: ["The ADR value will decrease in USD terms", "The ADR value will increase", "The ADR value remains unchanged", "The ADR value increases by 2%"],
         a: 0,
         f: "Logic: Currency Risk. The 12% currency drop offsets the 10% stock gain, resulting in a net loss in USD."
+    }, 
+    {
+        q: "Both variable life insurance and variable annuities have all of the following features, EXCEPT:",
+        c: [
+            "Guaranteed cash values", 
+            "Loan provisions", 
+            "Named beneficiaries", 
+            "Death benefits"
+        ],
+        a: 0,
+        f: "Logic: The word 'variable' means the investment risk is passed to the policyowner via a separate account. Because the account is tied to market performance, neither product can offer a guaranteed cash value."
+    }, {
+        a: 0,
+        f: "Logic: Currency Risk. The 12% currency drop offsets the 10% stock gain, resulting in a net loss in USD."
+    }, {
+        q: "One of the main differences between futures contracts and forward contracts is that:",
+        c: [
+            "Forward contracts cannot be offset", 
+            "Forward contracts do not involve commodities", 
+            "Futures contracts are always used to speculate", 
+            "An investor may not be short a futures contract"
+        ],
+        a: 0,
+        f: "Logic: Forward contracts are customized, over-the-counter (OTC) agreements between two specific parties. Because they are not standardized, they lack a secondary market and cannot be easily offset or traded."
+    }, {
+        q: "A client is seeking an investment that provides flow-through of both passive income and passive losses to offset other passive income generated in their portfolio. Which of the following vehicles is MOST appropriate?",
+        c: ["Real Estate Investment Trust (REIT)", "Direct Participation Program (DPP)", "Closed-end fund", "C-Corporation"],
+        a: 1,
+        f: "Logic: DPPs (like limited partnerships) pass through both income and losses to the investor. REITs pass through income, but are legally prohibited from passing through losses."
+    },
+    {
+        q: "An investor buys 100 shares of XYZ stock at $45 per share and simultaneously buys 1 XYZ $40 put for a premium of $2. What is the investor's maximum potential loss on this position?",
+        c: ["$200", "$500", "$700", "Unlimited"],
+        a: 2,
+        f: "Logic: The investor paid $45 for the stock + $2 for the put = $47 break-even cost. The put guarantees they can sell the stock for at least $40. Maximum loss = $47 - $40 = $7 per share ($700 total)."
+    },
+    {
+        q: "A client purchases a corporate bond at a premium. Which of the following statements regarding the bond's yields is TRUE?",
+        c: ["Yield to maturity will be higher than the current yield.", "The nominal yield will be lower than the yield to call.", "The current yield will be higher than the nominal yield.", "The yield to maturity will be lower than the nominal yield."],
+        a: 3,
+        f: "Logic: For a premium bond, the yields from highest to lowest are: Nominal (Coupon), Current Yield, Yield to Maturity, and Yield to Call."
     },
 {
         q: "An investor is considering a 'Viatical Settlement.' What is the PRIMARY risk associated with this investment vehicle?",
@@ -1967,6 +2075,36 @@ const simLib = [
         a: 0,
         f: "Logic: While aggressive, the UIT aligns with high risk tolerance and a capital appreciation objective over a long horizon."
     },{
+        q: "Who is responsible for filing estate income tax returns and making sure that the payments are made on the estate's behalf?",
+        c: [
+            "The heirs", 
+            "The administrator or executor", 
+            "The probate court", 
+            "The decedent or testator"
+        ],
+        a: 1,
+        f: "Logic: The executor (if named in a will) or the administrator (if appointed by a court) acts as the fiduciary of the estate. Their primary responsibilities include gathering the estate's assets, paying off debts and taxes, and then distributing the remaining assets to the beneficiaries."
+    },{
+        q: "An individual has recently inherited a life insurance policy. What's the individual's tax liability on the insurance policy's death benefit?",
+        c: [
+            "The proceeds exceeding the cost basis are taxable at the individual's ordinary income rate.", 
+            "100% of the death benefit is taxable at the individual's ordinary income rate.", 
+            "Zero, since the death benefit from an insurance policy is only taxable to the deceased's estate.", 
+            "The proceeds exceeding the cost basis are taxable at the long-term capital gains rate."
+        ],
+        a: 2,
+        f: "Logic: Life insurance death benefits paid to a named beneficiary are generally free of federal income tax. While the death benefit might be included in the deceased's gross estate for estate tax calculations, the individual beneficiary owes zero income tax on the proceeds."
+    },{
+        q: "As it relates to gift and estate taxes, what's portability?",
+        c: [
+            "The ability for a surviving spouse to use the deceased spouse's unused lifetime gift tax exclusion", 
+            "The ability to use the gift tax exclusion on state income taxes", 
+            "The ability to double the annual gift tax exclusion for married couples", 
+            "The ability to exclude charitable donations from the gift tax"
+        ],
+        a: 0,
+        f: "Logic: Portability allows a surviving spouse to 'port' over any of their deceased spouse's unused lifetime estate and gift tax exemption and add it to their own, effectively doubling their shelter from estate taxes."
+    },{
     q: "An IAR researches a 'Principal Protected Note' (PPN) but does not fully grasp how the option overlay affects the payout. By recommending it, they violate:",
     c: ["Reasonable-Basis Suitability", "Customer-Specific Suitability", "Quantitative Suitability", "The Prudent Investor Act"],
     a: 0,
@@ -2583,6 +2721,16 @@ const simLib = [
         c: ["Little to no dividends", "High dividends", "Monthly dividends", "Stock dividends only"],
         a: 0,
         f: "Logic: They reinvest the cash."
+    },{
+        q: "Which of the following is addressed in behavioral finance?",
+        c: [
+            "An aversion to losses", 
+            "Predicting market trends using historical pricing patterns", 
+            "An investor making large and sudden withdrawals", 
+            "The efficient distribution of information in stock prices"
+        ],
+        a: 0,
+        f: "Logic: Behavioral finance studies the psychological influences and biases of investors, such as 'loss aversion' (the tendency to prefer avoiding losses over acquiring equivalent gains)."
     },
     {
         q: "Which index is price-weighted?",
@@ -2614,6 +2762,17 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: The 'de minimis' rule allows up to 5 retail clients in a state without registration, provided there is no physical office."
+    },{
+        q: "An investment adviser representative (IAR) is employed by a Federal Covered Adviser. The IAR has a physical office in State A, and serves 15 retail clients who live in State B. Under the Uniform Securities Act, where must the IAR register?",
+        c: ["Only in State A", "Only in State B", "In both State A and State B", "With the SEC only"],
+        a: 0,
+        f: "Logic: IARs of Federal Covered Advisers only have to register in the states where they maintain a physical 'place of business.' The number of retail clients in other states does not trigger registration for federal IARs."
+    },
+    {
+        q: "Under the Uniform Securities Act, an agent of a broker-dealer is permitted to share in the profits and losses of a customer's account if:",
+        c: ["The agent is an investment adviser representative.", "The agent and the customer are immediate family members.", "The customer provides written authorization and the broker-dealer approves.", "The agent contributes at least 50% of the account capital."],
+        a: 2,
+        f: "Logic: Unlike IARs (who can never share in accounts), Broker-Dealer agents are permitted to share in profits and losses provided they have written authorization from both the client and their employing firm."
     },
 {
         q: "Under the modernized SEC Marketing Rule, an Investment Adviser (IA) may use a 'Testimonial' in an advertisement only if they prominently disclose:",
