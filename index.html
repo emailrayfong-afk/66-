@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: ARTEMIS S66 v18.8</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v18.5</title>
 <style>
         :root { 
             --nasa-blue: #0b3d91; 
@@ -271,6 +271,27 @@ const sprintLib = [
         c: ["The present value of expected future dividends", "The current earnings per share (EPS)"], 
         a: 0, 
         f: "Logic: DDM relies strictly on projecting future dividend payments and discounting them back to today's present value, ignoring book value or simple EPS."
+    },{
+        q: "To calculate how much money must be invested TODAY in a lump sum to reach a specific future goal, an investor should use which formula?", 
+        c: [
+            "Present Value", 
+            "Future Value"
+        ], 
+        a: 0, 
+        f: "Logic: Present Value (PV) calculates what a future amount of money is worth right now. Future Value (FV) calculates what today's money will grow into later."
+    },{
+        q: "Which form of the Efficient Market Hypothesis (EMH) asserts that even private, insider information is already reflected in the stock price?", 
+        c: ["Strong Form", "Semi-Strong Form"], 
+        a: 0, 
+        f: "Logic: Strong Form EMH says absolutely all information (public and private) is priced in. Semi-Strong only accounts for public information."
+    },{
+        q: "Which of the following items is found on an individual's income statement rather than their balance sheet?", 
+        c: [
+            "Expenses", 
+            "Liabilities"
+        ], 
+        a: 0, 
+        f: "Logic: An income statement tracks cash flow (income and expenses). A balance sheet tracks a snapshot of net worth (assets and liabilities)."
     },
     {q: "Payment / Rate is the formula for which calculation?", c: ["Perpetuity", "Future Value"], a: 0, f: "Logic: Dividing the payout by the rate gives the principal needed for a perpetuity."},
     {q: "DCF is used to calculate which value?", c: ["Present Value", "Stated Value"], a: 0, f: "Logic: Discounted Cash Flow finds what future money is worth today (Present Value)."},
@@ -508,6 +529,17 @@ const sprintLib = [
         c: ["Transfer a deceased spouse's unused lifetime exclusion to the survivor", "Double the annual gift tax exclusion while both spouses are alive"], 
         a: 0, 
         f: "Logic: Portability applies after death, allowing the surviving spouse to use the deceased's unused lifetime exemption. Doubling the annual exclusion while both are alive is known as 'gift splitting'."
+    },{
+        q: "In a Tenancy in Common (TIC) account, what happens to a deceased owner's fractional share of the assets?", 
+        c: ["It passes to the deceased owner's estate", "It passes directly to the surviving account owners"], 
+        a: 0, 
+        f: "Logic: TIC shares pass to the estate. Joint Tenants with Right of Survivorship (JTWROS) shares pass to the surviving owners."
+    },
+    {
+        q: "Assuming all statutory holding periods are met, when does an employee incur regular income tax liability on Incentive Stock Options (ISOs)?", 
+        c: ["When the acquired stock is ultimately sold", "When the options are initially exercised"], 
+        a: 0, 
+        f: "Logic: ISOs defer regular tax liability until the stock is finally sold, unlike Non-Qualified Stock Options (NSOs) which are taxed at exercise."
     },
 {q: "IAR reviews client tax status and liquidity before a trade. This satisfies:", c: ["Customer-Specific", "Quantitative"], a: 0, f: "Logic: Customer-specific is the 'Person Check'—matching the tool to the individual profile."},
 {q: "IAR recommends 15 trades in a week for a 'Buy and Hold' client. This violates:", c: ["Quantitative", "Reasonable-Basis"], a: 0, f: "Logic: Quantitative is the 'Portfolio Check'—preventing excessive trading (churning)."},
@@ -612,7 +644,71 @@ const sprintLib = [
 ], [ // 04. REGULATIONS & GUIDELINES (PILLAR 4)
     {q: "USA 'Person' includes:", c: ["Corporation", "Deceased"], a: 0, f: "Logic: Entities capable of contract."},
     {q: "BD register if office in state?", c: ["Yes (Immediate)", "No"], a: 0, f: "Logic: Place of Business trigger."},
-    {q: "IA retail client de minimis?", c: ["5 or fewer", "10"], a: 0, f: "Logic: Home-office exemption limit."},
+{
+        q: "What are the core recordkeeping timeframes under the Uniform Securities Act?", 
+        c: [
+            "3 years for Broker-Dealers, 5 years for Investment Advisers", 
+            "5 years for Broker-Dealers, 3 years for Investment Advisers"
+        ], 
+        a: 0, 
+        f: "Logic: BDs = 3 years. IAs = 5 years. (Hint: Both require records to be in the principal office for the first 2 years)."
+    },
+    {q: "IA retail client de minimis?", c: ["5 or fewer", "10"], a: 0, f: "Logic: Home-office exemption limit."},{
+        q: "Do institutional clients (such as pension funds) count towards the 5-client 'de minimis' exemption limit for out-of-state Investment Advisers?", 
+        c: ["No, institutional clients do not count toward the limit", "Yes, they count exactly the same as retail clients"], 
+        a: 0, 
+        f: "Logic: The de minimis exemption strictly limits an out-of-state IA to 5 or fewer RETAIL clients. You can have unlimited institutional clients without registering."
+    },{
+        q: "All of the following are required to be included in a written investment advisory contract, EXCEPT:",
+        c: [
+            "The methodology for computing the advisor's fee", 
+            "A clause regarding the assignment of the contract", 
+            "The term of the contract", 
+            "The name of the broker-dealer that executes securities trades in the account"
+        ],
+        a: 3,
+        f: "Logic: Advisory contracts must include the fee calculation, the term of the agreement, and a non-assignment clause (prohibiting the transfer of the account without client consent). They are NOT required to name the specific broker-dealer used for execution."
+    },{
+        q: "When calculating the present value of a bond using Discounted Cash Flow (DCF), which metric is NOT a required input?", 
+        c: ["Duration", "Discount Rate"], 
+        a: 0, 
+        f: "Logic: Duration is a risk measurement (sensitivity to interest rates). To find present value, you only need the cash flows, time to maturity, and the discount rate."
+    },{
+        q: "XYZ Advisers is an IA located and registered in State A. They manage accounts for three retail clients in State B, and two corporate pension funds in State B. XYZ maintains no physical office in State B. Under the Uniform Securities Act, XYZ Advisers:",
+        c: [
+            "Must register with the Administrator in State B because it transacts business with retail clients residing in that state.", 
+            "Is exempt from registration in State B because it has no place of business there and its retail client count does not exceed five.", 
+            "Must register in State B because managing pension fund assets requires mandatory state registration.", 
+            "Is exempt from registration in State B because the Uniform Securities Act categorizes all out-of-state advisers as federal covered advisers."
+        ],
+        a: 1,
+        f: "Logic: The 'De Minimis' exemption allows out-of-state IAs with no place of business in the state to have up to 5 retail clients without registering. Institutional clients (like pension funds) do not count toward this 5-client limit."
+    },
+    {
+        q: "Under the provisions of the Uniform Securities Act, the Administrator has broad authority to establish financial requirements. Which of the following actions is an investment adviser NOT universally required to take?",
+        c: [
+            "Post a surety bond, regardless of whether the firm maintains custody or discretionary authority over client funds.", 
+            "File annual financial statements and reports with the State Administrator.", 
+            "Pay an initial registration fee and a subsequent annual renewal filing fee.", 
+            "Allow the Administrator to conduct periodic or special examinations of the firm's books and records at any time."
+        ],
+        a: 0,
+        f: "Logic: Surety bonds are generally ONLY required by the Administrator if the Investment Adviser maintains custody of client funds or has discretionary authority over client accounts. It is not a universal requirement for all IAs."
+    },{
+        q: "To calculate 'Gross Profit' on an income statement, which expense is subtracted from Total Revenue?", 
+        c: [
+            "Cost of Goods Sold (COGS)", 
+            "Selling, General, and Administrative (SG&A) Expenses"
+        ], 
+        a: 0, 
+        f: "Logic: Gross profit only accounts for the direct costs of producing the goods (COGS). Operating expenses like SG&A are subtracted later to find Operating Income."
+    },
+    {
+        q: "Under the Uniform Securities Act, is an Investment Adviser universally required to post a surety bond?", 
+        c: ["No, typically only if they have custody or discretionary authority", "Yes, all registered IAs must post a bond"], 
+        a: 0, 
+        f: "Logic: Surety bonds provide a financial safety net for clients. The Administrator usually only requires them if the IA has direct access to client money (custody) or the power to trade without asking (discretion)."
+    },
     {q: "IAR of Federal firm registers with:", c: ["State", "SEC"], a: 0, f: "Logic: Individual is always state license."},
     {q: "Consent to Service is:", c: ["Permanent", "Annual"], a: 0, f: "Logic: Filed once for legal service."},
     {q: "State registration expires:", c: ["Dec 31st", "Anniversary"], a: 0, f: "Logic: Year-end uniform license."},
@@ -671,7 +767,37 @@ const simLib = [
         c: ["Value", "Growth", "Speculative", "High Beta"],
         a: 0,
         f: "Logic: Value investors look for 'bargains' (Low P/B) and are often rewarded with higher income (High Yield) while waiting for the price to rise."
+    },{
+        q: "A business reports revenue of $120,000, cost of goods sold of $35,000, selling, general, and administrative expenses of $15,000, and interest expenses of $5,000. What is the business's gross profit?",
+        c: [
+            "$85,000", 
+            "$70,000", 
+            "$65,000", 
+            "$120,000"
+        ],
+        a: 0,
+        f: "Logic: Gross Profit is calculated simply as Revenue minus Cost of Goods Sold (COGS). SG&A and interest expenses are 'below the line' and are subtracted later to find operating income and net income. ($120,000 - $35,000 = $85,000)."
     }, {
+        q: "A couple wants to save $50,000 for their newborn child’s college education. If they want to make one immediate investment and avoid making additional deposits, which formula will determine the total amount they need to invest now?",
+        c: [
+            "Internal rate of return", 
+            "Current ratio", 
+            "Present value", 
+            "Future value"
+        ],
+        a: 2,
+        f: "Logic: The couple knows the future amount they need ($50,000) and the time horizon. They need to use the Present Value formula to calculate how much they must deposit *today* (in a single lump sum) to reach that future goal."
+    },{
+        q: "An income statement of an individual would contain:",
+        c: [
+            "Expenses", 
+            "Liabilities", 
+            "Real property", 
+            "Savings accounts"
+        ],
+        a: 0,
+        f: "Logic: An income statement (or cash flow statement) tracks money coming in (income) and money going out (expenses) over a period of time. Liabilities, real property, and savings accounts are snapshot items found on a balance sheet."
+    },{
         q: "When using the discounted cash flow (DCF) method to value a fixed-income security, if the discount rate used in the calculation is lower than the bond's coupon rate, the resulting present value will be:",
         c: ["Less than par value", "Equal to par value", "Greater than par value", "Zero"],
         a: 2,
@@ -686,6 +812,27 @@ const simLib = [
         ],
         a: 3,
         f: "Logic: The Dividend Discount Model (DDM) determines the intrinsic value of a stock by forecasting its future dividend payments and discounting them back to their present value using a required rate of return."
+    },{
+        q: "Three individuals, Albert, Bernard, and Charles, establish a joint brokerage account to pool their investment resources. They structure the account as Tenants in Common (TIC). Albert contributes 50%, while Bernard and Charles each contribute 25%. If Charles were to pass away suddenly, what would happen to his share?",
+        c: [
+            "His 25% share is automatically distributed equally between Albert and Bernard.", 
+            "His 25% share passes to his estate and is distributed according to the instructions in his will.", 
+            "His share passes directly to his designated beneficiary on the account, bypassing the probate process.", 
+            "The entire account must be liquidated and distributed to the remaining owners and the deceased's estate."
+        ],
+        a: 1,
+        f: "Logic: In a Tenancy in Common (TIC) account, ownership can be unequal, and a deceased owner's fractional share passes to their estate (subject to probate), not to the surviving account owners."
+    },
+    {
+        q: "Sarah is granted Incentive Stock Options (ISOs). Assuming Sarah meets all statutory holding period requirements (holding the stock for more than two years from the grant date and more than one year from the exercise date), at what point will she incur regular tax liability on the profit generated?",
+        c: [
+            "At the time the options are officially granted by the board of directors.", 
+            "At the time the options are exercised and the underlying stock is purchased.", 
+            "At the time the stock acquired through the exercise of the options is ultimately sold in the open market.", 
+            "ISOs are strictly tax-exempt provided the mandatory holding period requirements are met."
+        ],
+        a: 2,
+        f: "Logic: For statutory/Incentive Stock Options (ISOs), if the employee meets the required holding periods, regular income tax is completely deferred until the acquired stock is finally sold (often resulting in favorable long-term capital gains rates)."
     },
     {
         q: "An investment adviser strongly believes in the Semi-Strong form of the Efficient Market Hypothesis (EMH). Which of the following strategies is the adviser MOST likely to recommend to a client?",
@@ -2075,6 +2222,27 @@ const simLib = [
         a: 0,
         f: "Logic: While aggressive, the UIT aligns with high risk tolerance and a capital appreciation objective over a long horizon."
     },{
+        q: "Three individuals, Albert, Bernard, and Charles, establish a joint brokerage account to pool their investment resources. They structure the account as Tenants in Common (TIC). Albert contributes 50%, while Bernard and Charles each contribute 25%. If Charles were to pass away suddenly, what would happen to his share?",
+        c: [
+            "His 25% share is automatically distributed equally between Albert and Bernard.", 
+            "His 25% share passes to his estate and is distributed according to the instructions in his will.", 
+            "His share passes directly to his designated beneficiary on the account, bypassing the probate process.", 
+            "The entire account must be liquidated and distributed to the remaining owners and the deceased's estate."
+        ],
+        a: 1,
+        f: "Logic: In a Tenancy in Common (TIC) account, ownership can be unequal, and a deceased owner's fractional share passes to their estate (subject to probate), not to the surviving account owners."
+    },
+    {
+        q: "Sarah is granted Incentive Stock Options (ISOs). Assuming Sarah meets all statutory holding period requirements (holding the stock for more than two years from the grant date and more than one year from the exercise date), at what point will she incur regular tax liability on the profit generated?",
+        c: [
+            "At the time the options are officially granted by the board of directors.", 
+            "At the time the options are exercised and the underlying stock is purchased.", 
+            "At the time the stock acquired through the exercise of the options is ultimately sold in the open market.", 
+            "ISOs are strictly tax-exempt provided the mandatory holding period requirements are met."
+        ],
+        a: 2,
+        f: "Logic: For statutory/Incentive Stock Options (ISOs), if the employee meets the required holding periods, regular income tax is completely deferred until the acquired stock is finally sold (often resulting in favorable long-term capital gains rates)."
+    },{
         q: "Who is responsible for filing estate income tax returns and making sure that the payments are made on the estate's behalf?",
         c: [
             "The heirs", 
@@ -2762,6 +2930,37 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: The 'de minimis' rule allows up to 5 retail clients in a state without registration, provided there is no physical office."
+    },{
+        q: "All of the following are required to be included in a written investment advisory contract, EXCEPT:",
+        c: [
+            "The methodology for computing the advisor's fee", 
+            "A clause regarding the assignment of the contract", 
+            "The term of the contract", 
+            "The name of the broker-dealer that executes securities trades in the account"
+        ],
+        a: 3,
+        f: "Logic: Advisory contracts must include the fee calculation, the term of the agreement, and a non-assignment clause (prohibiting the transfer of the account without client consent). They are NOT required to name the specific broker-dealer used for execution."
+    },{
+        q: "Which of the following is NOT needed to calculate the present value of a non-callable bond?",
+        c: [
+            "Maturity date", 
+            "Duration", 
+            "Bond's principal and interest payments", 
+            "Current discount rate"
+        ],
+        a: 1,
+        f: "Logic: To calculate present value (using Discounted Cash Flow), you need the future cash flows (principal and interest payments), the timing of those flows (maturity date), and the required return (discount rate). Duration is a measurement of price sensitivity, not an input for the PV formula."
+    },
+{
+        q: "For how long must broker-dealers and investment advisers maintain their books and records according to the Uniform Securities Act?",
+        c: [
+            "Three years for broker-dealers and five for investment advisers", 
+            "Five years for broker-dealers and three for investment advisers", 
+            "Two years for broker-dealers and five for investment advisers", 
+            "Two years for each"
+        ],
+        a: 0,
+        f: "Logic: Under the USA, Broker-Dealers must maintain records for 3 years, while Investment Advisers must maintain them for 5 years. For both entities, the records must be kept easily accessible in the principal office for the first 2 years."
     },{
         q: "An investment adviser representative (IAR) is employed by a Federal Covered Adviser. The IAR has a physical office in State A, and serves 15 retail clients who live in State B. Under the Uniform Securities Act, where must the IAR register?",
         c: ["Only in State A", "Only in State B", "In both State A and State B", "With the SEC only"],
