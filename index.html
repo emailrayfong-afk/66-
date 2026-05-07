@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: ARTEMIS S66 v18.5</title>
+    <title>MISSION COMMAND: S66 v18.9</title>
 <style>
         :root { 
             --nasa-blue: #0b3d91; 
@@ -272,6 +272,30 @@ const sprintLib = [
         a: 0, 
         f: "Logic: DDM relies strictly on projecting future dividend payments and discounting them back to today's present value, ignoring book value or simple EPS."
     },{
+        q: "To reduce the systematic risk of a portfolio that is 100% invested in equities, which type of security should an Investment Adviser Representative recommend?", 
+        c: [
+            "Debt instruments, because they generally have a negative correlation to equities.", 
+            "An S&P 500 Index ETF, because it provides broad positive correlation to the market."
+        ], 
+        a: 0, 
+        f: "Logic: You cannot reduce systematic (market) risk by simply buying more of the same asset class. You must introduce an asset class with a negative correlation, like bonds/debt, to offset the risk of the stock market dropping."
+    },{
+        q: "A business needs $2,000 in 2 years (10% discount rate). The Present Value is $1,653. If they can buy it today for $1,600, is this a discount or a premium?", 
+        c: [
+            "A $53 discount", 
+            "A $53 premium"
+        ], 
+        a: 0, 
+        f: "Logic: If the 'fair value' today is $1,653 and you only have to pay $1,600, you are getting a $53 discount."
+    },{
+        q: "To achieve the greatest reduction in overall portfolio risk, an investor should combine assets that have a correlation coefficient closest to:", 
+        c: [
+            "-1.0 (Perfect negative correlation)", 
+            "+1.0 (Perfect positive correlation)"
+        ], 
+        a: 0, 
+        f: "Logic: A correlation of -1.0 is the ultimate goal of diversification. It means the assets move perfectly opposite to each other—so one asset 'zigs' exactly when the other 'zags'."
+    },{
         q: "What is the core calculation objective of the Discounted Cash Flow (DCF) valuation method?", 
         c: [
             "To calculate the Present Value of future cash flows", 
@@ -416,6 +440,14 @@ const sprintLib = [
         a: 0, 
         f: "Logic: Forward contracts are customized, direct agreements without a secondary market. Futures are standardized and exchange-traded, making them very easy to offset."
     },{
+        q: "In an Equity Indexed Annuity (EIA), how does the 'annual reset' or 'ratchet' feature protect the investor?", 
+        c: [
+            "It locks in previous gains and ignores index declines, protecting the principal from market losses.", 
+            "It guarantees that the participation rate will automatically increase every year the market rises."
+        ], 
+        a: 0, 
+        f: "Logic: The annual reset feature establishes a new starting point each year. If the underlying index drops, the floor kicks in, meaning the investor does not lose money (the loss is ignored)."
+    },{
         q: "Which feature is absent from both variable life insurance and variable annuities?", 
         c: ["Guaranteed cash values", "Death benefits and named beneficiaries"], 
         a: 0, 
@@ -526,6 +558,22 @@ const sprintLib = [
         a: 0, 
         f: "Logic: Behavioral finance studies psychological biases like loss aversion. Traditional finance (like EMH) assumes investors are always perfectly rational."
     },{
+        q: "What is the primary mathematical advantage of using a Dollar Cost Averaging (DCA) strategy?", 
+        c: [
+            "The average cost per share will be lower than the average price per share.", 
+            "The average price per share will be lower than the average cost per share."
+        ], 
+        a: 0, 
+        f: "Logic: DCA forces you to buy more shares when they are 'on sale' (low price). This naturally pulls your average cost down below the average market price over that timeframe."
+    },{
+        q: "Is it suitable to recommend a 1035 Exchange to a different annuity just to avoid a market correction if the current annuity has surrender fees remaining?", 
+        c: [
+            "No, because the money could be moved into a safer sub-account within the existing annuity for free.", 
+            "Yes, because protecting the principal is always the top priority for seniors."
+        ], 
+        a: 0, 
+        f: "Logic: A 1035 Exchange is a 'sale' and a new 'purchase.' If the same goal (protection) can be achieved by an internal transfer within the current annuity, the exchange is unnecessary and unsuitable."
+    },{
         q: "Two working spouses (under age 50) do not participate in an employer-sponsored retirement plan. What is the maximum combined amount they can contribute to their Traditional IRAs?", 
         c: [
             "$14,000 total ($7,000 per person)", 
@@ -541,6 +589,14 @@ const sprintLib = [
         ], 
         a: 0, 
         f: "Logic: Life insurance and collectibles are the two classic 'prohibited' items for an IRA. Certain U.S. minted coins are explicitly allowed as an exception to the collectibles rule."
+    },{
+        q: "An employee exercises her Incentive Stock Options (ISOs) two years after the grant date, and then waits another two years before selling the acquired shares. How is her profit taxed?", 
+        c: [
+            "As a long-term capital gain at the time the shares are sold", 
+            "As ordinary income at the time the options are exercised"
+        ], 
+        a: 0, 
+        f: "Logic: The statutory holding period for ISOs is 2 years from the grant date and 1 year from the exercise date. Because she met both requirements, she avoids ordinary income tax and gets the favorable long-term capital gains rate when she finally sells."
     },
 {
         q: "Who acts as the fiduciary responsible for filing an estate's income tax returns and paying its tax liabilities?", 
@@ -684,6 +740,38 @@ const sprintLib = [
         ],
         a: 0, 
         f: "Logic: BDs = 3 years. IAs = 5 years. (Hint: Both require records to be in the principal office for the first 2 years)."
+    },{
+        q: "What is the core definition of a swap contract?", 
+        c: [
+            "An agreement between two parties to exchange a sequence of cash flows over a predetermined period", 
+            "A trust that holds a basket of equity securities on behalf of small retail investors"
+        ], 
+        a: 0, 
+        f: "Logic: Think of the name—the parties are literally 'swapping' cash flows. It is a derivative contract typically used to exchange fixed-rate payments for fluctuating-rate payments."
+    },{
+        q: "When an Investment Adviser executes a client trade, which of the following is NOT a required element on the order memorandum (order ticket)?", 
+        c: [
+            "The identity of the supervisor who approved the order", 
+            "The identity of the person who recommended the transaction"
+        ], 
+        a: 0, 
+        f: "Logic: IA order tickets must document who recommended the trade, who placed the trade, and the date. They are not legally required to document who 'approved' it."
+    },{
+        q: "Which of the following is NOT required to be printed on a customer's trade confirmation receipt for a bond?", 
+        c: [
+            "The bond's old yield-to-maturity from when it was first issued", 
+            "Whether the bond has a call feature"
+        ], 
+        a: 0, 
+        f: "Logic: Your trade receipt shows the yield for your trade today. It does not show the historical yield from when the bond was first born. It must, however, warn you if the bond can be called away."
+    },{
+        q: "Under NASAA rules, an Investment Adviser must keep a detailed list of names and addresses for everyone they send an ad to, as long as the group size is:", 
+        c: [
+            "10 or fewer people", 
+            "More than 10 people"
+        ], 
+        a: 0, 
+        f: "Logic: For small groups (10 or fewer), you must list every name and address. For big mass mailings (more than 10), you are off the hook for the name list and just need to save a copy of the ad."
     },
     {
         q: "A Special Purpose Acquisition Company (SPAC), sometimes referred to as a 'blank check company,' typically raises its initial capital to seek out and acquire an existing private company by:",
@@ -846,6 +934,36 @@ const simLib = [
         c: ["Value", "Growth", "Speculative", "High Beta"],
         a: 0,
         f: "Logic: Value investors look for 'bargains' (Low P/B) and are often rewarded with higher income (High Yield) while waiting for the price to rise."
+    },{
+        q: "A business expects to buy $2,000 of additional inventory in two years and its required rate of return is 10%. Right now, the business is offered the same inventory for $1,600. If estimates are rounded to the nearest dollar, which of the following statements is TRUE about immediately purchasing the inventory?",
+        c: [
+            "The inventory is priced at a $53 discount.", 
+            "The inventory is priced at a $400 discount.", 
+            "The inventory is priced at a $53 premium.", 
+            "The inventory is priced at a $400 premium."
+        ],
+        a: 0,
+        f: "Logic: First, find the Present Value (PV) of the future cost. $2,000 / (1.10)^2 = $1,652.89 (round to $1,653). Since the current price is $1,600, it is being offered at a $53 discount relative to its present value ($1,653 - $1,600 = $53)."
+    },{
+        q: "An investment adviser is building a portfolio for a client and wants to maximize diversification to reduce overall risk. To achieve the best risk reduction, the adviser should look for investments that have a correlation coefficient closest to:",
+        c: [
+            "+1.0", 
+            "0.0", 
+            "-1.0", 
+            "+0.5"
+        ],
+        a: 2,
+        f: "Logic: Think of correlation on a scale from -1.0 to +1.0. A score of -1.0 means the investments move in perfectly opposite directions (perfect negative correlation). When one goes up, the other goes down. This is the absolute best way to lower your overall risk!"
+    },{
+        q: "A client has his portfolio invested in a number of different equity securities in the energy, manufacturing, and technology sectors. His investment adviser representative wants to help him reduce his systematic risk. Which of the following types of securities would the IAR most likely discuss with the client?",
+        c: [
+            "Securities which have a negative correlation with the securities that are currently in his portfolio, such as S&P 500 Index Exchange-Traded Funds.", 
+            "Securities which have a negative correlation with the securities that are currently in his portfolio, such as debt instruments.", 
+            "Securities which have a positive correlation with the securities that are currently in his portfolio, such as debt instruments.", 
+            "Securities which have a positive correlation with the securities that are currently in his portfolio, such as S&P 500 Exchange-Traded Funds."
+        ],
+        a: 1,
+        f: "Logic: Systematic risk (market risk) cannot be diversified away by simply buying more stocks (such as an S&P 500 ETF). To reduce systematic risk in an all-equity portfolio, the adviser must recommend a completely different asset class, such as debt instruments (bonds), which typically have a negative correlation to the stock market."
     },{
         q: "An investment adviser is explaining the concept of Discounted Cash Flow (DCF) to a client. Which of the following best describes the primary objective of the DCF valuation method?",
         c: [
@@ -1654,7 +1772,17 @@ const simLib = [
         c: ["The ADR value will decrease in USD terms", "The ADR value will increase", "The ADR value remains unchanged", "The ADR value increases by 2%"],
         a: 0,
         f: "Logic: Currency Risk. The 12% currency drop offsets the 10% stock gain, resulting in a net loss in USD."
-    }, 
+    }, {
+        q: "When evaluating an Equity Indexed Annuity (EIA) for a client, an investment adviser should explain that the product typically features which of the following?",
+        c: [
+            "A guaranteed minimum floor that protects the principal from market declines", 
+            "Unlimited upside potential that exactly matches the returns of the underlying index", 
+            "Full exposure to market losses if the chosen index drops below the initial investment amount", 
+            "Mandatory state registration as a security under the Uniform Securities Act"
+        ],
+        a: 0,
+        f: "Logic: EIAs provide a guaranteed minimum return (a 'floor', often 0%), which protects the investor's principal from market losses (effectively 'ignoring' negative years). However, the trade-off is that upside gains are limited by participation rates and caps."
+    },
     {
         q: "Both variable life insurance and variable annuities have all of the following features, EXCEPT:",
         c: [
@@ -2320,6 +2448,36 @@ const simLib = [
         c: ["A sector-specific UIT focused on emerging technology", "A portfolio of investment-grade municipal bonds", "A laddered portfolio of short-term CDs", "A balanced fund with 60% blue-chip stocks and 40% bonds"],
         a: 0,
         f: "Logic: While aggressive, the UIT aligns with high risk tolerance and a capital appreciation objective over a long horizon."
+    },{
+        q: "A registered representative (RR) recommends a 1035 Exchange from a variable annuity to a fixed annuity to protect a 70-year-old client from an impending market correction. The current annuity has two years left on its surrender period. This recommendation is likely:",
+        c: [
+            "Suitable, provided the RR discloses the surrender fees to the client.", 
+            "Suitable, because the RR is proactively protecting the client's principal.", 
+            "Unsuitable, as the client could simply reallocate funds within the existing separate account without triggering fees.", 
+            "Unsuitable, because 1035 Exchanges are strictly prohibited for clients over age 65."
+        ],
+        a: 2,
+        f: "Logic: Before recommending a 1035 Exchange that triggers a surrender fee, the RR must consider internal options. Variable annuities offer various sub-accounts; the client could move funds to a fixed or money market sub-account within the same contract to avoid the market correction without paying a fee."
+    },{
+        q: "An investor uses a dollar cost averaging strategy by investing $500 into a mutual fund every month regardless of market fluctuations. The primary mathematical outcome of using this method is that the:",
+        c: [
+            "Average cost of securities purchased is more than the average price of the securities.", 
+            "Average price of securities purchased is less than the average cost of the securities.", 
+            "Average cost of the securities will be equal to the average price of the securities.", 
+            "Average price of the securities purchased will be more than the average cost of the securities."
+        ],
+        a: 3,
+        f: "Logic: Because the investor buys more shares when the price is low and fewer shares when the price is high, the mathematical result is that the average cost per share will be lower than the average price per share over that period."
+    },{
+        q: "An individual received employee incentive stock options (ISOs) as part of her compensation. She exercised the options two years after they were granted. Then, two years after exercising the options, she sold the shares. How will the individual be taxed?",
+        c: [
+            "She must pay ordinary income taxes on the value of the shares when the options were exercised.", 
+            "She must pay short-term capital gains on any appreciation from the time the options were exercised until the shares were sold.", 
+            "She must pay ordinary income taxes when the options were granted.", 
+            "She must pay long-term capital gains tax at the time the shares were sold."
+        ],
+        a: 3,
+        f: "Logic: To receive favorable long-term capital gains treatment on Incentive Stock Options (ISOs), the employee must hold the stock for at least 2 years after the grant date AND at least 1 year after the exercise date. Since she waited 2 years to exercise, and another 2 years to sell, both rules are met, so the entire profit is taxed as a long-term capital gain upon the final sale."
     },{
         q: "Which of the following investments is strictly prohibited from being held within an Individual Retirement Account (IRA)?",
         c: [
@@ -3049,6 +3207,46 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: The 'de minimis' rule allows up to 5 retail clients in a state without registration, provided there is no physical office."
+    },{
+        q: "Which of the following best describes a swap?",
+        c: [
+            "A contract between two parties to exchange a sequence of cash flows, one of which has a fluctuating value for a predetermined period", 
+            "A bond that is issued by a financial services company with a rate of return that is linked to other securities", 
+            "A trust that is owned by a large number of small investors and contains a basket of equity securities", 
+            "The difference between Treasury bond yields and bonds of a different issuer with similar maturities"
+        ],
+        a: 0,
+        f: "Logic: A swap is a derivative contract where two parties agree to exchange a sequence of cash flows over a predetermined period. The most common type is an interest rate swap, where one party pays a fixed rate and receives a fluctuating (floating) rate in return."
+    },{
+        q: "According to the recordkeeping requirements for IAs, if a client trade is executed, which of the following items is NOT required to be included on the order memorandum?",
+        c: [
+            "The person who approved the order and recommendation", 
+            "The date on which the order was entered", 
+            "The person who placed the order", 
+            "The person who recommended the transaction"
+        ],
+        a: 0,
+        f: "Logic: Under NASAA recordkeeping rules, an IA's order ticket (memorandum) must include the person who recommended the trade, the person who placed the order, the date of entry, and the executing broker-dealer. It does NOT require the identity of a supervisor who 'approved' the order."
+    },{
+        q: "All of the following are found on a customer's confirmation statement for a bond, EXCEPT:",
+        c: [
+            "The bond's purchase price", 
+            "The date of the transaction", 
+            "Whether the bond is callable", 
+            "The bond's yield-to-maturity at the time it was originally issued"
+        ],
+        a: 3,
+        f: "Logic: Think of the confirmation statement as the receipt for your specific trade. It shows the details of what you just did: the price you paid today, the date, and if the bond can be called away. It does NOT show the old yield from when the bond was first created years ago."
+    },{
+        q: "According to the NASAA Recordkeeping Requirements for Investment Adviser Model Rule, an IA is required to maintain a record of the names and addresses of any person to whom it has sent any notice, circular, advertisement, offering, report or publication if the number of persons is:",
+        c: [
+            "10 or fewer", 
+            "More than 10", 
+            "Less than 10", 
+            "10 or more"
+        ],
+        a: 0,
+        f: "Logic: Think of it like this: if you send an ad to a small group (10 or fewer people), the state wants a list of exactly who got it. But if you send a mass mailing to a big group (more than 10 people), making a huge list is too much work, so you just have to keep a copy of the ad itself."
     },{
         q: "According to the Uniform Securities Act, which of the following statements is NOT TRUE concerning private placements?",
         c: [
