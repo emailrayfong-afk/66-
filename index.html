@@ -272,6 +272,22 @@ const sprintLib = [
         a: 0, 
         f: "Logic: DDM relies strictly on projecting future dividend payments and discounting them back to today's present value, ignoring book value or simple EPS."
     },{
+        q: "What is the core calculation objective of the Discounted Cash Flow (DCF) valuation method?", 
+        c: [
+            "To calculate the Present Value of future cash flows", 
+            "To calculate the Future Value of present cash flows"
+        ], 
+        a: 0, 
+        f: "Logic: DCF is all about bringing future money back to today's dollars. Whenever you see DCF, look for 'Present Value of future cash flows.'"
+    },{
+        q: "Which statistical metric represents the 'dispersion of returns,' 'variability,' or 'total volatility' of an investment?", 
+        c: [
+            "Standard Deviation", 
+            "Beta"
+        ], 
+        a: 0, 
+        f: "Logic: Standard Deviation is the standard measure of total volatility and how much returns disperse from the average. Beta only measures market (systematic) risk."
+    },{
         q: "To calculate how much money must be invested TODAY in a lump sum to reach a specific future goal, an investor should use which formula?", 
         c: [
             "Present Value", 
@@ -509,6 +525,22 @@ const sprintLib = [
         c: ["Loss Aversion", "Efficient Market Hypothesis"], 
         a: 0, 
         f: "Logic: Behavioral finance studies psychological biases like loss aversion. Traditional finance (like EMH) assumes investors are always perfectly rational."
+    },{
+        q: "Two working spouses (under age 50) do not participate in an employer-sponsored retirement plan. What is the maximum combined amount they can contribute to their Traditional IRAs?", 
+        c: [
+            "$14,000 total ($7,000 per person)", 
+            "$7,000 total per household"
+        ], 
+        a: 0, 
+        f: "Logic: There is no 'joint' IRA. Each working spouse can open and fund their own Individual Retirement Account up to the $7,000 limit, making the household total $14,000."
+    },{
+        q: "When reviewing a client's Individual Retirement Account (IRA), an investment adviser should know that which of the following is strictly prohibited?", 
+        c: [
+            "A life insurance policy", 
+            "U.S. Government-minted gold coins"
+        ], 
+        a: 0, 
+        f: "Logic: Life insurance and collectibles are the two classic 'prohibited' items for an IRA. Certain U.S. minted coins are explicitly allowed as an exception to the collectibles rule."
     },
 {
         q: "Who acts as the fiduciary responsible for filing an estate's income tax returns and paying its tax liabilities?", 
@@ -649,9 +681,56 @@ const sprintLib = [
         c: [
             "3 years for Broker-Dealers, 5 years for Investment Advisers", 
             "5 years for Broker-Dealers, 3 years for Investment Advisers"
-        ], 
+        ],
         a: 0, 
         f: "Logic: BDs = 3 years. IAs = 5 years. (Hint: Both require records to be in the principal office for the first 2 years)."
+    },
+    {
+        q: "A Special Purpose Acquisition Company (SPAC), sometimes referred to as a 'blank check company,' typically raises its initial capital to seek out and acquire an existing private company by:",
+        c: [
+            "Conducting a fully registered Initial Public Offering (IPO)", 
+            "Relying exclusively on private placements under Regulation D", 
+            "Issuing tax-exempt municipal revenue bonds", 
+            "Borrowing funds directly from the Federal Reserve discount window"
+        ],
+        a: 0,
+        f: "Logic: For the exam, remember that SPACs (Blank Check Companies) raise their 'shopping money' directly from the public through a normal, fully registered IPO before they even have an underlying operating business."
+    },
+    {
+        q: "Under the Uniform Securities Act (State Law), if an independent person is paid a cash fee to solicit for a State-Registered Investment Adviser, must they register?", 
+        c: [
+            "Yes, they must register as an Investment Adviser Representative (IAR).", 
+            "No, a written contract is sufficient under state law."
+        ], 
+        a: 0, 
+        f: "Logic: State Law (USA) = YES, they must register as an IAR."
+    },
+    {
+        q: "Under the Investment Advisers Act of 1940 (Federal Law), what is required of an independent, paid solicitor for a Federal Covered Adviser?", 
+        c: [
+            "A written contract and disclosure document (no SEC registration required).", 
+            "They must register with the SEC as an Investment Adviser Representative."
+        ], 
+        a: 0, 
+        f: "Logic: Federal Law ('40 Act) = NO SEC registration for individuals. They just need a Written Contract and to provide a disclosure document."
+    },
+    {
+        q: "Under the Uniform Securities Act (USA), a private placement exemption is limited to how many non-institutional (retail) offers within a 12-month period?", 
+        c: [
+            "10 offers", 
+            "35 offers"
+        ], 
+        a: 0, 
+        f: "Logic: The state USA limits private placement offers to 10 retail investors per 12 months. Do not confuse this with the federal SEC Regulation D limit, which allows up to 35 non-accredited investors."
+    },
+    {
+        q: "Using the 'OFFS' memory trick, which of the following is categorized as a classic derivative rather than an investment company?", 
+        c: [
+            "Forward Contract", 
+            "Unit Investment Trust (UIT)"
+        ], 
+        a: 0, 
+        f: "Logic: OFFS stands for Options, Futures, Forwards, and Swaps—these are all derivatives. A UIT is a type of investment company."
     },
     {q: "IA retail client de minimis?", c: ["5 or fewer", "10"], a: 0, f: "Logic: Home-office exemption limit."},{
         q: "Do institutional clients (such as pension funds) count towards the 5-client 'de minimis' exemption limit for out-of-state Investment Advisers?", 
@@ -768,6 +847,16 @@ const simLib = [
         a: 0,
         f: "Logic: Value investors look for 'bargains' (Low P/B) and are often rewarded with higher income (High Yield) while waiting for the price to rise."
     },{
+        q: "An investment adviser is explaining the concept of Discounted Cash Flow (DCF) to a client. Which of the following best describes the primary objective of the DCF valuation method?",
+        c: [
+            "To determine the future value of current cash flows adjusted for inflation", 
+            "To calculate the present value of future cash flows", 
+            "To find the internal rate of return necessary to achieve a zero net present value", 
+            "To calculate the current yield of a bond based on its annual coupon payments"
+        ],
+        a: 1,
+        f: "Logic: For the exam, whenever you see Discounted Cash Flow (DCF), immediately look for the phrase 'Present Value of future cash flows.' The 'discount' is simply the mathematical rate used to bring future money back to its present value."
+    },{
         q: "A business reports revenue of $120,000, cost of goods sold of $35,000, selling, general, and administrative expenses of $15,000, and interest expenses of $5,000. What is the business's gross profit?",
         c: [
             "$85,000", 
@@ -777,6 +866,16 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: Gross Profit is calculated simply as Revenue minus Cost of Goods Sold (COGS). SG&A and interest expenses are 'below the line' and are subtracted later to find operating income and net income. ($120,000 - $35,000 = $85,000)."
+    },{
+        q: "An investment adviser is analyzing the historical performance of a mutual fund and notes a high degree of 'dispersion of returns' from its historical average. Which of the following metrics is the adviser evaluating?",
+        c: [
+            "Standard Deviation", 
+            "Beta", 
+            "Alpha", 
+            "Correlation Coefficient"
+        ],
+        a: 0,
+        f: "Logic: For the exam, terms like 'variability,' 'volatility,' and 'dispersion of returns' are key identifiers for Standard Deviation, which is the gold standard for measuring an investment's total risk over time."
     }, {
         q: "A couple wants to save $50,000 for their newborn child’s college education. If they want to make one immediate investment and avoid making additional deposits, which formula will determine the total amount they need to invest now?",
         c: [
@@ -2222,6 +2321,26 @@ const simLib = [
         a: 0,
         f: "Logic: While aggressive, the UIT aligns with high risk tolerance and a capital appreciation objective over a long horizon."
     },{
+        q: "Which of the following investments is strictly prohibited from being held within an Individual Retirement Account (IRA)?",
+        c: [
+            "Real estate properties", 
+            "Gold coins minted by the U.S. Treasury", 
+            "Covered call options", 
+            "A variable life insurance policy"
+        ],
+        a: 3,
+        f: "Logic: For the exam, remember that Life Insurance and Collectibles are strictly prohibited in an IRA. Real estate, certain government-minted coins, and basic options strategies usually have exceptions that permit them to be held in the account."
+    },{
+        q: "Two individuals are a part of the same household and both work full time. Their household income is $60,000 and neither individual participates in their employer-sponsored retirement plans. Assuming both are under age 50, how much can they jointly put into individual retirement accounts (IRAs)?",
+        c: [
+            "$7,000", 
+            "$14,000", 
+            "$0", 
+            "$15,000"
+        ],
+        a: 1,
+        f: "Logic: The current standard IRA contribution limit is $7,000 per person. Since both spouses work, they can each fully fund their own individual account, creating a combined total of $14,000. Because neither is covered by a plan at work, their contributions are also fully tax-deductible no matter what they earn."
+    },{
         q: "Three individuals, Albert, Bernard, and Charles, establish a joint brokerage account to pool their investment resources. They structure the account as Tenants in Common (TIC). Albert contributes 50%, while Bernard and Charles each contribute 25%. If Charles were to pass away suddenly, what would happen to his share?",
         c: [
             "His 25% share is automatically distributed equally between Albert and Bernard.", 
@@ -2930,6 +3049,55 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: The 'de minimis' rule allows up to 5 retail clients in a state without registration, provided there is no physical office."
+    },{
+        q: "According to the Uniform Securities Act, which of the following statements is NOT TRUE concerning private placements?",
+        c: [
+            "The offer may be made to 35 or fewer persons in that state during any 12-month period.", 
+            "The offer may be made to any number of institutional investors during any 12-month period.", 
+            "Commissions may not be paid if the buyers are non-institutional customers.", 
+            "The offer may not be made to more than 10 persons in that state during any 12-month period."
+        ],
+        a: 0,
+        f: "Logic: Under the Uniform Securities Act (state law), a private placement exemption strictly restricts offers to no more than 10 non-institutional (retail) investors in a 12-month period. The '35 non-accredited investor' rule is a federal standard under Regulation D, not the state USA standard."
+    },{
+        q: "Under the Uniform Securities Act, an independent accountant receives a cash referral fee for directing retail clients to a State-Registered Investment Adviser. What is the regulatory requirement for the accountant?",
+        c: [
+            "The accountant must register as an Investment Adviser Representative (IAR) in the state.", 
+            "The accountant is exempt from registration because they are a certified professional.", 
+            "The accountant only needs a written contract with the IA and does not need to register.", 
+            "The accountant must register directly with the SEC."
+        ],
+        a: 0,
+        f: "Logic: Under STATE law (the Uniform Securities Act), anyone acting as an independent, paid solicitor for a State-Registered IA must register as an IAR."
+    },
+    {
+        q: "According to the Investment Advisers Act of 1940, if a Federal Covered Adviser pays cash to an independent third party for client referrals, what is the primary federal regulatory requirement for the solicitor?",
+        c: [
+            "The solicitor must register with the SEC as an Investment Adviser Representative.", 
+            "The solicitor must operate under a written agreement and provide required disclosures, but does not register with the SEC.", 
+            "The solicitor is strictly prohibited from receiving cash fees under federal law.", 
+            "The solicitor must register as a broker-dealer agent."
+        ],
+        a: 1,
+        f: "Logic: Under FEDERAL law (the '40 Act), the SEC does not register individuals. The federal requirement for a paid solicitor is simply that there must be a written agreement/contract in place and the client must receive a solicitor's disclosure."
+    },{
+        q: "How does a Special Purpose Acquisition Company (SPAC) or 'Blank Check Company' typically raise the initial capital it uses to acquire a target business?", 
+        c: [
+            "Through a normal, fully registered Initial Public Offering (IPO)", 
+            "Through an unregistered private placement restricted to institutional investors"
+        ], 
+        a: 0, 
+        f: "Logic: SPACs raise their acquisition funds from the public via a fully registered IPO, even though they do not yet have an actual business or revenue."
+    },{
+        q: "An investment adviser is explaining the difference between investment companies and derivatives to a client. Which of the following would be categorized as a derivative?",
+        c: [
+            "Unit Investment Trust (UIT)", 
+            "Interest Rate Swap", 
+            "Exchange-Traded Fund (ETF)", 
+            "Open-End Mutual Fund"
+        ],
+        a: 1,
+        f: "Logic: Remember the acronym OFFS for classic derivatives: Options, Futures, Forwards, and Swaps. UITs, ETFs, and Mutual Funds are all classified as pooled investment companies, not derivatives."
     },{
         q: "All of the following are required to be included in a written investment advisory contract, EXCEPT:",
         c: [
