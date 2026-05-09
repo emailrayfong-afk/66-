@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: S66 v18.9</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v18.5</title>
 <style>
         :root { 
             --nasa-blue: #0b3d91; 
@@ -440,6 +440,23 @@ const sprintLib = [
         a: 0, 
         f: "Logic: Forward contracts are customized, direct agreements without a secondary market. Futures are standardized and exchange-traded, making them very easy to offset."
     },{
+        q: "Which statement best describes an Equity-Indexed Annuity (EIA)?", 
+        c: [
+            "It is a fixed annuity with a guaranteed minimum return and interest linked to an index.", 
+            "It is a variable annuity that provides unlimited upside with no floor."
+        ], 
+        a: 0, 
+        f: "Logic: Key word: FIXED. An EIA is a fixed annuity. It protects your principal (the floor) but gives you a little extra growth based on the market."
+    },
+    {
+        q: "An investor expects high volatility in a stock's price but is unsure if the direction will be up or down. Which strategy should be used?", 
+        c: [
+            "Buy a long straddle (Buy a call and a put)", 
+            "Sell a short straddle (Sell a call and a put)"
+        ], 
+        a: 0, 
+        f: "Logic: If you expect big movement but don't know the direction, you 'buy both' (Long Straddle). You win if the stock moves big in EITHER direction."
+    },{
         q: "In an Equity Indexed Annuity (EIA), how does the 'annual reset' or 'ratchet' feature protect the investor?", 
         c: [
             "It locks in previous gains and ignores index declines, protecting the principal from market losses.", 
@@ -565,6 +582,31 @@ const sprintLib = [
         ], 
         a: 0, 
         f: "Logic: DCA forces you to buy more shares when they are 'on sale' (low price). This naturally pulls your average cost down below the average market price over that timeframe."
+    },{
+        q: "What is a primary advantage of an S-Corporation compared to a General Partnership?", 
+        c: [
+            "Owners have limited liability for the debts of the business.", 
+            "Owners have unlimited personal liability for the business."
+        ], 
+        a: 0, 
+        f: "Logic: In a General Partnership, you can lose your house for a business debt. In an S-Corp, your personal assets are protected (Limited Liability)."
+    },
+    {
+        q: "Under the Uniform Gifts to Minors Act (UGMA), which of the following is TRUE?", 
+        c: [
+            "Gifts are irrevocable and there is no limit on the amount that can be given.", 
+            "Gifts are revocable until the minor reaches the age of majority."
+        ], 
+        a: 0, 
+        f: "Logic: Once you give it, it belongs to the kid forever (Irrevocable). There is no limit on the gift amount (though taxes might apply over a certain limit)."
+    },{
+        q: "An employee exercises her Incentive Stock Options (ISOs) two years after the grant date, and then waits another two years before selling the acquired shares. How is her profit taxed?", 
+        c: [
+            "As a long-term capital gain at the time the shares are sold", 
+            "As ordinary income at the time the options are exercised"
+        ], 
+        a: 0, 
+        f: "Logic: The statutory holding period for ISOs is 2 years from the grant date and 1 year from the exercise date. Because she met both requirements, she avoids ordinary income tax and gets the favorable long-term capital gains rate when she finally sells."
     },{
         q: "Is it suitable to recommend a 1035 Exchange to a different annuity just to avoid a market correction if the current annuity has surrender fees remaining?", 
         c: [
@@ -740,6 +782,43 @@ const sprintLib = [
         ],
         a: 0, 
         f: "Logic: BDs = 3 years. IAs = 5 years. (Hint: Both require records to be in the principal office for the first 2 years)."
+    },{
+        q: "What is the name of the process by which an investor calculates the sum of the present values of projected future cash flows to determine the fair market value of an investment?",
+        c: [
+            "Discounted Cash Flows (DCF)", 
+            "Internal Rate of Return (IRR)", 
+            "Capital Asset Pricing Model (CAPM)", 
+            "Net Present Value (NPV)"
+        ],
+        a: 0,
+        f: "Logic: DCF is the name of the valuation process itself. It involves 'discounting' future money back to today's dollars to see what an investment is worth right now."
+    },
+    {
+        q: "Which of the following metrics is specifically used to evaluate a portfolio manager's performance by measuring their 'risk-adjusted return'?",
+        c: [
+            "Beta", 
+            "Standard Deviation", 
+            "Alpha", 
+            "Correlation Coefficient"
+        ],
+        a: 2,
+        f: "Logic: Alpha is the 'holy grail' for managers. It measures the return of an investment after adjusting for the risk taken. A positive alpha means the manager 'beat the market' or added value."
+    },{
+        q: "Under NASAA rules, an Investment Adviser must keep a detailed list of names and addresses for everyone they send an ad to, as long as the group size is:", 
+        c: [
+            "10 or fewer people", 
+            "More than 10 people"
+        ], 
+        a: 0, 
+        f: "Logic: For small groups (10 or fewer), you must list every name and address. For big mass mailings (more than 10), you are off the hook for the name list and just need to save a copy of the ad."
+    },{
+        q: "Which of the following is NOT required to be printed on a customer's trade confirmation receipt for a bond?", 
+        c: [
+            "The bond's old yield-to-maturity from when it was first issued", 
+            "Whether the bond has a call feature"
+        ], 
+        a: 0, 
+        f: "Logic: Your trade receipt shows the yield for your trade today. It does not show the historical yield from when the bond was first born. It must, however, warn you if the bond can be called away."
     },{
         q: "What is the core definition of a swap contract?", 
         c: [
@@ -934,6 +1013,27 @@ const simLib = [
         c: ["Value", "Growth", "Speculative", "High Beta"],
         a: 0,
         f: "Logic: Value investors look for 'bargains' (Low P/B) and are often rewarded with higher income (High Yield) while waiting for the price to rise."
+    },{
+        q: "A business analyst is calculating the sum of the present values of projected future cash flows to determine if a current investment price is fair. What is the name of this valuation process?",
+        c: [
+            "Discounted Cash Flow (DCF)", 
+            "Net Present Value (NPV)", 
+            "Internal Rate of Return (IRR)", 
+            "Expected Return"
+        ],
+        a: 0,
+        f: "Logic: DCF is the name of the process. NPV is the result (DCF minus the cost). If the question asks for the 'process of calculating present values,' the answer is DCF."
+    },
+    {
+        q: "A portfolio manager's performance is being evaluated based on the 'value added' to the portfolio relative to the risk taken. This risk-adjusted return is known as:",
+        c: [
+            "Beta", 
+            "Alpha", 
+            "Standard Deviation", 
+            "Correlation Coefficient"
+        ],
+        a: 1,
+        f: "Logic: Alpha is the only 'return' on this list. Beta and Standard Deviation measure risk, but Alpha measures the extra return earned for taking that risk."
     },{
         q: "A business expects to buy $2,000 of additional inventory in two years and its required rate of return is 10%. Right now, the business is offered the same inventory for $1,600. If estimates are rounded to the nearest dollar, which of the following statements is TRUE about immediately purchasing the inventory?",
         c: [
@@ -1733,6 +1833,23 @@ const simLib = [
         c: ["Pharmaceuticals", "Automobiles", "Steel", "Airlines"],
         a: 0,
         f: "Logic: Sector. Recess-proof goods."
+    },{
+        q: "According to Modern Portfolio Theory (MPT), the 'expected return' of an investment is best described as:", 
+        c: [
+            "Possible returns weighted by the likelihood of those returns occurring", 
+            "The guaranteed income such as bond interest and dividends"
+        ], 
+        a: 0, 
+        f: "Logic: MPT uses probability. Expected return isn't a guarantee; it's a weighted average of various possible outcomes based on their likelihood."
+    },
+    {
+        q: "Which of these is considered a 'risk-adjusted' return rather than just a measure of risk?", 
+        c: [
+            "Alpha", 
+            "Beta"
+        ], 
+        a: 0, 
+        f: "Logic: Beta measures market risk, but Alpha measures the return you got for taking that risk. Alpha = Risk-Adjusted Return."
     },
     {
         q: "Regression Analysis estimates relationship between:",
@@ -2448,6 +2565,16 @@ const simLib = [
         c: ["A sector-specific UIT focused on emerging technology", "A portfolio of investment-grade municipal bonds", "A laddered portfolio of short-term CDs", "A balanced fund with 60% blue-chip stocks and 40% bonds"],
         a: 0,
         f: "Logic: While aggressive, the UIT aligns with high risk tolerance and a capital appreciation objective over a long horizon."
+    },{
+        q: "An individual received employee incentive stock options (ISOs) as part of her compensation. She exercised the options two years after they were granted. Then, two years after exercising the options, she sold the shares. How will the individual be taxed?",
+        c: [
+            "She must pay ordinary income taxes on the value of the shares when the options were exercised.", 
+            "She must pay short-term capital gains on any appreciation from the time the options were exercised until the shares were sold.", 
+            "She must pay ordinary income taxes when the options were granted.", 
+            "She must pay long-term capital gains tax at the time the shares were sold."
+        ],
+        a: 3,
+        f: "Logic: To receive favorable long-term capital gains treatment on Incentive Stock Options (ISOs), the employee must hold the stock for at least 2 years after the grant date AND at least 1 year after the exercise date. Since she waited 2 years to exercise, and another 2 years to sell, both rules are met, so the entire profit is taxed as a long-term capital gain upon the final sale."
     },{
         q: "A registered representative (RR) recommends a 1035 Exchange from a variable annuity to a fixed annuity to protect a 70-year-old client from an impending market correction. The current annuity has two years left on its surrender period. This recommendation is likely:",
         c: [
@@ -3207,6 +3334,47 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: The 'de minimis' rule allows up to 5 retail clients in a state without registration, provided there is no physical office."
+    },{
+        q: "A company listed on the Nasdaq is conducting a secondary offering of common stock in State B. Under the Uniform Securities Act, what authority does the State B Administrator have over this offering?",
+        c: [
+            "The Administrator can require the issuer to pay a filing fee.", 
+            "The Administrator can require the issuer to file a consent to service of process.", 
+            "The Administrator can investigate the underwriters for fraudulent activity.", 
+            "The Administrator can require the issuer to register the stock by coordination."
+        ],
+        a: 2,
+        f: "Logic: Nasdaq/NYSE stocks are 'Federal Covered.' States lose almost all power (no fees, no filing, no registration). The ONLY power the state keeps is the power to investigate and prosecute FRAUD."
+    },
+    {
+        q: "A broker-dealer is headquartered in State A and has no office in State B. It conducts business with existing clients who are residents of State A but are temporarily vacationing in State B. Which statement is TRUE?",
+        c: [
+            "The broker-dealer must register in State B because it has clients there.", 
+            "The broker-dealer is exempt from registration in State B under the 'snowbird' exclusion.", 
+            "The broker-dealer must register if it has more than 5 clients in State B.", 
+            "The agents of the broker-dealer must register, but the firm does not."
+        ],
+        a: 1,
+        f: "Logic: If the client is only 'temporarily' in the state (vacationing), the broker-dealer does not need to register. This is the 'Snowbird Rule.'"
+    },{
+        q: "All of the following are found on a customer's confirmation statement for a bond, EXCEPT:",
+        c: [
+            "The bond's purchase price", 
+            "The date of the transaction", 
+            "Whether the bond is callable", 
+            "The bond's yield-to-maturity at the time it was originally issued"
+        ],
+        a: 3,
+        f: "Logic: Think of the confirmation statement as the receipt for your specific trade. It shows the details of what you just did: the price you paid today, the date, and if the bond can be called away. It does NOT show the old yield from when the bond was first created years ago."
+    },{
+        q: "According to the NASAA Recordkeeping Requirements for Investment Adviser Model Rule, an IA is required to maintain a record of the names and addresses of any person to whom it has sent any notice, circular, advertisement, offering, report or publication if the number of persons is:",
+        c: [
+            "10 or fewer", 
+            "More than 10", 
+            "Less than 10", 
+            "10 or more"
+        ],
+        a: 0,
+        f: "Logic: Think of it like this: if you send an ad to a small group (10 or fewer people), the state wants a list of exactly who got it. But if you send a mass mailing to a big group (more than 10 people), making a huge list is too much work, so you just have to keep a copy of the ad itself."
     },{
         q: "Which of the following best describes a swap?",
         c: [
