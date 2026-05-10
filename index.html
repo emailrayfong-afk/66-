@@ -262,76 +262,110 @@
 
 <script>
 // --- 1. DATA LIBRARIES ---
-// ALL 100 QUESTIONS PER PILLAR ARE NOW CONSOLIDATED HERE
 const sprintLib = [
-[ // 01. ECONOMICS (PILLAR 1: 100 QUESTIONS)
+[ // 01. ECONOMICS (PILLAR 1)
     {q: "Which return calculation ignores the timing of cash flows?", c: ["Time-weighted", "Dollar-weighted"], a: 0, f: "Logic: Time-weighted measures manager skill; Dollar-weighted measures investor timing."},
-{
+    {
         q: "The Dividend Discount Model (DDM) estimates a stock's intrinsic value based primarily on:", 
         c: ["The present value of expected future dividends", "The current earnings per share (EPS)"], 
         a: 0, 
         f: "Logic: DDM relies strictly on projecting future dividend payments and discounting them back to today's present value, ignoring book value or simple EPS."
-    },{
+    },
+    {
+        q: "Is 'Working Capital' a dollar amount or a ratio?",
+        c: ["A dollar amount", "A ratio"],
+        a: 0,
+        f: "Logic: Working Capital is Assets MINUS Liabilities. The Current Ratio is Assets DIVIDED by Liabilities."
+    },
+    {
+        q: "Does a positive Net Present Value (NPV) mean the IRR is higher than the discount rate?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: If NPV > 0, the project is more profitable than the required rate of return."
+    },
+    {
+        q: "Does a correlation of -1.0 provide the greatest diversification benefit?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: -1.0 means assets move in perfectly opposite directions (Zigs when others Zag)."
+    },
+    {
+        q: "Is the Quick Ratio (Acid Test) more conservative than the Current Ratio?",
+        c: ["Yes (it ignores inventory)", "No"],
+        a: 0,
+        f: "Logic: Quick Ratio assumes you can't sell your inventory fast enough in an emergency."
+    },
+    {
+        q: "Does 'Standard Deviation' measure the volatility of an investment?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: High SD = High volatility = High risk."
+    },
+    {
+        q: "In a 'Top-Down' approach, is the economy analyzed before the individual stock?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Economy -> Sector -> Industry -> Stock."
+    },
+    {
+        q: "Does Alpha measure a manager's ability to beat the market after adjusting for risk?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Alpha is the 'value added' beyond what Beta predicts."
+    },
+    {
         q: "To reduce the systematic risk of a portfolio that is 100% invested in equities, which type of security should an Investment Adviser Representative recommend?", 
-        c: [
-            "Debt instruments, because they generally have a negative correlation to equities.", 
-            "An S&P 500 Index ETF, because it provides broad positive correlation to the market."
-        ], 
+        c: ["Debt instruments", "An S&P 500 Index ETF"], 
         a: 0, 
-        f: "Logic: You cannot reduce systematic (market) risk by simply buying more of the same asset class. You must introduce an asset class with a negative correlation, like bonds/debt, to offset the risk of the stock market dropping."
-    },{
-        q: "A business needs $2,000 in 2 years (10% discount rate). The Present Value is $1,653. If they can buy it today for $1,600, is this a discount or a premium?", 
-        c: [
-            "A $53 discount", 
-            "A $53 premium"
-        ], 
+        f: "Logic: You cannot reduce systematic risk by buying more stocks. You must introduce an asset class with a negative correlation, like bonds."
+    },
+    {
+        q: "If an investment's Net Present Value (NPV) is positive, what is true about its Internal Rate of Return (IRR)?", 
+        c: ["The IRR is higher than the discount rate", "The IRR is lower than the discount rate"], 
         a: 0, 
-        f: "Logic: If the 'fair value' today is $1,653 and you only have to pay $1,600, you are getting a $53 discount."
-    },{
-        q: "To achieve the greatest reduction in overall portfolio risk, an investor should combine assets that have a correlation coefficient closest to:", 
-        c: [
-            "-1.0 (Perfect negative correlation)", 
-            "+1.0 (Perfect positive correlation)"
-        ], 
+        f: "Logic: A positive NPV means the project is outperforming the required return."
+    },
+    {
+        q: "A business needs $2,000 in 2 years. The Present Value is $1,653. If they buy it for $1,600, is this a discount?", 
+        c: ["Yes, a $53 discount", "No, a $53 premium"], 
         a: 0, 
-        f: "Logic: A correlation of -1.0 is the ultimate goal of diversification. It means the assets move perfectly opposite to each other—so one asset 'zigs' exactly when the other 'zags'."
-    },{
-        q: "What is the core calculation objective of the Discounted Cash Flow (DCF) valuation method?", 
-        c: [
-            "To calculate the Present Value of future cash flows", 
-            "To calculate the Future Value of present cash flows"
-        ], 
+        f: "Logic: Buying for less than the calculated PV is a discount."
+    },
+    {
+        q: "To achieve the greatest reduction in portfolio risk, aim for a correlation coefficient of:", 
+        c: ["-1.0", "+1.0"], 
         a: 0, 
-        f: "Logic: DCF is all about bringing future money back to today's dollars. Whenever you see DCF, look for 'Present Value of future cash flows.'"
-    },{
-        q: "Which statistical metric represents the 'dispersion of returns,' 'variability,' or 'total volatility' of an investment?", 
-        c: [
-            "Standard Deviation", 
-            "Beta"
-        ], 
+        f: "Logic: -1.0 is perfectly opposite movement."
+    },
+    {
+        q: "What is the core objective of the Discounted Cash Flow (DCF) method?", 
+        c: ["To calculate Present Value of future cash flows", "To calculate Future Value"], 
         a: 0, 
-        f: "Logic: Standard Deviation is the standard measure of total volatility and how much returns disperse from the average. Beta only measures market (systematic) risk."
-    },{
-        q: "To calculate how much money must be invested TODAY in a lump sum to reach a specific future goal, an investor should use which formula?", 
-        c: [
-            "Present Value", 
-            "Future Value"
-        ], 
+        f: "Logic: DCF brings future money back to today's dollars."
+    },
+    {
+        q: "Which metric represents the 'dispersion of returns'?", 
+        c: ["Standard Deviation", "Beta"], 
         a: 0, 
-        f: "Logic: Present Value (PV) calculates what a future amount of money is worth right now. Future Value (FV) calculates what today's money will grow into later."
-    },{
-        q: "Which form of the Efficient Market Hypothesis (EMH) asserts that even private, insider information is already reflected in the stock price?", 
+        f: "Logic: SD is the standard measure of total volatility."
+    },
+    {
+        q: "To find how much must be invested TODAY for a future goal, use:", 
+        c: ["Present Value", "Future Value"], 
+        a: 0, 
+        f: "Logic: PV calculates today's requirement for a future result."
+    },
+    {
+        q: "Which EMH form says insider info is already priced in?", 
         c: ["Strong Form", "Semi-Strong Form"], 
         a: 0, 
-        f: "Logic: Strong Form EMH says absolutely all information (public and private) is priced in. Semi-Strong only accounts for public information."
-    },{
-        q: "Which of the following items is found on an individual's income statement rather than their balance sheet?", 
-        c: [
-            "Expenses", 
-            "Liabilities"
-        ], 
+        f: "Logic: Strong Form accounts for absolutely all info."
+    },
+    {
+        q: "Which is found on an individual's income statement?", 
+        c: ["Expenses", "Liabilities"], 
         a: 0, 
-        f: "Logic: An income statement tracks cash flow (income and expenses). A balance sheet tracks a snapshot of net worth (assets and liabilities)."
+        f: "Logic: Income statement = Flow (Income/Expenses). Balance sheet = Snapshot (Assets/Liabilities)."
     },
     {q: "Payment / Rate is the formula for which calculation?", c: ["Perpetuity", "Future Value"], a: 0, f: "Logic: Dividing the payout by the rate gives the principal needed for a perpetuity."},
     {q: "DCF is used to calculate which value?", c: ["Present Value", "Stated Value"], a: 0, f: "Logic: Discounted Cash Flow finds what future money is worth today (Present Value)."},
@@ -434,41 +468,136 @@ const sprintLib = [
     {q: "The 'Security Market Line' (SML) is a representation of:", c: ["CAPM", "Efficient Frontier"], a: 0, f: "Logic: The SML plots expected return against Beta."}
 ], [ // 02. INVESTMENT VEHICLES (PILLAR 2)
     {q: "Which vehicle issues 'redeemable' shares and does not trade on an exchange?", c: ["Open-End Mutual Fund", "Closed-End Fund"], a: 0, f: "Logic: Open-end funds are redeemable with the issuer."},
-    {q: "Net Asset Value (NAV) of a mutual fund is calculated how often?", c: ["Daily", "Continuously"], a: 0, f: "Logic: Calculated once per day at market close."}, {
+    {q: "Net Asset Value (NAV) of a mutual fund is calculated how often?", c: ["Daily", "Continuously"], a: 0, f: "Logic: Calculated once per day at market close."}, 
+    {
         q: "Which derivative contract is traded Over-The-Counter (OTC) and cannot be easily offset?", 
         c: ["Forward Contracts", "Futures Contracts"], 
         a: 0, 
-        f: "Logic: Forward contracts are customized, direct agreements without a secondary market. Futures are standardized and exchange-traded, making them very easy to offset."
-    },{
-        q: "Which statement best describes an Equity-Indexed Annuity (EIA)?", 
-        c: [
-            "It is a fixed annuity with a guaranteed minimum return and interest linked to an index.", 
-            "It is a variable annuity that provides unlimited upside with no floor."
-        ], 
-        a: 0, 
-        f: "Logic: Key word: FIXED. An EIA is a fixed annuity. It protects your principal (the floor) but gives you a little extra growth based on the market."
+        f: "Logic: Forward contracts are customized OTC agreements. Futures are standardized and exchange-traded."
     },
     {
-        q: "An investor expects high volatility in a stock's price but is unsure if the direction will be up or down. Which strategy should be used?", 
-        c: [
-            "Buy a long straddle (Buy a call and a put)", 
-            "Sell a short straddle (Sell a call and a put)"
-        ], 
+        q: "Is a 'Futures' contract an obligation or an option?",
+        c: ["An obligation", "An option"],
+        a: 0,
+        f: "Logic: Options are choice; Futures are a legal obligation."
+    },
+    {
+        q: "Does a 'Long Straddle' bet on high volatility?",
+        c: ["Yes (Buy a call and a put)", "No"],
+        a: 0,
+        f: "Logic: Long Straddle = betting on big movement."
+    },
+    {
+        q: "If a bond is at a discount, is the Yield to Maturity (YTM) higher than the coupon?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Discount yields pull up toward par."
+    },
+    {
+        q: "Are mutual funds considered 'continuous primary offerings'?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: New shares issued constantly."
+    },
+    {
+        q: "Does 'Gamma' measure how fast 'Delta' changes?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Delta is speed; Gamma is acceleration."
+    },
+    {
+        q: "Is a 'Forward' contract a derivative?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: OFFS = Options, Futures, Forwards, Swaps."},
+    {
+        q: "Does a Variable Annuity separate account act like a mutual fund?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Performance dictates the variable payout."
+    },
+    {
+        q: "Does a 'Short Straddle' expect the market to stay stable?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Selling both sides to collect premium if price stays put."
+    },
+    {
+        q: "Is a 'Swap' agreement considered a derivative?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Part of the OFFS group."},
+    {
+        q: "In an Equity-Indexed Annuity, does the 'Floor' protect principal?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Guaranteed floor (usually 0%) ignores market drops."
+    },
+    {
+        q: "If a bond is trading at a premium, is the Yield to Call (YTC) the lowest yield?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Premium Worst Case = Call."
+    },
+    {
+        q: "To hedge a long stock position, should you BUY a put?",
+        c: ["BUY a put", "SELL a put"],
+        a: 0,
+        f: "Logic: Buying a put acts as insurance."
+    },
+    {
+        q: "Are mutual funds required to calculate their NAV every business day?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: Daily pricing at market close."
+    },
+    {
+        q: "Does an ETF trade on an exchange throughout the day?",
+        c: ["Yes", "No"],
+        a: 0,
+        f: "Logic: ETF = Exchange Traded."
+    },
+    {
+        q: "A bond currently yields 8% YTM and pays a 6% coupon. What is the status?",
+        c: ["Trading at a discount", "Trading at a premium"],
+        a: 0,
+        f: "Logic: Yield > Coupon means price is below Par."
+    },
+    {
+        q: "Which of the following is NOT an investment company under the 1940 Act?",
+        c: ["Holding Company", "Unit Investment Trust"],
+        a: 0,
+        f: "Logic: UITs, FACs, and Management Cos are the Big 3."
+    },
+    {
+        q: "What best describes a 'Swap'?",
+        c: ["Agreement to exchange cash flows", "Option to sell a commodity"],
+        a: 0,
+        f: "Logic: Swapping payments (e.g., fixed vs variable)."
+    },
+    {
+        q: "An Equity-Indexed Annuity (EIA) is best categorized as a:",
+        c: ["Fixed annuity", "Variable annuity"],
+        a: 0,
+        f: "Logic: EIA is a FIXED product with market-linked interest."
+    },
+    {
+        q: "A 'Closed-End Fund' is characterized by:",
+        c: ["Exchange trading via supply/demand", "Always trading at NAV"],
+        a: 0,
+        f: "Logic: Can be at premium or discount to NAV."
+    },
+    {
+        q: "A corporate debenture is:",
+        c: ["An unsecured bond", "A secured bond"],
+        a: 0,
+        f: "Logic: Debenture = Good faith only."
+    },
+    {
+        q: "Which feature is absent from both variable life and variable annuities?", 
+        c: ["Guaranteed cash values", "Death benefits"], 
         a: 0, 
-        f: "Logic: If you expect big movement but don't know the direction, you 'buy both' (Long Straddle). You win if the stock moves big in EITHER direction."
-    },{
-        q: "In an Equity Indexed Annuity (EIA), how does the 'annual reset' or 'ratchet' feature protect the investor?", 
-        c: [
-            "It locks in previous gains and ignores index declines, protecting the principal from market losses.", 
-            "It guarantees that the participation rate will automatically increase every year the market rises."
-        ], 
-        a: 0, 
-        f: "Logic: The annual reset feature establishes a new starting point each year. If the underlying index drops, the floor kicks in, meaning the investor does not lose money (the loss is ignored)."
-    },{
-        q: "Which feature is absent from both variable life insurance and variable annuities?", 
-        c: ["Guaranteed cash values", "Death benefits and named beneficiaries"], 
-        a: 0, 
-        f: "Logic: Because they are 'variable' and tied to market performance in a separate account, neither product can offer guaranteed cash values. The client bears the investment risk."
+        f: "Logic: Market risk prevents guaranteed cash values."
     },
     {q: "Which security has most senior claim in liquidation?", c: ["Secured Bond", "Preferred Stock"], a: 0, f: "Logic: Secured debt is paid first."},
     {q: "ADRs facilitate the trading of:", c: ["Foreign stocks in the U.S.", "U.S. stocks in foreign markets"], a: 0, f: "Logic: Buy foreign company shares in USD."},
@@ -567,445 +696,25 @@ const sprintLib = [
     {q: "Defeased bond backed by:", c: ["Treasury escrow", "Default"], a: 0, f: "Logic: Removed from books."},
     {q: "Unlimited risk position?", c: ["Short Naked Call", "Long Put"], a: 0, f: "Logic: Stock goes to infinity."},
     {q: "Income Bond suitable for income?", c: ["No", "Yes"], a: 0, f: "Logic: Only pays if company earns."},
-    {q: "Investment Vehicles align capital with:", c: ["Risk/Return goals", "Broker profit"], a: 0, f: "Logic: Tools to solve client puzzles."}
-], [ // 03. STRATEGY & RECOMMENDATIONS (PILLAR 3)
-    {q: "Which risk metric measures 'Total Risk'?", c: ["Standard Deviation", "Beta"], a: 0, f: "Logic: SD covers total volatility."}, {
-        q: "Which concept is a primary focus of behavioral finance rather than traditional finance?", 
-        c: ["Loss Aversion", "Efficient Market Hypothesis"], 
-        a: 0, 
-        f: "Logic: Behavioral finance studies psychological biases like loss aversion. Traditional finance (like EMH) assumes investors are always perfectly rational."
-    },{
-        q: "What is the primary mathematical advantage of using a Dollar Cost Averaging (DCA) strategy?", 
-        c: [
-            "The average cost per share will be lower than the average price per share.", 
-            "The average price per share will be lower than the average cost per share."
-        ], 
-        a: 0, 
-        f: "Logic: DCA forces you to buy more shares when they are 'on sale' (low price). This naturally pulls your average cost down below the average market price over that timeframe."
-    },{
-        q: "What is a primary advantage of an S-Corporation compared to a General Partnership?", 
-        c: [
-            "Owners have limited liability for the debts of the business.", 
-            "Owners have unlimited personal liability for the business."
-        ], 
-        a: 0, 
-        f: "Logic: In a General Partnership, you can lose your house for a business debt. In an S-Corp, your personal assets are protected (Limited Liability)."
-    },
+    {q: "Investment Vehicles align capital with:", c: ["Risk/Return goals", "Broker profit"], a: 0, f: "Logic: Tools to solve client puzzles."},
     {
-        q: "Under the Uniform Gifts to Minors Act (UGMA), which of the following is TRUE?", 
-        c: [
-            "Gifts are irrevocable and there is no limit on the amount that can be given.", 
-            "Gifts are revocable until the minor reaches the age of majority."
-        ], 
-        a: 0, 
-        f: "Logic: Once you give it, it belongs to the kid forever (Irrevocable). There is no limit on the gift amount (though taxes might apply over a certain limit)."
-    },{
-        q: "An employee exercises her Incentive Stock Options (ISOs) two years after the grant date, and then waits another two years before selling the acquired shares. How is her profit taxed?", 
-        c: [
-            "As a long-term capital gain at the time the shares are sold", 
-            "As ordinary income at the time the options are exercised"
-        ], 
-        a: 0, 
-        f: "Logic: The statutory holding period for ISOs is 2 years from the grant date and 1 year from the exercise date. Because she met both requirements, she avoids ordinary income tax and gets the favorable long-term capital gains rate when she finally sells."
-    },{
-        q: "Is it suitable to recommend a 1035 Exchange to a different annuity just to avoid a market correction if the current annuity has surrender fees remaining?", 
-        c: [
-            "No, because the money could be moved into a safer sub-account within the existing annuity for free.", 
-            "Yes, because protecting the principal is always the top priority for seniors."
-        ], 
-        a: 0, 
-        f: "Logic: A 1035 Exchange is a 'sale' and a new 'purchase.' If the same goal (protection) can be achieved by an internal transfer within the current annuity, the exchange is unnecessary and unsuitable."
-    },{
-        q: "Two working spouses (under age 50) do not participate in an employer-sponsored retirement plan. What is the maximum combined amount they can contribute to their Traditional IRAs?", 
-        c: [
-            "$14,000 total ($7,000 per person)", 
-            "$7,000 total per household"
-        ], 
-        a: 0, 
-        f: "Logic: There is no 'joint' IRA. Each working spouse can open and fund their own Individual Retirement Account up to the $7,000 limit, making the household total $14,000."
-    },{
-        q: "When reviewing a client's Individual Retirement Account (IRA), an investment adviser should know that which of the following is strictly prohibited?", 
-        c: [
-            "A life insurance policy", 
-            "U.S. Government-minted gold coins"
-        ], 
-        a: 0, 
-        f: "Logic: Life insurance and collectibles are the two classic 'prohibited' items for an IRA. Certain U.S. minted coins are explicitly allowed as an exception to the collectibles rule."
-    },{
-        q: "An employee exercises her Incentive Stock Options (ISOs) two years after the grant date, and then waits another two years before selling the acquired shares. How is her profit taxed?", 
-        c: [
-            "As a long-term capital gain at the time the shares are sold", 
-            "As ordinary income at the time the options are exercised"
-        ], 
-        a: 0, 
-        f: "Logic: The statutory holding period for ISOs is 2 years from the grant date and 1 year from the exercise date. Because she met both requirements, she avoids ordinary income tax and gets the favorable long-term capital gains rate when she finally sells."
-    },
-{
-        q: "Who acts as the fiduciary responsible for filing an estate's income tax returns and paying its tax liabilities?", 
-        c: [
-            "The administrator or executor", 
-            "The probate court judge"
-        ], 
-        a: 0, 
-        f: "Logic: The administrator or executor has the fiduciary duty to manage the estate's affairs, which explicitly includes filing necessary tax returns and paying debts before distributing assets to the heirs."
-    },{
-        q: "What is the income tax liability for an individual who is the named beneficiary of a life insurance death benefit?", 
-        c: ["Zero; the death benefit is generally income tax-free to the beneficiary.", "The amount exceeding the policy's cost basis is taxed as ordinary income."], 
-        a: 0, 
-        f: "Logic: Life insurance death benefits are generally received income tax-free by the named beneficiary. Taxation usually only applies at the estate level if the deceased owned the policy."
-    },
-{q: "IAR ensures a complex PPN is suitable for at least some investors. This is:", c: ["Reasonable-Basis", "Customer-Specific"], a: 0, f: "Logic: Reasonable-basis is the 'Product Check'—understanding the vehicle before recommending it."},{
-        q: "In estate planning, 'portability' refers to the ability to:", 
-        c: ["Transfer a deceased spouse's unused lifetime exclusion to the survivor", "Double the annual gift tax exclusion while both spouses are alive"], 
-        a: 0, 
-        f: "Logic: Portability applies after death, allowing the surviving spouse to use the deceased's unused lifetime exemption. Doubling the annual exclusion while both are alive is known as 'gift splitting'."
-    },{
-        q: "In a Tenancy in Common (TIC) account, what happens to a deceased owner's fractional share of the assets?", 
-        c: ["It passes to the deceased owner's estate", "It passes directly to the surviving account owners"], 
-        a: 0, 
-        f: "Logic: TIC shares pass to the estate. Joint Tenants with Right of Survivorship (JTWROS) shares pass to the surviving owners."
-    },
-    {
-        q: "Assuming all statutory holding periods are met, when does an employee incur regular income tax liability on Incentive Stock Options (ISOs)?", 
-        c: ["When the acquired stock is ultimately sold", "When the options are initially exercised"], 
-        a: 0, 
-        f: "Logic: ISOs defer regular tax liability until the stock is finally sold, unlike Non-Qualified Stock Options (NSOs) which are taxed at exercise."
-    },
-{q: "IAR reviews client tax status and liquidity before a trade. This satisfies:", c: ["Customer-Specific", "Quantitative"], a: 0, f: "Logic: Customer-specific is the 'Person Check'—matching the tool to the individual profile."},
-{q: "IAR recommends 15 trades in a week for a 'Buy and Hold' client. This violates:", c: ["Quantitative", "Reasonable-Basis"], a: 0, f: "Logic: Quantitative is the 'Portfolio Check'—preventing excessive trading (churning)."},
-    {q: "According to MPT, an 'Optimal Portfolio' lies on:", c: ["Efficient Frontier", "CML"], a: 0, f: "Logic: Highest return per risk level."},
-    {q: "Joint account with unequal ownership?", c: ["TIC", "JTWROS"], a: 0, f: "Logic: TIC allow split ownership."},
-    {q: "Roth IRA contributions are:", c: ["After-tax", "Pre-tax"], a: 0, f: "Logic: No upfront deduction."},
-    {q: "Defined Benefit plan risk on:", c: ["Employer", "Employee"], a: 0, f: "Logic: Promised specific payout."},
-    {q: "Maintaining target mix by selling winners?", c: ["Rebalancing", "Tactical"], a: 0, f: "Logic: Passive target return."},
-    {q: "Bypass probate but keep control?", c: ["TOD", "TIC"], a: 0, f: "Logic: Direct transfer to heirs."},
-    {q: "Manager outperformed risk-adjusted expectations?", c: ["Positive Alpha", "Negative"], a: 0, f: "Logic: Added value metric."},
-    {q: "RMDs must begin at age:", c: ["73", "59.5"], a: 0, f: "Logic: Current law (SECURE 2.0)."},
-    {q: "Limited strictly to married couples?", c: ["Tenancy by Entirety", "JTWROS"], a: 0, f: "Logic: One legal unit treatment."},
-    {q: "Strategic asset allocation is:", c: ["Passive", "Active"], a: 0, f: "Logic: Buy and hold anchor."},
-    {q: "Metric return relative to SD?", c: ["Sharpe Ratio", "Treynor"], a: 0, f: "Logic: Sharpe uses total risk."},
-    {q: "ERISA fiduciary acts in interest of:", c: ["Participants", "Shareholders"], a: 0, f: "Logic: Duty of loyalty to employees."},
-    {q: "IRA with no income limits for contributions?", c: ["Traditional", "Roth"], a: 0, f: "Logic: No phase-outs for anyone earning."},
-    {q: "Simple Trust MUST distribute:", c: ["Net Income", "Principal"], a: 0, f: "Logic: Empty bucket every year."},
-    {q: "Step-up in Basis occur when heir:", c: ["Inherits", "Gifted"], a: 0, f: "Logic: Value at date of death."},
-    {q: "Project cash flow relative to cost of capital?", c: ["NPV", "P/S"], a: 0, f: "Logic: Primary budgeting tool."},
-    {q: "20-year growth horizon priority:", c: ["Equities", "Fixed Income"], a: 0, f: "Logic: Stock appreciation."},
-    {q: "Limited liability, 100-shareholder cap?", c: ["S-Corp", "C-Corp"], a: 0, f: "Logic: Flow-through tax treatment."},
-    {q: "Non-Qualified plan creditor risk?", c: ["Employee", "IRS"], a: 0, f: "Logic: Unsecured company promise."},
-    {q: "MPT says markets efficient?", c: ["EMH", "CAPM"], a: 0, f: "Logic: Prices reflect all info."},
-    {q: "Determine amount of Life Insurance?", c: ["Capital Needs Analysis", "Allocation"], a: 0, f: "Logic: Survivor gap calculation."},
-    {q: "Broad Market highest correlation?", c: ["Wilshire 5000", "S&P 500"], a: 0, f: "Logic: Total market index."},
-    {q: "Use 529 and Coverdell for same child?", c: ["Yes", "No"], a: 0, f: "Logic: Can use both legally."},
-    {q: "Growth investor's biggest risk?", c: ["Market Risk", "Inflation Risk"], a: 0, f: "Logic: High volatility concerns."},
-    {q: "Tactical focus on short-term timing?", c: ["Yes", "No"], a: 0, f: "Logic: Active management style."},
-    {q: "TIC assets pass to survivor?", c: ["No (Estate)", "Yes"], a: 0, f: "Logic: Heirs get TIC assets."},
-    {q: "Solo 401(k) for self-employed?", c: ["Yes", "No"], a: 0, f: "Logic: Highest owner contributions."},
-    {q: "Wash Sale period?", c: ["30 Days", "90 Days"], a: 0, f: "Logic: Disallowed tax loss period."},
-    {q: "Created by Will, effective at death?", c: ["Testamentary Trust", "Living"], a: 0, f: "Logic: Written into the will."},
-    {q: "Balanced Fund invests in:", c: ["Stocks/Bonds", "Growth only"], a: 0, f: "Logic: Growth and Income mix."},
-    {q: "Eliminate Unsystematic risk via:", c: ["Diversification", "Beta"], a: 0, f: "Logic: Kill specific stock risk."},
-    {q: "UPIA fiduciaries judged on:", c: ["Whole Portfolio", "One trade"], a: 0, f: "Logic: Context of entire mix."},
-    {q: "LLC has unlimited owners?", c: ["Yes", "No"], a: 0, f: "Logic: Flow-through like partnership."},
-    {q: "Negative Alpha means manager:", c: ["Worse than Beta predicted", "Better"], a: 0, f: "Logic: Underperformed risk taken."},
-    {q: "Pre-tax 401(k) taxed now?", c: ["No", "Yes"], a: 0, f: "Logic: Lowers current tax bill."},
-    {q: "Complex Trust can accumulate?", c: ["Yes", "No"], a: 0, f: "Logic: Flexibility on income."},
-    {q: "Fund grandchild college with control?", c: ["529 Plan", "UGMA"], a: 0, f: "Logic: Owner keeps control."},
-    {q: "Beta measure of volatility?", c: ["Yes", "No"], a: 0, f: "Logic: Sensitivity to market."},
-    {q: "SEP IRA contributions by:", c: ["Employer", "Employee"], a: 0, f: "Logic: Boss only funding."},
-    {q: "Per Stirpes assets go to:", c: ["Beneficiary children", "Others"], a: 0, f: "Logic: Family branch branch."},
-    {q: "P/B compares price to:", c: ["Liquidation value", "Earnings"], a: 0, f: "Logic: Asset value comparison."},
-    {q: "Strategic allocator rebalances?", c: ["Yes", "No"], a: 0, f: "Logic: Keeps target mix intact."},
-    {q: "Withdraw 529 for K-12?", c: ["Yes ($10k)", "No"], a: 0, f: "Logic: Private school law change."},
-    {q: "Retiree on pension risk?", c: ["Inflation Risk", "Market"], a: 0, f: "Logic: Fixed checks lose power."},
-    {q: "Step-up in basis at death?", c: ["Yes", "No"], a: 0, f: "Logic: Heirs get fair market value."},
-    {q: "Mandatory 10% penalty early withdrawal?", c: ["Yes (Before 59.5)", "No"], a: 0, f: "Logic: Retirement age rule."},
-    {q: "Portfolio Beta 1.5 sensitivity?", c: ["50% more than market", "Less"], a: 0, f: "Logic: High sensitivity factor."},
-    {q: "Private Muni interest subject to AMT?", c: ["Yes", "No"], a: 0, f: "Logic: Tax preference item."},
-    {q: "Revocable Trust income taxed to:", c: ["Grantor", "Trustee"], a: 0, f: "Logic: Grantor retains control."},
-    {q: "Roth original owner RMDs?", c: ["No", "Yes"], a: 0, f: "Logic: Never forced for Roth."},
-    {q: "Safe Harbor 401(k) avoids:", c: ["Testing", "Fiduciary Duty"], a: 0, f: "Logic: Skips non-discrimination test."},
-    {q: "Bias holding losing stock?", c: ["Loss Aversion", "Overconfidence"], a: 0, f: "Logic: Avoid pain of the loss."},
-    {q: "ILIT removes death benefit from estate?", c: ["Yes", "No"], a: 0, f: "Logic: Trust owns policy outside."},
-    {q: "Medicare Part D covers:", c: ["Drugs", "Hospital"], a: 0, f: "Logic: 'D' is for Drugs."},
-    {q: "QDRO splits assets in:", c: ["Divorce", "Death"], a: 0, f: "Logic: Qualified plan court order."},
-    {q: "Best measure of market risk?", c: ["Beta", "Alpha"], a: 0, f: "Logic: Systematic risk factor."},
-    {q: "Employer deduction for 401(k)?", c: ["Immediate", "Delayed"], a: 0, f: "Logic: Qualified plan benefit."},
-    {q: "Trust for spouse then kids?", c: ["QTIP", "Simple"], a: 0, f: "Logic: Terminable Interest Property."},
-    {q: "Belief in timing market bias?", c: ["Overconfidence", "Anchoring"], a: 0, f: "Logic: Overestimating ability."},
-    {q: "IRR finds specific percent?", c: ["Yes", "No"], a: 0, f: "Logic: Rate where PV equals zero."},
-    {q: "Community property assets?", c: ["50/50", "Earner"], a: 0, f: "Logic: Equal ownership in marriage."},
-    {q: "High Dividend Yield stock?", c: ["Preferred", "Growth"], a: 0, f: "Logic: Designed for income."},
-    {q: "SD measures both risks?", c: ["Yes", "No"], a: 0, f: "Logic: Total risk (Market + specific)."},
-    {q: "403(b) for non-profits?", c: ["Yes", "No"], a: 0, f: "Logic: TSA for teachers/schools."},
-    {q: "1031 exchange for real estate?", c: ["Yes", "No"], a: 0, f: "Logic: Defer capital gains swap."},
-    {q: "Medicare Part A covers:", c: ["Hospital", "Doctors"], a: 0, f: "Logic: 'A'll-in hospital stay."},
-    {q: "Fixate on purchase price bias?", c: ["Anchoring", "Loss Aversion"], a: 0, f: "Logic: Anchor to first number."},
-    {q: "Cannot diversify Market Risk?", c: ["Yes", "No"], a: 0, f: "Logic: Systematic hits everyone."},
-    {q: "SIMPLE IRA max employees?", c: ["100", "500"], a: 0, f: "Logic: 'Small' business plan."},
-    {q: "Trustee loyalty to:", c: ["Beneficiary", "Grantor"], a: 0, f: "Logic: Fiduciary duty focus."},
-    {q: "Indexed Life insurance floor?", c: ["0%", "No floor"], a: 0, f: "Logic: Downside protection."},
-    {q: "Time Horizon ends when:", c: ["Money needed", "Investment made"], a: 0, f: "Logic: Date of the 'harvest'."},
-    {q: "ERISA 404(c) provides:", c: ["Employer Safe Harbor", "High Fees"], a: 0, f: "Logic: Avoid participant liability."},
-    {q: "Strategic involves market timing?", c: ["No", "Yes"], a: 0, f: "Logic: Anchor long-term target."},
-    {q: "Roth always after-tax?", c: ["Yes", "No"], a: 0, f: "Logic: Pay tax now for tax-free later."},
-    {q: "DC plan risk on:", c: ["Employee", "Employer"], a: 0, f: "Logic: Final balance depends on market."},
-    {q: "Growth stock dividend?", c: ["Low", "High"], a: 0, f: "Logic: Reinvest for expansion."},
-    {q: "Alpha beat market risk-adjusted?", c: ["Yes", "No"], a: 0, f: "Logic: Manager added value."},
-    {q: "Inflation risk same as purchasing power?", c: ["Yes", "No"], a: 0, f: "Logic: Falling power of dollar."},
-    {q: "LLC taxed like partnership?", c: ["Yes", "No"], a: 0, f: "Logic: Flow-through protection."},
-    {q: "Value focus on undervalued?", c: ["Yes", "No"], a: 0, f: "Logic: Buying bargains."},
-    {q: "JTWROS bypasses probate?", c: ["Yes", "No"], a: 0, f: "Logic: Passes direct to survivor."},
-    {q: "Emergency savings account?", c: ["Money Market", "S&P 500"], a: 0, f: "Logic: Liquidity and safety."},
-    {q: "Fiduciary prioritize co profits?", c: ["No", "Yes"], a: 0, f: "Logic: Loyalty to participants."},
-    {q: "Total Risk of non-diversified?", c: ["SD", "Beta"], a: 0, f: "Logic: Only SD captures total risk."},
-    {q: "Coverdell used by age 30?", c: ["Yes", "No"], a: 0, f: "Logic: Use or transfer rule."},
-    {q: "Catch-up at age 50?", c: ["Yes", "No"], a: 0, f: "Logic: Extra retirement contributions."},
-    {q: "Tactical overweight sectors?", c: ["Yes", "No"], a: 0, f: "Logic: Capitalize on trends."},
-    {q: "Trust cannot be changed?", c: ["Irrevocable", "Revocable"], a: 0, f: "Logic: Grantor gives up control."},
-    {q: "Balance sheet list revenue?", c: ["No (Income Statement)", "Yes"], a: 0, f: "Logic: Assets and debt only."},
-    {q: "Currency risk in foreign invest?", c: ["Yes", "No"], a: 0, f: "Logic: USD vs foreign fluctuations."},
-    {q: "Cap Rate for Real Estate?", c: ["Yes", "No"], a: 0, f: "Logic: Income vs price metric."},
-    {q: "Small-Cap higher volatility?", c: ["Yes", "No"], a: 0, f: "Logic: Sensitive economic shifts."},
-    {q: "457 Plan for govt workers?", c: ["Yes", "No"], a: 0, f: "Logic: Government version of 401k."},
-    {q: "Interest-only mortgage reduction?", c: ["No", "Yes"], a: 0, f: "Logic: Principal remains same."},
-    {q: "Exact same direction movement?", c: ["Positive Correlation", "Negative"], a: 0, f: "Logic: Move together coefficient."},
-    {q: "Rebalancing triggers tax?", c: ["Yes (Taxable accounts)", "No"], a: 0, f: "Logic: Selling gain assets."},
-    {q: "Section 3 goal is Suitability?", c: ["Yes", "No"], a: 0, f: "Logic: MISSION COMPLETED."}
-], [ // 04. REGULATIONS & GUIDELINES (PILLAR 4)
-    {q: "USA 'Person' includes:", c: ["Corporation", "Deceased"], a: 0, f: "Logic: Entities capable of contract."},
-    {q: "BD register if office in state?", c: ["Yes (Immediate)", "No"], a: 0, f: "Logic: Place of Business trigger."},
-{
-        q: "What are the core recordkeeping timeframes under the Uniform Securities Act?", 
-        c: [
-            "3 years for Broker-Dealers, 5 years for Investment Advisers", 
-            "5 years for Broker-Dealers, 3 years for Investment Advisers"
-        ],
-        a: 0, 
-        f: "Logic: BDs = 3 years. IAs = 5 years. (Hint: Both require records to be in the principal office for the first 2 years)."
-    },{
-        q: "What is the name of the process by which an investor calculates the sum of the present values of projected future cash flows to determine the fair market value of an investment?",
-        c: [
-            "Discounted Cash Flows (DCF)", 
-            "Internal Rate of Return (IRR)", 
-            "Capital Asset Pricing Model (CAPM)", 
-            "Net Present Value (NPV)"
-        ],
+        q: "Dividend Payout Ratio is:",
+        c: ["Dividends / EPS", "Dividends / Price", "Assets / Dividends", "Price / Yield"],
         a: 0,
-        f: "Logic: DCF is the name of the valuation process itself. It involves 'discounting' future money back to today's dollars to see what an investment is worth right now."
+        f: "Logic: Formula. Percentage of earnings paid out."
     },
     {
-        q: "Which of the following metrics is specifically used to evaluate a portfolio manager's performance by measuring their 'risk-adjusted return'?",
-        c: [
-            "Beta", 
-            "Standard Deviation", 
-            "Alpha", 
-            "Correlation Coefficient"
-        ],
-        a: 2,
-        f: "Logic: Alpha is the 'holy grail' for managers. It measures the return of an investment after adjusting for the risk taken. A positive alpha means the manager 'beat the market' or added value."
-    },{
-        q: "Under NASAA rules, an Investment Adviser must keep a detailed list of names and addresses for everyone they send an ad to, as long as the group size is:", 
-        c: [
-            "10 or fewer people", 
-            "More than 10 people"
-        ], 
-        a: 0, 
-        f: "Logic: For small groups (10 or fewer), you must list every name and address. For big mass mailings (more than 10), you are off the hook for the name list and just need to save a copy of the ad."
-    },{
-        q: "Which of the following is NOT required to be printed on a customer's trade confirmation receipt for a bond?", 
-        c: [
-            "The bond's old yield-to-maturity from when it was first issued", 
-            "Whether the bond has a call feature"
-        ], 
-        a: 0, 
-        f: "Logic: Your trade receipt shows the yield for your trade today. It does not show the historical yield from when the bond was first born. It must, however, warn you if the bond can be called away."
-    },{
-        q: "What is the core definition of a swap contract?", 
-        c: [
-            "An agreement between two parties to exchange a sequence of cash flows over a predetermined period", 
-            "A trust that holds a basket of equity securities on behalf of small retail investors"
-        ], 
-        a: 0, 
-        f: "Logic: Think of the name—the parties are literally 'swapping' cash flows. It is a derivative contract typically used to exchange fixed-rate payments for fluctuating-rate payments."
-    },{
-        q: "When an Investment Adviser executes a client trade, which of the following is NOT a required element on the order memorandum (order ticket)?", 
-        c: [
-            "The identity of the supervisor who approved the order", 
-            "The identity of the person who recommended the transaction"
-        ], 
-        a: 0, 
-        f: "Logic: IA order tickets must document who recommended the trade, who placed the trade, and the date. They are not legally required to document who 'approved' it."
-    },{
-        q: "Which of the following is NOT required to be printed on a customer's trade confirmation receipt for a bond?", 
-        c: [
-            "The bond's old yield-to-maturity from when it was first issued", 
-            "Whether the bond has a call feature"
-        ], 
-        a: 0, 
-        f: "Logic: Your trade receipt shows the yield for your trade today. It does not show the historical yield from when the bond was first born. It must, however, warn you if the bond can be called away."
-    },{
-        q: "Under NASAA rules, an Investment Adviser must keep a detailed list of names and addresses for everyone they send an ad to, as long as the group size is:", 
-        c: [
-            "10 or fewer people", 
-            "More than 10 people"
-        ], 
-        a: 0, 
-        f: "Logic: For small groups (10 or fewer), you must list every name and address. For big mass mailings (more than 10), you are off the hook for the name list and just need to save a copy of the ad."
-    },
-    {
-        q: "A Special Purpose Acquisition Company (SPAC), sometimes referred to as a 'blank check company,' typically raises its initial capital to seek out and acquire an existing private company by:",
-        c: [
-            "Conducting a fully registered Initial Public Offering (IPO)", 
-            "Relying exclusively on private placements under Regulation D", 
-            "Issuing tax-exempt municipal revenue bonds", 
-            "Borrowing funds directly from the Federal Reserve discount window"
-        ],
+        q: "Breakout occurs when price moves past:",
+        c: ["Support or Resistance", "Moving average", "52-week high", "Volume spike"],
         a: 0,
-        f: "Logic: For the exam, remember that SPACs (Blank Check Companies) raise their 'shopping money' directly from the public through a normal, fully registered IPO before they even have an underlying operating business."
-    },
-    {
-        q: "Under the Uniform Securities Act (State Law), if an independent person is paid a cash fee to solicit for a State-Registered Investment Adviser, must they register?", 
-        c: [
-            "Yes, they must register as an Investment Adviser Representative (IAR).", 
-            "No, a written contract is sufficient under state law."
-        ], 
-        a: 0, 
-        f: "Logic: State Law (USA) = YES, they must register as an IAR."
-    },
-    {
-        q: "Under the Investment Advisers Act of 1940 (Federal Law), what is required of an independent, paid solicitor for a Federal Covered Adviser?", 
-        c: [
-            "A written contract and disclosure document (no SEC registration required).", 
-            "They must register with the SEC as an Investment Adviser Representative."
-        ], 
-        a: 0, 
-        f: "Logic: Federal Law ('40 Act) = NO SEC registration for individuals. They just need a Written Contract and to provide a disclosure document."
-    },
-    {
-        q: "Under the Uniform Securities Act (USA), a private placement exemption is limited to how many non-institutional (retail) offers within a 12-month period?", 
-        c: [
-            "10 offers", 
-            "35 offers"
-        ], 
-        a: 0, 
-        f: "Logic: The state USA limits private placement offers to 10 retail investors per 12 months. Do not confuse this with the federal SEC Regulation D limit, which allows up to 35 non-accredited investors."
-    },
-    {
-        q: "Using the 'OFFS' memory trick, which of the following is categorized as a classic derivative rather than an investment company?", 
-        c: [
-            "Forward Contract", 
-            "Unit Investment Trust (UIT)"
-        ], 
-        a: 0, 
-        f: "Logic: OFFS stands for Options, Futures, Forwards, and Swaps—these are all derivatives. A UIT is a type of investment company."
-    },
-    {q: "IA retail client de minimis?", c: ["5 or fewer", "10"], a: 0, f: "Logic: Home-office exemption limit."},{
-        q: "Do institutional clients (such as pension funds) count towards the 5-client 'de minimis' exemption limit for out-of-state Investment Advisers?", 
-        c: ["No, institutional clients do not count toward the limit", "Yes, they count exactly the same as retail clients"], 
-        a: 0, 
-        f: "Logic: The de minimis exemption strictly limits an out-of-state IA to 5 or fewer RETAIL clients. You can have unlimited institutional clients without registering."
-    },{
-        q: "All of the following are required to be included in a written investment advisory contract, EXCEPT:",
-        c: [
-            "The methodology for computing the advisor's fee", 
-            "A clause regarding the assignment of the contract", 
-            "The term of the contract", 
-            "The name of the broker-dealer that executes securities trades in the account"
-        ],
-        a: 3,
-        f: "Logic: Advisory contracts must include the fee calculation, the term of the agreement, and a non-assignment clause (prohibiting the transfer of the account without client consent). They are NOT required to name the specific broker-dealer used for execution."
-    },{
-        q: "When calculating the present value of a bond using Discounted Cash Flow (DCF), which metric is NOT a required input?", 
-        c: ["Duration", "Discount Rate"], 
-        a: 0, 
-        f: "Logic: Duration is a risk measurement (sensitivity to interest rates). To find present value, you only need the cash flows, time to maturity, and the discount rate."
-    },{
-        q: "XYZ Advisers is an IA located and registered in State A. They manage accounts for three retail clients in State B, and two corporate pension funds in State B. XYZ maintains no physical office in State B. Under the Uniform Securities Act, XYZ Advisers:",
-        c: [
-            "Must register with the Administrator in State B because it transacts business with retail clients residing in that state.", 
-            "Is exempt from registration in State B because it has no place of business there and its retail client count does not exceed five.", 
-            "Must register in State B because managing pension fund assets requires mandatory state registration.", 
-            "Is exempt from registration in State B because the Uniform Securities Act categorizes all out-of-state advisers as federal covered advisers."
-        ],
-        a: 1,
-        f: "Logic: The 'De Minimis' exemption allows out-of-state IAs with no place of business in the state to have up to 5 retail clients without registering. Institutional clients (like pension funds) do not count toward this 5-client limit."
-    },
-    {
-        q: "Under the provisions of the Uniform Securities Act, the Administrator has broad authority to establish financial requirements. Which of the following actions is an investment adviser NOT universally required to take?",
-        c: [
-            "Post a surety bond, regardless of whether the firm maintains custody or discretionary authority over client funds.", 
-            "File annual financial statements and reports with the State Administrator.", 
-            "Pay an initial registration fee and a subsequent annual renewal filing fee.", 
-            "Allow the Administrator to conduct periodic or special examinations of the firm's books and records at any time."
-        ],
-        a: 0,
-        f: "Logic: Surety bonds are generally ONLY required by the Administrator if the Investment Adviser maintains custody of client funds or has discretionary authority over client accounts. It is not a universal requirement for all IAs."
-    },{
-        q: "To calculate 'Gross Profit' on an income statement, which expense is subtracted from Total Revenue?", 
-        c: [
-            "Cost of Goods Sold (COGS)", 
-            "Selling, General, and Administrative (SG&A) Expenses"
-        ], 
-        a: 0, 
-        f: "Logic: Gross profit only accounts for the direct costs of producing the goods (COGS). Operating expenses like SG&A are subtracted later to find Operating Income."
-    },
-    {
-        q: "Under the Uniform Securities Act, is an Investment Adviser universally required to post a surety bond?", 
-        c: ["No, typically only if they have custody or discretionary authority", "Yes, all registered IAs must post a bond"], 
-        a: 0, 
-        f: "Logic: Surety bonds provide a financial safety net for clients. The Administrator usually only requires them if the IA has direct access to client money (custody) or the power to trade without asking (discretion)."
-    },
-    {q: "IAR of Federal firm registers with:", c: ["State", "SEC"], a: 0, f: "Logic: Individual is always state license."},
-    {q: "Consent to Service is:", c: ["Permanent", "Annual"], a: 0, f: "Logic: Filed once for legal service."},
-    {q: "State registration expires:", c: ["Dec 31st", "Anniversary"], a: 0, f: "Logic: Year-end uniform license."},
-    {q: "Felony look-back period?", c: ["10 Years", "5"], a: 0, f: "Logic: Statutory disqualification rule."},
-    {q: "BD Agent register for exempt stock?", c: ["Yes", "No"], a: 0, f: "Logic: Representing BD requires license."},
-    {q: "Firm >$110M AUM registers with:", c: ["SEC", "State"], a: 0, f: "Logic: Federal mandatory threshold."},
-    {q: "Registration effective within:", c: ["30 Days", "15"], a: 0, f: "Logic: Noon on the 30th day rule."},
-    {q: "Agent leaves BD, who notifies?", c: ["Both BD and Agent", "Only Agent"], a: 0, f: "Logic: Dual notification rule."},
-    {q: "Admin issue Cease/Desist without hearing?", c: ["Yes (Summarily)", "No"], a: 0, f: "Logic: Immediate protection power."},
-    {q: "Is Fixed Annuity a security?", c: ["No", "Yes"], a: 0, f: "Logic: Insurance product, no risk."},
-    {q: "Unsolicited trade is exempt:", c: ["Transaction", "Security"], a: 0, f: "Logic: Method of trade exemption."},
-    {q: "IAR charge performance fee to retail?", c: ["No", "Yes"], a: 0, f: "Logic: Qualified client rule applies."},
-    {q: "IA custody inadvertent return time?", c: ["3 Business Days", "24 hrs"], a: 0, f: "Logic: 72-hour window rule."},
-    {q: "Form ADV known as Brochure?", c: ["Part 2A", "Part 1"], a: 0, f: "Logic: Plain-English client doc."},
-    {q: "Agent share in client profits?", c: ["Yes (Permission/Proportional)", "No"], a: 0, f: "Logic: BD agent exception rule."},
-    {q: "Power to cross state lines for records?", c: ["Subpoena Power", "Injunction"], a: 0, f: "Logic: Investigative authority."},
-    {q: "Is Front-Running ethical?", c: ["No", "Yes"], a: 0, f: "Logic: Violation of loyalty."},
-    {q: "IA Books and Records period?", c: ["5 Years", "3"], a: 0, f: "Logic: 2 years in main office."},
-    {q: "NYSE-listed stock requirement?", c: ["Notice File", "Register"], a: 0, f: "Logic: Federal Covered treatment."},
-    {q: "Judge fiduciary by:", c: ["Entire Portfolio", "Trade"], a: 0, f: "Logic: Prudent Investor Act rule."},
-    {q: "Custody Net Worth required?", c: ["$35,000", "$10,000"], a: 0, f: "Logic: Touch the money threshold."},
-    {q: "Admin sentence IAR to jail?", c: ["No (Only Court)", "Yes"], a: 0, f: "Logic: Regulator vs Judiciary power."},
-    {q: "Statute of Limitations civil?", c: ["3/2 Rule", "5 Years"], a: 0, f: "Logic: 3 years event/2 discovery."},
-    {q: "Private Placement retail limit?", c: ["10 (12 months)", "35"], a: 0, f: "Logic: USA state-specific rule."},
-    {q: "Pre-approval by principal communication?", c: ["Retail (>25)", "Correspondence"], a: 0, f: "Logic: SIGNATURE required upfront."},
-    {q: "Soft dollars pay for rent?", c: ["No", "Yes"], a: 0, f: "Logic: Must benefit client (research)."},
-    {q: "IAR leave Federal firm, notify:", c: ["IAR", "Firm"], a: 0, f: "Logic: Federal firm not state reg."},
-    {q: "ABC test for IA: Business, Advice, and:", c: ["Compensation", "Authority"], a: 0, f: "Logic: Charge for advice rule."},
-    {q: "Testimonials permitted?", c: ["Yes (Disclosure)", "No"], a: 0, f: "Logic: Modernized NASAA rules."},
-    {q: "Options document delivery?", c: ["ODD (Before approval)", "Prospectus"], a: 0, f: "Logic: Derivative risk disclosure."},
-    {q: "Gift of Assessable stock is sale?", c: ["Yes", "No"], a: 0, f: "Logic: Carries future liability."},
-    {q: "Principal trade charge?", c: ["Markup/Markdown", "Commission"], a: 0, f: "Logic: Dealer role compensation."},
-    {q: "POA survives mental incompetence?", c: ["Only Durable", "Standard"], a: 0, f: "Logic: Standard dies with client mind."},
-    {q: "Privacy of non-public info rule?", c: ["Reg S-P", "Reg T"], a: 0, f: "Logic: Opt-out requirement."},
-    {q: "Borrow from brother client?", c: ["No (Unless institution)", "Yes"], a: 0, f: "Logic: Prohibited family borrowing."},
-    {q: "Annual updating amendment time?", c: ["90 Days (Fiscal Year)", "120"], a: 0, f: "Logic: Form ADV maintenance."},
-    {q: "IPO exempt transaction?", c: ["No", "Yes"], a: 0, f: "Logic: Requires full registration."},
-    {q: "Created by 1934 Act?", c: ["SEC", "FINRA"], a: 0, f: "Logic: Police the secondary market."},
-    {q: "IA Net Worth fall notification?", c: ["Next Business Day", "Immediately"], a: 0, f: "Logic: Fiscal emergency report."},
-    {q: "Admin investigate Federal IA?", c: ["Yes (Anti-fraud)", "No"], a: 0, f: "Logic: Jurisdiction over all fraud."},
-    {q: "Canadian client in Florida?", c: ["Snowbird Exemption", "De Minimis"], a: 0, f: "Logic: Temporary cross-border rule."},
-    {q: "BD charge separate fee for advice IA?", c: ["Yes", "No"], a: 0, f: "Logic: Lose exclusion via charge."},
-    {q: "LATE exclusion E stands for:", c: ["Engineers", "Economists"], a: 0, f: "Logic: Professional advice incidental."},
-    {q: "Guaranteed stock committed:", c: ["Fraud", "Churning"], a: 0, f: "Logic: Never guarantee market gain."},
-    {q: "Offer seen on national TV in state?", c: ["No", "Yes"], a: 0, f: "Logic: Only originating state offer."},
-    {q: "Agency Cross Trade consent?", c: ["Written", "Verbal"], a: 0, f: "Logic: Prior client approval required."},
-    {q: "The law is the shield mission goal?", c: ["Yes", "No"], a: 0, f: "Logic: MISSION ACCOMPLISHED."}
+        f: "Logic: Technical. Clearing a barrier."
+    }
 ]
-];
+]; // Closed sprintLib
 
-
+// ========================================
+// SIMULATION LIBRARY
+// ========================================
 const simLib = [
 [ // PILLAR 1: ECONOMICS & BUSINESS INFORMATION (SIMULATION MODE)
     {
@@ -1013,7 +722,157 @@ const simLib = [
         c: ["Value", "Growth", "Speculative", "High Beta"],
         a: 0,
         f: "Logic: Value investors look for 'bargains' (Low P/B) and are often rewarded with higher income (High Yield) while waiting for the price to rise."
-    },{
+    },
+    {
+        q: "An advisory firm finds that an investment's Net Present Value (NPV) is exactly zero. If the client requires a 6% internal rate of return, what is the investment's IRR?",
+        c: ["The IRR is equal to 6%", "The IRR is 0%", "The IRR is greater than 6%", "The IRR is less than 6%"],
+        a: 0,
+        f: "Logic: IRR is the discount rate that makes NPV zero. If NPV is 0 at a 6% discount rate, the IRR is exactly 6%."
+    },
+    {
+        q: "Which financial metric measures the 'value added' by a portfolio manager relative to the risk taken?",
+        c: ["Alpha", "Beta", "Standard Deviation", "R-squared"],
+        a: 0,
+        f: "Logic: Alpha is the risk-adjusted return. It shows how much the manager outperformed the market based on the beta of the portfolio."
+    },
+    {
+        q: "A company has Current Assets of $500k and Current Liabilities of $300k. What is its Working Capital?",
+        c: ["$200,000", "1.67:1", "0.60:1", "$800,000"],
+        a: 0,
+        f: "Logic: Working Capital is a dollar amount (Current Assets - Current Liabilities). Ratios are for the 'Current Ratio'."
+    },
+    {
+        q: "According to Modern Portfolio Theory (MPT), the expected return of an investment is:",
+        c: ["Possible returns weighted by the likelihood of each occurring", "The average of the last 10 years of gains", "The income guaranteed by the issuer", "The standard deviation divided by the mean"],
+        a: 0,
+        f: "Logic: MPT uses probability. It's the weighted average of all possible outcomes."
+    },
+    {
+        q: "Where are details regarding a company's upcoming acquisitions or major lawsuits typically found?",
+        c: ["The footnotes of the Balance Sheet", "The top of the Income Statement", "The Statement of Cash Flows", "The summary page of the 10-Q"],
+        a: 0,
+        f: "Logic: Major 'future' risks or structural changes (contingent liabilities) are always found in the footnotes."
+    },
+    {
+        q: "An analyst uses a 10% discount rate. What is the Present Value of $121 received in exactly two years?",
+        c: ["$100", "$110", "$121", "$133"],
+        a: 0,
+        f: "Logic: $121 / 1.10 = $110. Then $110 / 1.10 = $100."
+    },
+    {
+        q: "Which ratio measures leverage by comparing what a company owes to what it owns?",
+        c: ["Debt-to-Equity Ratio", "Quick Ratio", "Price-to-Book Ratio", "Inventory Turnover"],
+        a: 0,
+        f: "Logic: Debt-to-Equity measures financial leverage—the bank's money vs. the owner's money."
+    },
+    {
+        q: "Under the Strong Form of the Efficient Market Hypothesis, stock prices reflect:",
+        c: ["All public and private (insider) information", "Only historical price data", "Only publicly available information", "None of the above"],
+        a: 0,
+        f: "Logic: Strong Form = Everything is baked in. Even insiders can't beat the market."
+    },
+    {
+        q: "An investment adviser representative (IAR) calculates that a potential investment has a Net Present Value (NPV) of zero based on a 7% discount rate. What does this indicate about the investment's Internal Rate of Return (IRR)?",
+        c: [
+            "The IRR is equal to 7%", 
+            "The IRR is 0%", 
+            "The IRR is greater than 7%", 
+            "The IRR is less than 7%"
+        ],
+        a: 0,
+        f: "Logic: By definition, the IRR is the discount rate that results in an NPV of zero. If the NPV is zero at 7%, then the investment is expected to return exactly 7%."
+    },
+    {
+        q: "What is the name of the process that calculates the sum of the present values of projected future cash flows to determine a security's fair market value?",
+        c: ["Discounted Cash Flow (DCF)", "Internal Rate of Return (IRR)", "Net Present Value (NPV)", "Capital Asset Pricing Model (CAPM)"],
+        a: 0,
+        f: "Logic: DCF is the process; NPV is the result. Think of DCF as the action of 'shrinking' future dollars back to today's value."
+    },
+    {
+        q: "Is 'Standard Deviation' a measure of risk or a measure of return?",
+        c: ["A measure of risk (volatility)", "A measure of return (profit)", "Both", "Neither"],
+        a: 0,
+        f: "Logic: Standard Deviation tells you how much the price 'deviates' from the average. High deviation = High risk."
+    },
+    {
+        q: "Does a 'Top-Down' investment approach start with the economy or the specific stock?",
+        c: ["Starts with the economy (Big Picture)", "Starts with the specific stock (Individual Company)", "Starts with technical charts", "Starts with bonds"],
+        a: 0,
+        f: "Logic: Top-Down = Economy -> Sector -> Industry -> Stock. Bottom-Up starts with the stock."
+    },
+    {
+        q: "Does the 'Rule of 72' estimate how long it takes for an investment to double?",
+        c: ["Yes", "No, it calculates the tax rate", "No, it calculates inflation", "No, it's for retirement age"],
+        a: 0,
+        f: "Logic: 72 divided by the interest rate = years to double. 72 / 8% = 9 years."
+    },
+    {
+        q: "To achieve maximum diversification, should you look for a correlation coefficient of -1.0?",
+        c: ["Yes, -1.0 provides the most diversification", "No, +1.0 is the goal for diversification", "No, 0.0 is best", "No, +0.5 is best"],
+        a: 0,
+        f: "Logic: -1.0 means assets move in perfectly opposite directions. When one 'zigs,' the other 'zags.'"
+    },
+    {
+        q: "Is the Dow Jones Industrial Average (DJIA) a market-cap weighted or price-weighted index?",
+        c: ["Price-weighted", "Market-cap weighted", "Equal weighted", "Revenue weighted"],
+        a: 0,
+        f: "Logic: The Dow is a weird outlier. A higher stock price has more 'weight' in the index, regardless of company size."
+    },
+    {
+        q: "If an investor expects a real rate of return of 3% and inflation is 2%, what is their total return?",
+        c: ["5%", "1%", "6%", "2.5%"],
+        a: 0,
+        f: "Logic: Total Return = Real Return + Inflation. 3% + 2% = 5%."
+    },
+    {
+        q: "According to CAPM, is 'Risk Premium' the return earned above the risk-free rate?",
+        c: ["Yes", "No, it is the total return including the risk-free rate", "No, it is the risk-free rate minus inflation", "No, it is Beta"],
+        a: 0,
+        f: "Logic: Risk Premium is the 'extra' you get for moving out of safe Treasury bills into the risky market."
+    },
+    {
+        q: "A business calculates its most liquid assets by excluding inventory from its current assets. Which ratio is being used?",
+        c: ["Quick Ratio (Acid Test)", "Current Ratio", "Debt-to-Equity Ratio", "Price-to-Earnings Ratio"],
+        a: 0,
+        f: "Logic: The Quick Ratio ignores inventory because it assumes you can't sell your 'stuff' fast enough in an emergency."
+    },
+    {
+        q: "According to Modern Portfolio Theory (MPT), the 'Expected Return' of an investment is best described as:",
+        c: ["Possible returns weighted by their likelihood of occurring", "The average of the last 10 years of historical returns", "The risk-free rate plus the alpha generated by the manager", "The income guaranteed by the issuer plus appreciation"],
+        a: 0,
+        f: "Logic: MPT uses probability. It is a weighted average based on the chance of each outcome happening."
+    },
+    {
+        q: "Where would an analyst find information regarding a company's pending acquisitions or significant legal contingencies?",
+        c: ["The footnotes of the Balance Sheet", "The top of the Income Statement", "The Statement of Cash Flows", "The Form 10-Q summary page"],
+        a: 0,
+        f: "Logic: Major 'future' events like lawsuits or mergers are tucked away in the footnotes at the bottom of the balance sheet."
+    },
+    {
+        q: "A company reports a Debt-to-Equity ratio of 1.0. What does this signify?",
+        c: ["The amount of debt equals the shareholders' equity", "The market value of the stock equals the market value of the bonds", "The company is overleveraged relative to the industry", "The company's current assets equal its current liabilities"],
+        a: 0,
+        f: "Logic: 1.0 means a 1:1 ratio. The 'bank' (debt) and the 'owners' (equity) have an equal stake in the company's assets."
+    },
+    {
+        q: "Which metric is specifically used to evaluate a portfolio manager's 'risk-adjusted' performance?",
+        c: ["Alpha", "Beta", "Standard Deviation", "Correlation Coefficient"],
+        a: 0,
+        f: "Logic: Alpha measures the 'value added.' It’s the return you got that you *weren't* supposed to get based on the risk you took."
+    },
+    {
+        q: "Under the Efficient Market Hypothesis (EMH), which form suggests that even 'Insider Information' is already reflected in stock prices?",
+        c: ["Strong Form", "Semi-Strong Form", "Weak Form", "Moderate Form"],
+        a: 0,
+        f: "Logic: Strong Form = EVERYTHING is in the price. Public, private, and historical info are all baked in."
+    },
+    {
+        q: "An analyst wants to measure a company's total 'cash cushion' for daily operations. Which calculation should they use?",
+        c: ["Working Capital", "Current Ratio", "Quick Ratio", "Cash Flow from Operations"],
+        a: 0,
+        f: "Logic: Working Capital (Assets minus Liabilities) tells you the actual dollar amount left over to run the business."
+    },
+    {
         q: "A business analyst is calculating the sum of the present values of projected future cash flows to determine if a current investment price is fair. What is the name of this valuation process?",
         c: [
             "Discounted Cash Flow (DCF)", 
@@ -1034,7 +893,8 @@ const simLib = [
         ],
         a: 1,
         f: "Logic: Alpha is the only 'return' on this list. Beta and Standard Deviation measure risk, but Alpha measures the extra return earned for taking that risk."
-    },{
+    },
+    {
         q: "A business expects to buy $2,000 of additional inventory in two years and its required rate of return is 10%. Right now, the business is offered the same inventory for $1,600. If estimates are rounded to the nearest dollar, which of the following statements is TRUE about immediately purchasing the inventory?",
         c: [
             "The inventory is priced at a $53 discount.", 
@@ -1044,7 +904,8 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: First, find the Present Value (PV) of the future cost. $2,000 / (1.10)^2 = $1,652.89 (round to $1,653). Since the current price is $1,600, it is being offered at a $53 discount relative to its present value ($1,653 - $1,600 = $53)."
-    },{
+    },
+    {
         q: "An investment adviser is building a portfolio for a client and wants to maximize diversification to reduce overall risk. To achieve the best risk reduction, the adviser should look for investments that have a correlation coefficient closest to:",
         c: [
             "+1.0", 
@@ -1054,7 +915,8 @@ const simLib = [
         ],
         a: 2,
         f: "Logic: Think of correlation on a scale from -1.0 to +1.0. A score of -1.0 means the investments move in perfectly opposite directions (perfect negative correlation). When one goes up, the other goes down. This is the absolute best way to lower your overall risk!"
-    },{
+    },
+    {
         q: "A client has his portfolio invested in a number of different equity securities in the energy, manufacturing, and technology sectors. His investment adviser representative wants to help him reduce his systematic risk. Which of the following types of securities would the IAR most likely discuss with the client?",
         c: [
             "Securities which have a negative correlation with the securities that are currently in his portfolio, such as S&P 500 Index Exchange-Traded Funds.", 
@@ -1064,7 +926,8 @@ const simLib = [
         ],
         a: 1,
         f: "Logic: Systematic risk (market risk) cannot be diversified away by simply buying more stocks (such as an S&P 500 ETF). To reduce systematic risk in an all-equity portfolio, the adviser must recommend a completely different asset class, such as debt instruments (bonds), which typically have a negative correlation to the stock market."
-    },{
+    },
+    {
         q: "An investment adviser is explaining the concept of Discounted Cash Flow (DCF) to a client. Which of the following best describes the primary objective of the DCF valuation method?",
         c: [
             "To determine the future value of current cash flows adjusted for inflation", 
@@ -1074,7 +937,8 @@ const simLib = [
         ],
         a: 1,
         f: "Logic: For the exam, whenever you see Discounted Cash Flow (DCF), immediately look for the phrase 'Present Value of future cash flows.' The 'discount' is simply the mathematical rate used to bring future money back to its present value."
-    },{
+    },
+    {
         q: "A business reports revenue of $120,000, cost of goods sold of $35,000, selling, general, and administrative expenses of $15,000, and interest expenses of $5,000. What is the business's gross profit?",
         c: [
             "$85,000", 
@@ -1084,7 +948,8 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: Gross Profit is calculated simply as Revenue minus Cost of Goods Sold (COGS). SG&A and interest expenses are 'below the line' and are subtracted later to find operating income and net income. ($120,000 - $35,000 = $85,000)."
-    },{
+    },
+    {
         q: "An investment adviser is analyzing the historical performance of a mutual fund and notes a high degree of 'dispersion of returns' from its historical average. Which of the following metrics is the adviser evaluating?",
         c: [
             "Standard Deviation", 
@@ -1094,7 +959,8 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: For the exam, terms like 'variability,' 'volatility,' and 'dispersion of returns' are key identifiers for Standard Deviation, which is the gold standard for measuring an investment's total risk over time."
-    }, {
+    }, 
+    {
         q: "A couple wants to save $50,000 for their newborn child’s college education. If they want to make one immediate investment and avoid making additional deposits, which formula will determine the total amount they need to invest now?",
         c: [
             "Internal rate of return", 
@@ -1104,7 +970,8 @@ const simLib = [
         ],
         a: 2,
         f: "Logic: The couple knows the future amount they need ($50,000) and the time horizon. They need to use the Present Value formula to calculate how much they must deposit *today* (in a single lump sum) to reach that future goal."
-    },{
+    },
+    {
         q: "An income statement of an individual would contain:",
         c: [
             "Expenses", 
@@ -1114,12 +981,14 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: An income statement (or cash flow statement) tracks money coming in (income) and money going out (expenses) over a period of time. Liabilities, real property, and savings accounts are snapshot items found on a balance sheet."
-    },{
+    },
+    {
         q: "When using the discounted cash flow (DCF) method to value a fixed-income security, if the discount rate used in the calculation is lower than the bond's coupon rate, the resulting present value will be:",
         c: ["Less than par value", "Equal to par value", "Greater than par value", "Zero"],
         a: 2,
         f: "Logic: If the discount rate (required return) is lower than what the bond actually pays (the coupon), the bond is attractive to investors and will be valued at a premium (greater than par)."
-    },{
+    },
+    {
         q: "What does the dividend discount model take into account to estimate a company's share price?",
         c: [
             "A corporation's book value", 
@@ -1129,7 +998,8 @@ const simLib = [
         ],
         a: 3,
         f: "Logic: The Dividend Discount Model (DDM) determines the intrinsic value of a stock by forecasting its future dividend payments and discounting them back to their present value using a required rate of return."
-    },{
+    },
+    {
         q: "Three individuals, Albert, Bernard, and Charles, establish a joint brokerage account to pool their investment resources. They structure the account as Tenants in Common (TIC). Albert contributes 50%, while Bernard and Charles each contribute 25%. If Charles were to pass away suddenly, what would happen to his share?",
         c: [
             "His 25% share is automatically distributed equally between Albert and Bernard.", 
@@ -1833,11 +1703,14 @@ const simLib = [
         c: ["Pharmaceuticals", "Automobiles", "Steel", "Airlines"],
         a: 0,
         f: "Logic: Sector. Recess-proof goods."
-    },{
+    },
+    {
         q: "According to Modern Portfolio Theory (MPT), the 'expected return' of an investment is best described as:", 
         c: [
             "Possible returns weighted by the likelihood of those returns occurring", 
-            "The guaranteed income such as bond interest and dividends"
+            "The guaranteed income such as bond interest and dividends",
+            "The historic average return of the asset",
+            "The standard deviation of the asset"
         ], 
         a: 0, 
         f: "Logic: MPT uses probability. Expected return isn't a guarantee; it's a weighted average of various possible outcomes based on their likelihood."
@@ -1846,7 +1719,9 @@ const simLib = [
         q: "Which of these is considered a 'risk-adjusted' return rather than just a measure of risk?", 
         c: [
             "Alpha", 
-            "Beta"
+            "Beta",
+            "Standard Deviation",
+            "Correlation Coefficient"
         ], 
         a: 0, 
         f: "Logic: Beta measures market risk, but Alpha measures the return you got for taking that risk. Alpha = Risk-Adjusted Return."
@@ -1868,28 +1743,28 @@ const simLib = [
         c: ["Unemployment", "GDP", "Confidence", "Spending"],
         a: 0,
         f: "Logic: Cycle. Bad economy means job losses."
-    },
-    {
-        q: "Dividend Payout Ratio is:",
-        c: ["Dividends / EPS", "Dividends / Price", "Assets / Dividends", "Price / Yield"],
-        a: 0,
-        f: "Logic: Formula. Percentage of earnings paid out."
-    },
-    {
-        q: "Breakout occurs when price moves past:",
-        c: ["Support or Resistance", "Moving average", "52-week high", "Volume spike"],
-        a: 0,
-        f: "Logic: Technical. Clearing a barrier."
     }
 ],
-// PILLAR 1 COMPLETED. READY FOR PILLAR 2 START.
 [ // PILLAR 2: INVESTMENT VEHICLE CHARACTERISTICS (SIMULATION MODE)
-{
+    {
         q: "A US-based investor buys an ADR of a German company. The stock rises 10% in Euros, but the Euro weakens 12% against the USD. What is the impact?",
         c: ["The ADR value will decrease in USD terms", "The ADR value will increase", "The ADR value remains unchanged", "The ADR value increases by 2%"],
         a: 0,
         f: "Logic: Currency Risk. The 12% currency drop offsets the 10% stock gain, resulting in a net loss in USD."
-    }, {
+    }, 
+    {
+        q: "A customer with a 50% margin requirement sees their stock position drop by 20%. What is the customer's percentage loss on their equity?",
+        c: ["40%", "20%", "10%", "50%"],
+        a: 0,
+        f: "Logic: 50% margin = 2:1 leverage. A 20% drop in stock price results in a 40% loss of equity (20% x 2)."
+    },
+    {
+        q: "Which yield is the highest when a bond is trading at a discount?",
+        c: ["Yield to Maturity (YTM)", "Current Yield", "Nominal Yield", "Coupon Rate"],
+        a: 0,
+        f: "Logic: Seesaw! If Price is DOWN, Yields are UP. YTM is the highest point on the discount side of the seesaw."
+    },
+    {
         q: "When evaluating an Equity Indexed Annuity (EIA) for a client, an investment adviser should explain that the product typically features which of the following?",
         c: [
             "A guaranteed minimum floor that protects the principal from market declines", 
@@ -1910,10 +1785,8 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: The word 'variable' means the investment risk is passed to the policyowner via a separate account. Because the account is tied to market performance, neither product can offer a guaranteed cash value."
-    }, {
-        a: 0,
-        f: "Logic: Currency Risk. The 12% currency drop offsets the 10% stock gain, resulting in a net loss in USD."
-    }, {
+    },
+    {
         q: "One of the main differences between futures contracts and forward contracts is that:",
         c: [
             "Forward contracts cannot be offset", 
@@ -1923,7 +1796,8 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: Forward contracts are customized, over-the-counter (OTC) agreements between two specific parties. Because they are not standardized, they lack a secondary market and cannot be easily offset or traded."
-    }, {
+    },
+    {
         q: "A client is seeking an investment that provides flow-through of both passive income and passive losses to offset other passive income generated in their portfolio. Which of the following vehicles is MOST appropriate?",
         c: ["Real Estate Investment Trust (REIT)", "Direct Participation Program (DPP)", "Closed-end fund", "C-Corporation"],
         a: 1,
@@ -1941,7 +1815,7 @@ const simLib = [
         a: 3,
         f: "Logic: For a premium bond, the yields from highest to lowest are: Nominal (Coupon), Current Yield, Yield to Maturity, and Yield to Call."
     },
-{
+    {
         q: "An investor is considering a 'Viatical Settlement.' What is the PRIMARY risk associated with this investment vehicle?",
         c: ["Longevity Risk", "Interest Rate Risk", "Credit Risk of the Issuer", "Call Risk"],
         a: 0,
@@ -2565,7 +2439,127 @@ const simLib = [
         c: ["A sector-specific UIT focused on emerging technology", "A portfolio of investment-grade municipal bonds", "A laddered portfolio of short-term CDs", "A balanced fund with 60% blue-chip stocks and 40% bonds"],
         a: 0,
         f: "Logic: While aggressive, the UIT aligns with high risk tolerance and a capital appreciation objective over a long horizon."
-    },{
+    },
+    {
+        q: "An investor has owned shares of a mutual fund for six months. The fund distributes a long-term capital gain to the investor. What is the tax implication of this distribution?",
+        c: [
+            "It is taxed as a long-term capital gain regardless of the investor's holding period", 
+            "It is taxed as a short-term capital gain since the shares were held for less than one year", 
+            "It is not taxed as it represents a return of the investor's capital", 
+            "It is taxed as ordinary income in the same manner as a dividend"
+        ],
+        a: 0,
+        f: "Logic: The tax status of a mutual fund distribution is determined by the fund's holding period of the underlying assets. Because the fund held the assets for more than a year, the distribution is long-term to the investor, even if the investor only owned the fund for six months."
+    },
+    {
+        q: "Which business structure is characterized by limited liability but capped at 100 shareholders?",
+        c: ["S-Corporation", "C-Corporation", "Limited Partnership", "General Partnership"],
+        a: 0,
+        f: "Logic: S-Corp = 100 people max. If you hit 101, you're a C-Corp."
+    },
+    {
+        q: "For 'Incentive Stock Options' (ISOs) to receive long-term capital gains treatment, the stock must be held:",
+        c: ["2 years from grant and 1 year from exercise", "1 year from grant and 2 years from exercise", "At least 5 years", "Exactly 13 months"],
+        a: 0,
+        f: "Logic: Use the '2-and-1' rule for ISOs."
+    },
+    {
+        q: "A client inherits stock from a parent. What is the new cost basis for the client?",
+        c: ["Fair Market Value on the date of death", "The original price the parent paid", "Zero", "The average price over the last year"],
+        a: 0,
+        f: "Logic: This is the 'Step-Up' in basis. Heirs get the current value for tax purposes."
+    },
+    {
+        q: "A 65-year-old withdraws from a non-qualified annuity. How is the growth portion taxed?",
+        c: ["Ordinary income", "Capital gains", "Tax-free", "Subject to 10% penalty"],
+        a: 0,
+        f: "Logic: Annuity growth is ALWAYS ordinary income. They are 65, so no penalty applies."
+    },
+    {
+        q: "Which retirement plan is specifically for employees of state and local governments (like police)?",
+        c: ["457 Plan", "403(b) Plan", "401(k) Plan", "Keogh Plan"],
+        a: 0,
+        f: "Logic: 457 = Government. 403(b) = Teachers/Non-profits."
+    },
+    {
+        q: "In a divorce, which document is required to split a 401(k) between spouses?",
+        c: ["QDRO", "QDIA", "LOI", "SML"],
+        a: 0,
+        f: "Logic: Qualified Domestic Relations Order (QDRO) is the key for splitting retirement assets."
+    },
+    {
+        q: "An IAR recommends a 1035 Exchange. What is the primary benefit to the client?",
+        c: ["A tax-free transfer from one insurance policy to another", "Avoiding surrender fees", "Higher contribution limits", "Guaranteed market gains"],
+        a: 0,
+        f: "Logic: 1035 lets you swap policies without a tax bill today (though surrender fees still apply)."
+    },
+    {
+        q: "Which insurance policy provides 'pure protection' with no cash value or investment component?",
+        c: ["Term Life", "Whole Life", "Variable Life", "Universal Life"],
+        a: 0,
+        f: "Logic: Term = Renting. No cash value, just a death benefit for a specific time."
+    },
+    {
+        q: "Which business entity allows for an unlimited number of shareholders while maintaining pass-through tax treatment?",
+        c: ["Limited Partnership", "S-Corporation", "C-Corporation", "Sole Proprietorship"],
+        a: 0,
+        f: "Logic: S-Corps are capped at 100 shareholders. Limited Partnerships have no such limit."
+    },
+    {
+        q: "An investor wants to avoid 'Wash Sale' consequences. They must wait at least how many days before repurchasing a sold security?",
+        c: ["31 days", "30 days", "60 days", "90 days"],
+        a: 0,
+        f: "Logic: You must wait MORE than 30 days. Day 31 is safe."
+    },
+    {
+        q: "An employee exercises Incentive Stock Options (ISOs). To receive favorable capital gains treatment, they must wait how long before selling?",
+        c: ["2 years from grant AND 1 year from exercise", "1 year from grant and 2 years from exercise", "6 months from exercise", "At least 5 years from the initial grant"],
+        a: 0,
+        f: "Logic: Remember the '2 and 1' rule for ISOs. Violating this triggers ordinary income tax."
+    },
+    {
+        q: "Which business structure provides limited liability but is restricted to 100 or fewer shareholders?",
+        c: ["S-Corporation", "C-Corporation", "Limited Partnership", "General Partnership"],
+        a: 0,
+        f: "Logic: S-Corps are for smaller groups. If you hit 101 owners, you have to become a C-Corp."
+    },
+    {
+        q: "A client needs a $1,000,000 death benefit for the next 20 years on a very tight budget. What is the best choice?",
+        c: ["Term Life Insurance", "Whole Life Insurance", "Variable Life Insurance", "Universal Life Insurance"],
+        a: 0,
+        f: "Logic: Term is 'pure' insurance. It's the only way to get a million-dollar payout for a low monthly cost."
+    },
+    {
+        q: "Upon the death of a client, from whom may a registered representative accept trade instructions?",
+        c: ["The executor of the estate", "The client's adult son who is a beneficiary", "A person holding a standard Power of Attorney", "The client's spouse if they were the primary beneficiary"],
+        a: 0,
+        f: "Logic: Power of Attorney dies with the client. Only the court-appointed executor has the wheel now."
+    },
+    {
+        q: "How are withdrawals from a non-qualified variable annuity taxed for a 65-year-old client?",
+        c: ["Growth is ordinary income; principal is tax-free", "The entire amount is tax-free", "The entire amount is capital gains", "Growth is capital gains; principal is ordinary income"],
+        a: 0,
+        f: "Logic: Annuities use LIFO (Last In, First Out). The 'growth' (last in) comes out first and is always ordinary income."
+    },
+    {
+        q: "Which retirement plan is specifically designed for state and local government employees (like firefighters)?",
+        c: ["457 Plan", "403(b) Plan", "401(k) Plan", "Traditional IRA"],
+        a: 0,
+        f: "Logic: 457 = Government. 403(b) = Teachers/Non-profits. 401(k) = Corporate."
+    },
+    {
+        q: "What is the primary benefit of a 'Section 1035 Exchange'?",
+        c: ["Allows switching insurance policies without triggering a tax event", "Allows for higher contributions into a Roth IRA", "Eliminates the surrender period for new annuities", "Provides a federal tax deduction for the exchange fee"],
+        a: 0,
+        f: "Logic: 1035 is a 'tax-free swap' for annuities and life insurance. It doesn't waive surrender fees, though!"
+    },
+    {
+        q: "Which of the following entities is subject to 'double taxation' of its income?",
+        c: ["C-Corporation", "S-Corporation", "Limited Liability Company (LLC)", "General Partnership"],
+        a: 0,
+        f: "Logic: C-Corps pay tax on profit, then owners pay tax again on the dividends. Double hit."
+    },
+    {
         q: "An individual received employee incentive stock options (ISOs) as part of her compensation. She exercised the options two years after they were granted. Then, two years after exercising the options, she sold the shares. How will the individual be taxed?",
         c: [
             "She must pay ordinary income taxes on the value of the shares when the options were exercised.", 
@@ -2575,7 +2569,8 @@ const simLib = [
         ],
         a: 3,
         f: "Logic: To receive favorable long-term capital gains treatment on Incentive Stock Options (ISOs), the employee must hold the stock for at least 2 years after the grant date AND at least 1 year after the exercise date. Since she waited 2 years to exercise, and another 2 years to sell, both rules are met, so the entire profit is taxed as a long-term capital gain upon the final sale."
-    },{
+    },
+    {
         q: "A registered representative (RR) recommends a 1035 Exchange from a variable annuity to a fixed annuity to protect a 70-year-old client from an impending market correction. The current annuity has two years left on its surrender period. This recommendation is likely:",
         c: [
             "Suitable, provided the RR discloses the surrender fees to the client.", 
@@ -2585,7 +2580,8 @@ const simLib = [
         ],
         a: 2,
         f: "Logic: Before recommending a 1035 Exchange that triggers a surrender fee, the RR must consider internal options. Variable annuities offer various sub-accounts; the client could move funds to a fixed or money market sub-account within the same contract to avoid the market correction without paying a fee."
-    },{
+    },
+    {
         q: "An investor uses a dollar cost averaging strategy by investing $500 into a mutual fund every month regardless of market fluctuations. The primary mathematical outcome of using this method is that the:",
         c: [
             "Average cost of securities purchased is more than the average price of the securities.", 
@@ -2595,17 +2591,8 @@ const simLib = [
         ],
         a: 3,
         f: "Logic: Because the investor buys more shares when the price is low and fewer shares when the price is high, the mathematical result is that the average cost per share will be lower than the average price per share over that period."
-    },{
-        q: "An individual received employee incentive stock options (ISOs) as part of her compensation. She exercised the options two years after they were granted. Then, two years after exercising the options, she sold the shares. How will the individual be taxed?",
-        c: [
-            "She must pay ordinary income taxes on the value of the shares when the options were exercised.", 
-            "She must pay short-term capital gains on any appreciation from the time the options were exercised until the shares were sold.", 
-            "She must pay ordinary income taxes when the options were granted.", 
-            "She must pay long-term capital gains tax at the time the shares were sold."
-        ],
-        a: 3,
-        f: "Logic: To receive favorable long-term capital gains treatment on Incentive Stock Options (ISOs), the employee must hold the stock for at least 2 years after the grant date AND at least 1 year after the exercise date. Since she waited 2 years to exercise, and another 2 years to sell, both rules are met, so the entire profit is taxed as a long-term capital gain upon the final sale."
-    },{
+    },
+    {
         q: "Which of the following investments is strictly prohibited from being held within an Individual Retirement Account (IRA)?",
         c: [
             "Real estate properties", 
@@ -2615,7 +2602,8 @@ const simLib = [
         ],
         a: 3,
         f: "Logic: For the exam, remember that Life Insurance and Collectibles are strictly prohibited in an IRA. Real estate, certain government-minted coins, and basic options strategies usually have exceptions that permit them to be held in the account."
-    },{
+    },
+    {
         q: "Two individuals are a part of the same household and both work full time. Their household income is $60,000 and neither individual participates in their employer-sponsored retirement plans. Assuming both are under age 50, how much can they jointly put into individual retirement accounts (IRAs)?",
         c: [
             "$7,000", 
@@ -2625,28 +2613,8 @@ const simLib = [
         ],
         a: 1,
         f: "Logic: The current standard IRA contribution limit is $7,000 per person. Since both spouses work, they can each fully fund their own individual account, creating a combined total of $14,000. Because neither is covered by a plan at work, their contributions are also fully tax-deductible no matter what they earn."
-    },{
-        q: "Three individuals, Albert, Bernard, and Charles, establish a joint brokerage account to pool their investment resources. They structure the account as Tenants in Common (TIC). Albert contributes 50%, while Bernard and Charles each contribute 25%. If Charles were to pass away suddenly, what would happen to his share?",
-        c: [
-            "His 25% share is automatically distributed equally between Albert and Bernard.", 
-            "His 25% share passes to his estate and is distributed according to the instructions in his will.", 
-            "His share passes directly to his designated beneficiary on the account, bypassing the probate process.", 
-            "The entire account must be liquidated and distributed to the remaining owners and the deceased's estate."
-        ],
-        a: 1,
-        f: "Logic: In a Tenancy in Common (TIC) account, ownership can be unequal, and a deceased owner's fractional share passes to their estate (subject to probate), not to the surviving account owners."
     },
     {
-        q: "Sarah is granted Incentive Stock Options (ISOs). Assuming Sarah meets all statutory holding period requirements (holding the stock for more than two years from the grant date and more than one year from the exercise date), at what point will she incur regular tax liability on the profit generated?",
-        c: [
-            "At the time the options are officially granted by the board of directors.", 
-            "At the time the options are exercised and the underlying stock is purchased.", 
-            "At the time the stock acquired through the exercise of the options is ultimately sold in the open market.", 
-            "ISOs are strictly tax-exempt provided the mandatory holding period requirements are met."
-        ],
-        a: 2,
-        f: "Logic: For statutory/Incentive Stock Options (ISOs), if the employee meets the required holding periods, regular income tax is completely deferred until the acquired stock is finally sold (often resulting in favorable long-term capital gains rates)."
-    },{
         q: "Who is responsible for filing estate income tax returns and making sure that the payments are made on the estate's behalf?",
         c: [
             "The heirs", 
@@ -2656,7 +2624,8 @@ const simLib = [
         ],
         a: 1,
         f: "Logic: The executor (if named in a will) or the administrator (if appointed by a court) acts as the fiduciary of the estate. Their primary responsibilities include gathering the estate's assets, paying off debts and taxes, and then distributing the remaining assets to the beneficiaries."
-    },{
+    },
+    {
         q: "An individual has recently inherited a life insurance policy. What's the individual's tax liability on the insurance policy's death benefit?",
         c: [
             "The proceeds exceeding the cost basis are taxable at the individual's ordinary income rate.", 
@@ -2666,7 +2635,8 @@ const simLib = [
         ],
         a: 2,
         f: "Logic: Life insurance death benefits paid to a named beneficiary are generally free of federal income tax. While the death benefit might be included in the deceased's gross estate for estate tax calculations, the individual beneficiary owes zero income tax on the proceeds."
-    },{
+    },
+    {
         q: "As it relates to gift and estate taxes, what's portability?",
         c: [
             "The ability for a surviving spouse to use the deceased spouse's unused lifetime gift tax exclusion", 
@@ -2676,25 +2646,26 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: Portability allows a surviving spouse to 'port' over any of their deceased spouse's unused lifetime estate and gift tax exemption and add it to their own, effectively doubling their shelter from estate taxes."
-    },{
-    q: "An IAR researches a 'Principal Protected Note' (PPN) but does not fully grasp how the option overlay affects the payout. By recommending it, they violate:",
-    c: ["Reasonable-Basis Suitability", "Customer-Specific Suitability", "Quantitative Suitability", "The Prudent Investor Act"],
-    a: 0,
-    f: "Logic: You cannot have a 'Reasonable Basis' for a recommendation if you do not understand the product's core risks and mechanics."
-},
-{
-    q: "A 30-year-old client with high risk tolerance has 95% of their net worth recommended into one speculative UIT. This recommendation likely violates:",
-    c: ["Quantitative Suitability", "Reasonable-Basis Suitability", "The 12b-1 Fee Rule", "The 1933 Act"],
-    a: 0,
-    f: "Logic: Even if the product fits the client's 'Person Check,' the concentration/volume is unsuitable in the context of their total portfolio."
-},
-{
-    q: "Even with written consent for Agency Cross Trades, an IAR must ensure the frequency of these trades does not lead to a violation of:",
-    c: ["Quantitative Suitability (Churning)", "Front-running", "The Access Person rule", "The 1933 Act"],
-    a: 0,
-    f: "Logic: Fiduciary duty requires that the total volume of trading—regardless of consent—must be suitable for the client's objectives."
-},
-{
+    },
+    {
+        q: "An IAR researches a 'Principal Protected Note' (PPN) but does not fully grasp how the option overlay affects the payout. By recommending it, they violate:",
+        c: ["Reasonable-Basis Suitability", "Customer-Specific Suitability", "Quantitative Suitability", "The Prudent Investor Act"],
+        a: 0,
+        f: "Logic: You cannot have a 'Reasonable Basis' for a recommendation if you do not understand the product's core risks and mechanics."
+    },
+    {
+        q: "A 30-year-old client with high risk tolerance has 95% of their net worth recommended into one speculative UIT. This recommendation likely violates:",
+        c: ["Quantitative Suitability", "Reasonable-Basis Suitability", "The 12b-1 Fee Rule", "The 1933 Act"],
+        a: 0,
+        f: "Logic: Even if the product fits the client's 'Person Check,' the concentration/volume is unsuitable in the context of their total portfolio."
+    },
+    {
+        q: "Even with written consent for Agency Cross Trades, an IAR must ensure the frequency of these trades does not lead to a violation of:",
+        c: ["Quantitative Suitability (Churning)", "Front-running", "The Access Person rule", "The 1933 Act"],
+        a: 0,
+        f: "Logic: Fiduciary duty requires that the total volume of trading—regardless of consent—must be suitable for the client's objectives."
+    },
+    {
         q: "A qualified Employee Stock Ownership Plan (ESOP) is technically categorized as which type of retirement plan?",
         c: ["Defined Contribution Plan", "Defined Benefit Plan", "Non-Qualified Deferred Compensation Plan", "Profit-Sharing Pension Plan"],
         a: 0,
@@ -3293,7 +3264,8 @@ const simLib = [
         c: ["Little to no dividends", "High dividends", "Monthly dividends", "Stock dividends only"],
         a: 0,
         f: "Logic: They reinvest the cash."
-    },{
+    },
+    {
         q: "Which of the following is addressed in behavioral finance?",
         c: [
             "An aversion to losses", 
@@ -3333,893 +3305,241 @@ const simLib = [
             "Yes, but only if the IAR's firm is a Federal Covered Adviser"
         ],
         a: 0,
-        f: "Logic: The 'de minimis' rule allows up to 5 retail clients in a state without registration, provided there is no physical office."
-    },{
-        q: "A company listed on the Nasdaq is conducting a secondary offering of common stock in State B. Under the Uniform Securities Act, what authority does the State B Administrator have over this offering?",
-        c: [
-            "The Administrator can require the issuer to pay a filing fee.", 
-            "The Administrator can require the issuer to file a consent to service of process.", 
-            "The Administrator can investigate the underwriters for fraudulent activity.", 
-            "The Administrator can require the issuer to register the stock by coordination."
-        ],
-        a: 2,
-        f: "Logic: Nasdaq/NYSE stocks are 'Federal Covered.' States lose almost all power (no fees, no filing, no registration). The ONLY power the state keeps is the power to investigate and prosecute FRAUD."
+        f: "Logic: The 'de minimis' rule allows up to 5 retail clients in a state without registration, provided there is no physical office in that state."
     },
     {
-        q: "A broker-dealer is headquartered in State A and has no office in State B. It conducts business with existing clients who are residents of State A but are temporarily vacationing in State B. Which statement is TRUE?",
+        q: "According to the Uniform Securities Act, which of the following would NOT be defined as an Investment Adviser Representative (IAR)?",
         c: [
-            "The broker-dealer must register in State B because it has clients there.", 
-            "The broker-dealer is exempt from registration in State B under the 'snowbird' exclusion.", 
-            "The broker-dealer must register if it has more than 5 clients in State B.", 
-            "The agents of the broker-dealer must register, but the firm does not."
-        ],
-        a: 1,
-        f: "Logic: If the client is only 'temporarily' in the state (vacationing), the broker-dealer does not need to register. This is the 'Snowbird Rule.'"
-    },{
-        q: "All of the following are found on a customer's confirmation statement for a bond, EXCEPT:",
-        c: [
-            "The bond's purchase price", 
-            "The date of the transaction", 
-            "Whether the bond is callable", 
-            "The bond's yield-to-maturity at the time it was originally issued"
-        ],
-        a: 3,
-        f: "Logic: Think of the confirmation statement as the receipt for your specific trade. It shows the details of what you just did: the price you paid today, the date, and if the bond can be called away. It does NOT show the old yield from when the bond was first created years ago."
-    },{
-        q: "According to the NASAA Recordkeeping Requirements for Investment Adviser Model Rule, an IA is required to maintain a record of the names and addresses of any person to whom it has sent any notice, circular, advertisement, offering, report or publication if the number of persons is:",
-        c: [
-            "10 or fewer", 
-            "More than 10", 
-            "Less than 10", 
-            "10 or more"
+            "A Broker-Dealer that charges a single fee for investment advice and trade execution (Wrap Account)", 
+            "An individual who supervises IARs at a state-registered advisory firm", 
+            "A portfolio manager who provides investment advice to retail clients", 
+            "A solicitor who receives a fee for referring clients to an investment adviser"
         ],
         a: 0,
-        f: "Logic: Think of it like this: if you send an ad to a small group (10 or fewer people), the state wants a list of exactly who got it. But if you send a mass mailing to a big group (more than 10 people), making a huge list is too much work, so you just have to keep a copy of the ad itself."
-    },{
-        q: "Which of the following best describes a swap?",
-        c: [
-            "A contract between two parties to exchange a sequence of cash flows, one of which has a fluctuating value for a predetermined period", 
-            "A bond that is issued by a financial services company with a rate of return that is linked to other securities", 
-            "A trust that is owned by a large number of small investors and contains a basket of equity securities", 
-            "The difference between Treasury bond yields and bonds of a different issuer with similar maturities"
-        ],
-        a: 0,
-        f: "Logic: A swap is a derivative contract where two parties agree to exchange a sequence of cash flows over a predetermined period. The most common type is an interest rate swap, where one party pays a fixed rate and receives a fluctuating (floating) rate in return."
-    },{
-        q: "According to the recordkeeping requirements for IAs, if a client trade is executed, which of the following items is NOT required to be included on the order memorandum?",
-        c: [
-            "The person who approved the order and recommendation", 
-            "The date on which the order was entered", 
-            "The person who placed the order", 
-            "The person who recommended the transaction"
-        ],
-        a: 0,
-        f: "Logic: Under NASAA recordkeeping rules, an IA's order ticket (memorandum) must include the person who recommended the trade, the person who placed the order, the date of entry, and the executing broker-dealer. It does NOT require the identity of a supervisor who 'approved' the order."
-    },{
-        q: "All of the following are found on a customer's confirmation statement for a bond, EXCEPT:",
-        c: [
-            "The bond's purchase price", 
-            "The date of the transaction", 
-            "Whether the bond is callable", 
-            "The bond's yield-to-maturity at the time it was originally issued"
-        ],
-        a: 3,
-        f: "Logic: Think of the confirmation statement as the receipt for your specific trade. It shows the details of what you just did: the price you paid today, the date, and if the bond can be called away. It does NOT show the old yield from when the bond was first created years ago."
-    },{
-        q: "According to the NASAA Recordkeeping Requirements for Investment Adviser Model Rule, an IA is required to maintain a record of the names and addresses of any person to whom it has sent any notice, circular, advertisement, offering, report or publication if the number of persons is:",
-        c: [
-            "10 or fewer", 
-            "More than 10", 
-            "Less than 10", 
-            "10 or more"
-        ],
-        a: 0,
-        f: "Logic: Think of it like this: if you send an ad to a small group (10 or fewer people), the state wants a list of exactly who got it. But if you send a mass mailing to a big group (more than 10 people), making a huge list is too much work, so you just have to keep a copy of the ad itself."
-    },{
-        q: "According to the Uniform Securities Act, which of the following statements is NOT TRUE concerning private placements?",
-        c: [
-            "The offer may be made to 35 or fewer persons in that state during any 12-month period.", 
-            "The offer may be made to any number of institutional investors during any 12-month period.", 
-            "Commissions may not be paid if the buyers are non-institutional customers.", 
-            "The offer may not be made to more than 10 persons in that state during any 12-month period."
-        ],
-        a: 0,
-        f: "Logic: Under the Uniform Securities Act (state law), a private placement exemption strictly restricts offers to no more than 10 non-institutional (retail) investors in a 12-month period. The '35 non-accredited investor' rule is a federal standard under Regulation D, not the state USA standard."
-    },{
-        q: "Under the Uniform Securities Act, an independent accountant receives a cash referral fee for directing retail clients to a State-Registered Investment Adviser. What is the regulatory requirement for the accountant?",
-        c: [
-            "The accountant must register as an Investment Adviser Representative (IAR) in the state.", 
-            "The accountant is exempt from registration because they are a certified professional.", 
-            "The accountant only needs a written contract with the IA and does not need to register.", 
-            "The accountant must register directly with the SEC."
-        ],
-        a: 0,
-        f: "Logic: Under STATE law (the Uniform Securities Act), anyone acting as an independent, paid solicitor for a State-Registered IA must register as an IAR."
+        f: "Logic: An IAR must be a 'natural person' (an individual). A Broker-Dealer is a legal entity (a firm). A BD might register as an IA, but it can never be an IAR."
     },
     {
-        q: "According to the Investment Advisers Act of 1940, if a Federal Covered Adviser pays cash to an independent third party for client referrals, what is the primary federal regulatory requirement for the solicitor?",
+        q: "A multi-state investment adviser must file a Form ADV-W to withdraw from federal registration if the number of states in which it is required to register falls below:",
+        c: ["15", "30", "25", "13"],
+        a: 0,
+        f: "Logic: The Multi-State rule allows SEC registration for IAs required to register in 15+ states. If they drop below 15, they must withdraw (ADV-W) and return to state registration."
+    },
+    {
+        q: "Under the Uniform Securities Act, an IA must register in a state if they have no office there but reach which specific threshold of retail clients?",
+        c: ["The 6th retail client", "The 1st retail client", "The 11th retail client", "The 16th retail client"],
+        a: 0,
+        f: "Logic: The de minimis rule protects you for '5 or fewer.' Once you hit the 6th retail client, the exemption is lost."
+    },
+    {
+        q: "When a Broker-Dealer's registration is revoked by the State Administrator, what is the effect on the registrations of its agents?",
         c: [
-            "The solicitor must register with the SEC as an Investment Adviser Representative.", 
-            "The solicitor must operate under a written agreement and provide required disclosures, but does not register with the SEC.", 
-            "The solicitor is strictly prohibited from receiving cash fees under federal law.", 
-            "The solicitor must register as a broker-dealer agent."
+            "They are no longer effective", 
+            "They remain active for a 30-day grace period", 
+            "They are automatically transferred to a different BD", 
+            "They are unaffected as agents register independently"
         ],
-        a: 1,
-        f: "Logic: Under FEDERAL law (the '40 Act), the SEC does not register individuals. The federal requirement for a paid solicitor is simply that there must be a written agreement/contract in place and the client must receive a solicitor's disclosure."
-    },{
-        q: "How does a Special Purpose Acquisition Company (SPAC) or 'Blank Check Company' typically raise the initial capital it uses to acquire a target business?", 
+        a: 0,
+        f: "Logic: Truck and Trailer Rule. An agent's registration is only valid while associated with a registered Broker-Dealer."
+    },
+    {
+        q: "Under the Uniform Securities Act, which of the following is specifically EXCLUDED from the definition of a Broker-Dealer?",
         c: [
-            "Through a normal, fully registered Initial Public Offering (IPO)", 
-            "Through an unregistered private placement restricted to institutional investors"
-        ], 
-        a: 0, 
-        f: "Logic: SPACs raise their acquisition funds from the public via a fully registered IPO, even though they do not yet have an actual business or revenue."
-    },{
-        q: "An investment adviser is explaining the difference between investment companies and derivatives to a client. Which of the following would be categorized as a derivative?",
-        c: [
-            "Unit Investment Trust (UIT)", 
-            "Interest Rate Swap", 
-            "Exchange-Traded Fund (ETF)", 
-            "Open-End Mutual Fund"
+            "A Bank or Trust Company", 
+            "A person executing trades for their own account", 
+            "A person executing trades for the accounts of others", 
+            "A firm with an office in the state serving only retail clients"
         ],
-        a: 1,
-        f: "Logic: Remember the acronym OFFS for classic derivatives: Options, Futures, Forwards, and Swaps. UITs, ETFs, and Mutual Funds are all classified as pooled investment companies, not derivatives."
-    },{
+        a: 0,
+        f: "Logic: Banks, Savings Institutions, and Trust Companies are excluded from the definition of a Broker-Dealer."
+    },
+    {
+        q: "According to the Uniform Securities Act, all state-registered licenses (Agents, IARs, and BDs) expire on:",
+        c: [
+            "December 31st", 
+            "The anniversary of the registration date", 
+            "The end of the firm's fiscal year", 
+            "Every two years on the odd-numbered year"
+        ],
+        a: 0,
+        f: "Logic: State registration is a calendar-year cycle. Every license expires on New Year's Eve."
+    },
+    {
+        q: "Must an IAR of a Federal Covered Adviser register in a state if they have a physical office there, even if they have zero clients in that state?",
+        c: [
+            "Yes, an office always triggers registration", 
+            "No, registration is only triggered by client count", 
+            "No, Federal IARs never register with the state", 
+            "Only if they have more than 5 institutional clients"
+        ],
+        a: 0,
+        f: "Logic: For IARs of Federal firms, the ONLY thing that triggers state registration is having a physical 'place of business' in that state."
+    },
+    {
+        q: "Is an Investment Adviser required to obtain written client consent BEFORE completing a trade where the IA acts as a Principal?",
+        c: [
+            "Yes, consent is required prior to completion of the trade", 
+            "No, disclosure on the confirmation is sufficient", 
+            "No, consent is only required for retail accounts under $1M", 
+            "Yes, but verbal consent is acceptable for the first 10 days"
+        ],
+        a: 0,
+        f: "Logic: Principal trades are high-conflict. The IA must provide written disclosure AND get client consent before the trade settles."
+    },
+    {
+        q: "An Administrator may inspect the books and records of a registered Investment Adviser:",
+        c: [
+            "At any time during business hours without prior notice", 
+            "Only with 48 hours written notice", 
+            "Only if a customer has filed a formal complaint", 
+            "Once per year on a pre-scheduled date"
+        ],
+        a: 0,
+        f: "Logic: Administrators have 'surprise audit' powers. They can walk in anytime the lights are on."
+    },
+    {
+        q: "A Nasdaq-listed stock is being offered in State A. Which action can the State Administrator legally take?",
+        c: [
+            "Investigate the underwriter for fraudulent activity", 
+            "Require a full registration by coordination", 
+            "Require the issuer to pay a registration fee", 
+            "Order a stop on the IPO for lack of state registration"
+        ],
+        a: 0,
+        f: "Logic: Exchange-listed stocks are Federal Covered Securities. The state cannot require registration, but they ALWAYS retain the power to investigate fraud."
+    },
+    {
+        q: "According to NASAA rules, how long must an Investment Adviser (IA) maintain their books and records?",
+        c: [
+            "5 years, with the first 2 years in the principal office", 
+            "3 years, with the first 2 years in the principal office", 
+            "7 years, with the first 3 years in the principal office", 
+            "Permanently, as long as the firm is in business"
+        ],
+        a: 0,
+        f: "Logic: Remember IA-5. Investment Advisers have a 5-year requirement (Broker-Dealers have 3)."
+    },
+    {
+        q: "Under the USA, an independent accountant receives a cash referral fee for directing retail clients to a State-Registered IA. What is the requirement?",
+        c: [
+            "The accountant must register as an IAR in that state", 
+            "The accountant is exempt as a professional (LATE)", 
+            "Only a written contract between the IA and accountant is needed", 
+            "The accountant must register as a Broker-Dealer"
+        ],
+        a: 0,
+        f: "Logic: Under state law, any individual paid to solicit or refer clients for an IA is defined as an IAR and must be registered."
+    },
+    {
+        q: "Under the Investment Advisers Act of 1940, what is the requirement for a solicitor who refers clients to a Federal Covered Adviser?",
+        c: [
+            "A written agreement must exist and required disclosures provided", 
+            "The solicitor must register with the SEC as an IAR", 
+            "The solicitor must be a registered Agent of a Broker-Dealer", 
+            "The solicitor is strictly prohibited from receiving cash fees"
+        ],
+        a: 0,
+        f: "Logic: The SEC does not register IARs. Federal law requires a written contract and disclosure to the client, but no SEC registration for the solicitor."
+    },
+    {
         q: "All of the following are required to be included in a written investment advisory contract, EXCEPT:",
         c: [
-            "The methodology for computing the advisor's fee", 
+            "The name of the broker-dealer executing the trades", 
+            "The methodology for computing the advisory fee", 
             "A clause regarding the assignment of the contract", 
-            "The term of the contract", 
-            "The name of the broker-dealer that executes securities trades in the account"
+            "The term or duration of the contract"
         ],
+        a: 0,
+        f: "Logic: While fees and assignment rules are mandatory, the specific broker-dealer used for execution is not required in the advisory contract itself."
+    },
+    {
+        q: "Under the Uniform Securities Act, an IA must update its Brochure and provide it to existing clients within how many days of fiscal year-end?",
+        c: ["120 days", "90 days", "60 days", "30 days"],
+        a: 0,
+        f: "Logic: 90 days to the Admin; 120 days to the clients."
+    },
+    {
+        q: "If an IA is a partnership, it must notify clients of a change in which of the following?",
+        c: ["A change in minority interest partners", "A change in the firm's location", "A change in the firm's name", "All of the above"],
         a: 3,
-        f: "Logic: Advisory contracts must include the fee calculation, the term of the agreement, and a non-assignment clause (prohibiting the transfer of the account without client consent). They are NOT required to name the specific broker-dealer used for execution."
-    },{
-        q: "Which of the following is NOT needed to calculate the present value of a non-callable bond?",
-        c: [
-            "Maturity date", 
-            "Duration", 
-            "Bond's principal and interest payments", 
-            "Current discount rate"
-        ],
-        a: 1,
-        f: "Logic: To calculate present value (using Discounted Cash Flow), you need the future cash flows (principal and interest payments), the timing of those flows (maturity date), and the required return (discount rate). Duration is a measurement of price sensitivity, not an input for the PV formula."
+        f: "Logic: Partnership changes (even minority ones) are considered material and require notification."
     },
-{
-        q: "For how long must broker-dealers and investment advisers maintain their books and records according to the Uniform Securities Act?",
-        c: [
-            "Three years for broker-dealers and five for investment advisers", 
-            "Five years for broker-dealers and three for investment advisers", 
-            "Two years for broker-dealers and five for investment advisers", 
-            "Two years for each"
-        ],
-        a: 0,
-        f: "Logic: Under the USA, Broker-Dealers must maintain records for 3 years, while Investment Advisers must maintain them for 5 years. For both entities, the records must be kept easily accessible in the principal office for the first 2 years."
-    },{
-        q: "An investment adviser representative (IAR) is employed by a Federal Covered Adviser. The IAR has a physical office in State A, and serves 15 retail clients who live in State B. Under the Uniform Securities Act, where must the IAR register?",
-        c: ["Only in State A", "Only in State B", "In both State A and State B", "With the SEC only"],
-        a: 0,
-        f: "Logic: IARs of Federal Covered Advisers only have to register in the states where they maintain a physical 'place of business.' The number of retail clients in other states does not trigger registration for federal IARs."
-    },
-    {
-        q: "Under the Uniform Securities Act, an agent of a broker-dealer is permitted to share in the profits and losses of a customer's account if:",
-        c: ["The agent is an investment adviser representative.", "The agent and the customer are immediate family members.", "The customer provides written authorization and the broker-dealer approves.", "The agent contributes at least 50% of the account capital."],
-        a: 2,
-        f: "Logic: Unlike IARs (who can never share in accounts), Broker-Dealer agents are permitted to share in profits and losses provided they have written authorization from both the client and their employing firm."
-    },
-{
-        q: "Under the modernized SEC Marketing Rule, an Investment Adviser (IA) may use a 'Testimonial' in an advertisement only if they prominently disclose:",
-        c: [
-            "Whether the promoter is a client and if they were compensated",
-            "The promoter's specific net worth and credit score",
-            "The IAR's personal historical performance over 10 years",
-            "The exact number of other clients that the promoter has referred"
-        ],
-        a: 0,
-        f: "Logic: The new rule allows testimonials but requires 'clear and prominent' disclosure regarding the promoter's client status and any cash or non-cash compensation paid."
-    },
-    {
-        q: "What are the maximum criminal penalties for a willful violation of the Uniform Securities Act at the state level?",
-        c: [
-            "$5,000 fine and 3 years in prison",
-            "$10,000 fine and 5 years in prison",
-            "$1,000 fine and 1 year in prison",
-            "$5,000 fine and 5 years in prison"
-        ],
-        a: 0,
-        f: "Logic: State law follows the '5-5-3' rule: 5-year statute of limitations, $5,000 max fine, and 3-year max prison sentence."
-    },
-    {
-        q: "A Broker-Dealer has a physical branch in State Y but only deals with institutional clients there. Does the BD need to register in State Y?",
-        c: [
-            "Yes, because the BD has a place of business in State Y",
-            "No, because the BD only deals with institutional clients",
-            "No, because of the 'de minimis' rule",
-            "Yes, but only if they employ more than 10 agents"
-        ],
-        a: 0,
-        f: "Logic: Once you have a physical 'Place of Business' in a state, the institutional exemption no longer applies. You MUST register."
-    },
-    {
-        q: "The Administrator can issue a 'Cease and Desist' order. Which of the following is TRUE?",
-        c: [
-            "The Administrator can issue the order without a prior hearing",
-            "The order is only valid if confirmed by a court within 48 hours",
-            "The order requires a felony conviction first",
-            "The Administrator must provide 15 days notice before the order"
-        ],
-        a: 0,
-        f: "Logic: Administrators can issue these orders 'summarily' (immediately) to stop violations, though a hearing can be requested later."
-    },
-    {
-        q: "Under the 1940 Act, an IA can charge a performance fee ONLY if the client:",
-        c: [
-            "Is a 'Qualified Client' ($1.1M AUM or $2.2M Net Worth)",
-            "Is an 'Accredited Investor' ($200k income)",
-            "Provides verbal consent and has 5 years experience",
-            "Is a non-profit organization"
-        ],
-        a: 0,
-        f: "Logic: Performance fees are restricted to 'Qualified Clients' to protect less wealthy investors from excessive risk-taking by IAs."
-    },
-    {
-        q: "Which of the following is a 'Federal Covered Security'?",
-        c: [
-            "A stock listed on the New York Stock Exchange (NYSE)",
-            "An IPO of a local company sold in one state only",
-            "A municipal bond issued by a small city to local residents",
-            "A security issued by a non-profit organization"
-        ],
-        a: 0,
-        f: "Logic: Exchange-listed securities are regulated federally; states cannot require full registration (only notice filing)."
-    },
-    {
-        q: "An agent is convicted of a non-securities felony 8 years ago. Can the Administrator deny registration?",
-        c: [
-            "Yes, for any felony conviction within the last 10 years",
-            "No, because the felony was not securities-related",
-            "Yes, but only if the agent is also suspended by an SRO",
-            "No, because it was more than 5 years ago"
-        ],
-        a: 0,
-        f: "Logic: Statutory disqualification applies to ANY felony and securities-related misdemeanors within 10 years."
-    },
-    {
-        q: "An IA is deemed to have 'Custody' if they:",
-        c: [
-            "Possess client login credentials and can withdraw funds to third parties",
-            "Have 'Discretionary Authority' to trade",
-            "Forward a third-party check within 3 days",
-            "Automatically deduct a management fee"
-        ],
-        a: 0,
-        f: "Logic: Access to funds (like login credentials allowing transfers) is the defining factor of custody."
-    },
-    {
-        q: "If an IAR leaves a 'State-Registered' IA, who notifies the Administrator?",
-        c: [
-            "The Investment Adviser (the firm)",
-            "The IAR (the individual)",
-            "Both the IA and the IAR",
-            "The SEC"
-        ],
-        a: 0,
-        f: "Logic: For state-registered firms, the firm (IA) handles the notification."
-    },
-    {
-        q: "Which is NOT a 'Security' under the Uniform Securities Act?",
-        c: [
-            "A Fixed Annuity",
-            "A Variable Life policy",
-            "An interest in an MLM program",
-            "A warehouse receipt"
-        ],
-        a: 0,
-        f: "Logic: Fixed insurance products are not securities because the insurance company bears the investment risk."
-    },
-    {
-        q: "When must an IA provide the 'Brochure' (Form ADV Part 2A) to a prospect?",
-        c: [
-            "At or prior to entering the contract",
-            "Within 48 hours after signing",
-            "Only if the account is over $500k",
-            "At the end of the first quarter"
-        ],
-        a: 0,
-        f: "Logic: Full disclosure must be provided to the client before or at the time of signing."
-    },
-    {
-        q: "A firm buys a stock for its own account right before executing a large client buy order. This is:",
-        c: ["Front-running", "Churning", "Matched Trading", "Back-dating"],
-        a: 0,
-        f: "Logic: Front-running is using non-public knowledge of client trades for firm profit."
-    },
-    {
-        q: "An Administrator can audit an IA's records:",
-        c: [
-            "At any time, within or outside the state, without notice",
-            "Only during business hours with 48 hours notice",
-            "Only if a complaint is filed",
-            "Once per year only"
-        ],
-        a: 0,
-        f: "Logic: To protect the public, the Administrator has broad, unannounced audit powers."
-    },
-    {
-        q: "An 'Unethical Practice' regarding confidentiality includes:",
-        c: [
-            "Discussing an account with a spouse without authorization",
-            "Sharing info with the IRS under summons",
-            "Providing data to the firm's reporting software",
-            "Consulting an attorney for a firm legal dispute"
-        ],
-        a: 0,
-        f: "Logic: Spouses are third parties; you need written consent to share account details with them."
-    },
-    {
-        q: "A 'Federal Covered Adviser' is a firm that:",
-        c: [
-            "Is registered with the SEC and has over $110M AUM",
-            "Is registered with 15 different states",
-            "Only manages government accounts",
-            "Is exempt from anti-fraud rules"
-        ],
-        a: 0,
-        f: "Logic: Firms with $110M+ AUM must register federally with the SEC."
-    },
-    {
-        q: "Under the USA, an agent can share in account profits only if:",
-        c: [
-            "They have written permission from the client and the BD",
-            "The agent is a family member",
-            "The agent contributes 50% of capital",
-            "It is never permitted"
-        ],
-        a: 0,
-        f: "Logic: Unlike IARs, BD agents can share in profits if the client and the firm approve in writing."
-    },
-    {
-        q: "The 'Prudent Investor Act' requires a trustee to:",
-        c: [
-            "Manage total portfolio risk rather than individual assets",
-            "Guarantee no loss of principal",
-            "Invest only in approved 'Legal Lists'",
-            "Maximize short-term income"
-        ],
-        a: 0,
-        f: "Logic: Prudence is measured by the context of the entire portfolio, not just one stock."
-    },
-    {
-        q: "An IA must maintain records for:",
-        c: ["5 years, first 2 in an accessible location", "3 years", "Permanently", "10 years"],
-        a: 0,
-        f: "Logic: The '5 and 2' rule is the standard for IA record keeping."
-    },
-    {
-        q: "A 'Solicitor' for an IA generally must:",
-        c: [
-            "Register as an IAR",
-            "Be a lawyer",
-            "Have a college degree",
-            "Register with the Department of Labor"
-        ],
-        a: 0,
-        f: "Logic: In most states, people paid to refer clients to an IA must register as IARs."
-    },
-    {
-        q: "A 'Notice Filing' applies to:",
-        c: [
-            "Federal Covered Securities",
-            "Non-exempt securities in one state",
-            "Broker-Dealer advertising",
-            "IA internal payroll"
-        ],
-        a: 0,
-        f: "Logic: States cannot require registration for federal securities but can require copies of SEC documents and a fee."
-    },
-    {
-        q: "A 'Successor Firm' pays a filing fee for registration:",
-        c: ["No, it is exempt until the next December 31", "Yes, a full double fee", "Only if the firm is an IA", "Only if the SEC approves"],
-        a: 0,
-        f: "Logic: Successor firms do not pay a new fee for the remainder of the year; they only file a new application."
-    },
-    {
-        q: "When an IA has custody, they must provide account statements:",
-        c: ["Quarterly", "Monthly", "Annually", "Only upon request"],
-        a: 0,
-        f: "Logic: Custodial IAs must ensure clients receive statements at least every 3 months."
-    },
-    {
-        q: "If an IA is insolvent, the Administrator will:",
-        c: ["Revoke the registration", "Grant a 30-day grace period", "Loan the firm capital", "Assign a new CEO"],
-        a: 0,
-        f: "Logic: Inability to meet financial obligations is grounds for immediate disciplinary action."
-    },
-    {
-        q: "The 'statute of limitations' for civil liability under the USA is:",
-        c: [
-            "3 years from sale or 2 years from discovery",
-            "5 years from sale",
-            "10 years from discovery",
-            "1 year from the trade date"
-        ],
-        a: 0,
-        f: "Logic: Civil suits must be brought within the '3 and 2' window."
-    },
-    {
-        q: "A gift of assessable stock is considered:",
-        c: ["An offer and a sale", "A tax-free transfer", "A non-security event", "A private placement"],
-        a: 0,
-        f: "Logic: Because assessable stock carries a liability, 'gifting' it is legally seen as a sale."
-    },
-    {
-        q: "Maximum criminal penalty for a USA violation is:",
-        c: [
-            "$5,000 fine and 3 years in prison",
-            "$10,000 fine and 5 years in prison",
-            "$1,000 fine and 1 year in prison",
-            "Life imprisonment"
-        ],
-        a: 0,
-        f: "Logic: Criminal penalties under the USA follow the '3-5-0' rule: 3 years, $5,000, 0 jail if no knowledge."
-    },
-    {
-        q: "Which of the following is NOT an exempt transaction?",
-        c: [
-            "An unsolicited order for a non-exempt stock",
-            "A trade between a BD and an Underwriter",
-            "A sale of stock to a retail investor by an agent",
-            "A fiduciary transaction (e.g., by a trustee)"
-        ],
-        a: 2,
-        f: "Logic: Trades with individual retail investors are generally not exempt unless they meet specific criteria like being unsolicited."
-    },
-    {
-        q: "Advertising for an Investment Adviser must be kept for:",
-        c: ["5 years", "3 years", "10 years", "Permanently"],
-        a: 0,
-        f: "Logic: Marketing materials are part of the standard IA 5-year record-keeping requirement."
-    },
-    {
-        q: "If a BD's registration is revoked, what happens to its agents?",
-        c: [
-            "Their registrations are no longer active",
-            "They are automatically transferred to the SEC",
-            "They can continue working for 30 days",
-            "Nothing, as agents register independently"
-        ],
-        a: 0,
-        f: "Logic: Agents must be associated with a registered BD to be active."
-    },
-    {
-        q: "An IAR's registration is effective:",
-        c: ["At noon on the 30th day after filing", "Immediately upon hitting 'send'", "After 48 hours", "On January 1st"],
-        a: 0,
-        f: "Logic: This is the standard 'waiting period' unless the Administrator grants an earlier date."
-    },
-    {
-        q: "Which of the following defines an 'Institutional Investor'?",
-        c: ["An entity with at least $10M in assets", "Any investor with a margin account", "A person who has passed the Series 65", "A non-profit with 2 employees"],
-        a: 0,
-        f: "Logic: Banks, insurance companies, and large employee benefit plans are institutional."
-    },
-    {
-        q: "A person who provides investment advice solely on US Government securities is:",
-        c: [
-            "Exempt from registration as an IA",
-            "Required to register with the SEC",
-            "Required to register with the state",
-            "A Federal Covered Adviser"
-        ],
-        a: 0,
-        f: "Logic: Advice on government securities is a specific exclusion from the definition of an IA."
-    },
-    {
-        q: "The term 'Guaranteed' under the USA refers to:",
-        c: ["Principal, Interest, or Dividends", "High market returns", "Zero volatility", "Approval by the Administrator"],
-        a: 0,
-        f: "Logic: A guarantee must be by a third party other than the issuer."
-    },
-    {
-        q: "Registration by 'Coordination' is used for:",
-        c: ["Securities being registered with the SEC", "Securities sold only in one state", "Municipal bonds", "Treasury bills"],
-        a: 0,
-        f: "Logic: Coordination allows state and federal registration to happen simultaneously."
-    },
-    {
-        q: "Which of the following is an IA 'Brochure Supplement'?",
-        c: ["Part 2B of Form ADV", "Part 1A of Form ADV", "Schedule A", "The firm's Balance Sheet"],
-        a: 0,
-        f: "Logic: Part 2B provides information about the specific individuals giving advice."
-    },
-    {
-        q: "If an IAR is found to have no knowledge of a rule they violated, they:",
-        c: ["Cannot be imprisoned", "Cannot be fined", "Are exempt from all penalties", "Must pay double damages"],
-        a: 0,
-        f: "Logic: Criminal prison time requires 'willful' violation with knowledge of the rule."
-    },
-    {
-        q: "The Administrator may require a BD to post a:",
-        c: ["Surety Bond", "Performance Bond", "Bail Bond", "Margin Bond"],
-        a: 0,
-        f: "Logic: This provides protection for clients if the BD violates the law or fails."
-    },
-    {
-        q: "Soft dollars can be used to pay for:",
-        c: ["Research software", "Rent", "Travel to a seminar", "Agent salaries"],
-        a: 0,
-        f: "Logic: Soft dollars must directly benefit the client (like research or analysis tools)."
-    },
-    {
-        q: "A BD agent is also a part-time real estate agent. They must:",
-        c: ["Notify the BD in writing of the outside activity", "Register as an IAR", "Quit the real estate job", "Pay the BD 10% of commissions"],
-        a: 0,
-        f: "Logic: Outside Business Activities (OBAs) require prompt written notification to the firm."
-    },
-    {
-        q: "Can an Administrator require an IA to file its advertisements?",
-        c: ["Yes, unless the security or transaction is exempt", "No, never", "Only if the IA is Federal Covered", "Only if the IA has custody"],
-        a: 0,
-        f: "Logic: Administrators have power over marketing materials for non-exempt offerings."
-    },
-    {
-        q: "An IA with $150M AUM must register with:",
-        c: ["The SEC", "The state", "Both the SEC and state", "Neither"],
-        a: 0,
-        f: "Logic: Once assets exceed $110M, federal registration is mandatory."
-    },
-    {
-        q: "What is the 'De Minimis' limit for a BD?",
-        c: ["There is no de minimis for BDs", "5 retail clients", "10 retail clients", "1 institutional client"],
-        a: 0,
-        f: "Logic: Unlike IAs, BDs generally must register if they have even one retail client in a state."
-    },
-    {
-        q: "A person who issues a security is the:",
-        c: ["Issuer", "Broker", "Agent", "Custodian"],
-        a: 0,
-        f: "Logic: The entity receiving the capital and providing the security."
-    },
-    {
-        q: "An Administrator can issue a subpoena:",
-        c: ["In any state, regardless of where the firm is based", "Only in their home state", "Only if the SEC approves", "Only after a court trial"],
-        a: 0,
-        f: "Logic: Administrative power is broad and extends across state lines for investigations."
-    },
-    {
-        q: "Which of the following is NOT an IA exclusion?",
-        c: ["An IAR", "A bank", "A publisher of a general newspaper", "A lawyer giving specific, paid-for advice"],
-        a: 3,
-        f: "Logic: Lawyers are only excluded if the advice is incidental to their practice and not separately charged."
-    },
-    {
-        q: "Under the USA, 'State' refers to:",
-        c: ["Any US State, Territory, or Possession", "Only the 50 main states", "Only the state where the SEC is located", "Only California and New York"],
-        a: 0,
-        f: "Logic: The definition is broad and includes D.C., Puerto Rico, and Guam."
-    },
-    {
-        q: "A trade of an unlisted stock between two institutions is a(n):",
-        c: ["Exempt Transaction", "Illegal Transaction", "Federal Covered Transaction", "Primary Offering"],
-        a: 0,
-        f: "Logic: Transactions between financial institutions are exempt from registration."
-    },
-    {
-        q: "IA records must be kept on-site for the first:",
-        c: ["2 years", "3 years", "5 years", "1 year"],
-        a: 0,
-        f: "Logic: The '5 and 2' rule requires the first two years to be at the principal office."
-    },
-    {
-        q: "When an agent switches from BD A to BD B, who notifies the Admin?",
-        c: ["Agent, BD A, and BD B", "Only the Agent", "Only BD B", "Only the Admin"],
-        a: 0,
-        f: "Logic: For BD agents, all three parties must notify the Administrator."
-    },
-    {
-        q: "An IA must update its Brochure:",
-        c: ["Annually within 120 days of fiscal year end", "Every 30 days", "Every 5 years", "Only if a client asks"],
-        a: 0,
-        f: "Logic: This keeps the information current for existing and potential clients."
-    },
-    {
-        q: "Which of the following is a 'Discretionary' trade?",
-        c: [
-            "The IAR picks the stock and the amount",
-            "The client tells the IAR to buy 'something good'",
-            "The client picks the stock and price",
-            "The client picks the stock but the IAR picks the time"
-        ],
-        a: 0,
-        f: "Logic: Discretion involves the 'Three As': Asset, Amount, or Action."
-    },
-    {
-        q: "The Administrator may cancel a registration if the person:",
-        c: ["Is deceased or mentally incompetent", "Is charged with a speeding ticket", "Moves to a different house", "Has a bad year of returns"],
-        a: 0,
-        f: "Logic: Cancellation is a non-punitive action when a person is no longer in business."
-    },
-    {
-        q: "An IA that uses a 'wrap fee' must provide:",
-        c: ["Appendix 1 of Form ADV Part 2A", "A free life insurance policy", "A 50% discount on trades", "A copy of the S&P 500 prospectus"],
-        a: 0,
-        f: "Logic: Wrap accounts have specific disclosure requirements due to their bundled nature."
-    },
-    {
-        q: "Which of the following is NOT a 'Security'?",
-        c: ["Commodity Futures", "Stock Options", "Variable Annuities", "Mutual Funds"],
-        a: 0,
-        f: "Logic: Futures contracts are on commodities, which are not securities."
-    },
-    {
-        q: "Under the USA, an offer to sell is NOT made when:",
-        c: ["A proxy statement is sent to shareholders", "A newspaper ad is placed", "A radio spot is aired", "An agent calls a client"],
-        a: 0,
-        f: "Logic: Corporate actions like proxies or reclassifications are not 'offers' or 'sales'."
-    },
-    {
-        q: "State-registered IAs with discretion must have a net worth of:",
-        c: ["$10,000", "$35,000", "$100,000", "$5,000"],
-        a: 0,
-        f: "Logic: Discretion = $10k. Custody = $35k."
-    },
-    {
-        q: "If an IA's net worth falls below the minimum, they must file a report by:",
-        c: ["The close of the next business day", "Immediately", "Within 15 days", "The end of the month"],
-        a: 0,
-        f: "Logic: Prompt notification and a following-day detailed report are required."
-    },
-    {
-        q: "A person who receives commissions for selling stocks is a(n):",
-        c: ["Broker-Dealer", "Investment Adviser", "Publisher", "Consultant"],
-        a: 0,
-        f: "Logic: Transaction-based compensation is the hallmark of a BD."
-    },
-    {
-        q: "The 'Howey Test' is used to define a(n):",
-        c: ["Investment Contract", "Broker-Dealer", "Fiduciary", "Limit Order"],
-        a: 0,
-        f: "Logic: It requires an investment of money in a common enterprise with an expectation of profit from others."
-    },
-    {
-        q: "What is the maximum number of retail clients for 'De Minimis'?",
-        c: ["5", "10", "15", "0"],
-        a: 0,
-        f: "Logic: More than 5 triggers the need for registration."
-    },
-    {
-        q: "Which of the following is an 'Agent' exclusion?",
-        c: ["An individual representing an issuer in an exempt transaction", "A person who works at a BD", "A person who sells IPOs to the public", "An IAR"],
-        a: 0,
-        f: "Logic: Individuals representing issuers in certain exempt events are not defined as agents."
-    },
-    {
-        q: "An Administrator can deny registration for a misdemeanor involving:",
-        c: ["Finance or Securities", "Speeding", "Public nuisance", "Fishing without a license"],
-        a: 0,
-        f: "Logic: Only 'money-related' misdemeanors count for statutory disqualification."
-    },
-    {
-        q: "The 'Access Person' of an IA must report personal trades:",
-        c: ["Quarterly", "Annually", "Daily", "Never"],
-        a: 0,
-        f: "Logic: This helps compliance monitor for front-running or conflicts."
-    },
-    {
-        q: "An IA cannot use a 'Hedge Clause' which:",
-        c: ["Tries to waive the firm's fiduciary liability", "Protects the firm from market losses", "Limits the number of clients", "Specifies the fee structure"],
-        a: 0,
-        f: "Logic: You cannot legally ask a client to sign away their rights under the law."
-    },
-    {
-        q: "Which is a 'Qualified Client'?",
-        c: ["A person with $2.2M net worth", "A person with $1M total assets", "A person who earns $200k", "A person with a Series 66"],
-        a: 0,
-        f: "Logic: This is the current threshold for paying performance fees."
-    },
-    {
-        q: "Part 1 of Form ADV contains:",
-        c: ["General information about the firm's location and owners", "The firm's investment philosophy", "The IAR's education", "The billing schedule"],
-        a: 0,
-        f: "Logic: Part 1 is the 'facts' for the regulator; Part 2 is the 'narrative' for the client."
-    },
-    {
-        q: "Under the USA, an agent can share an account with a client:",
-        c: ["Regardless of whether they contribute capital", "Only if the agent contributes 99%", "Only if they are married", "Sharing is never allowed"],
-        a: 0,
-        f: "Logic: BD agents can share in proportion (or not) with permission. IARs cannot share."
-    },
-    {
-        q: "A security is 'Registered by Notification' if:",
-        c: ["The issuer has been in business for 36 months and is profitable", "The issuer is a startup", "The issuer is a non-profit", "The SEC mandates it"],
-        a: 0,
-        f: "Logic: This is for established, stable companies (also called Filing)."
-    },
-    {
-        q: "The 'Prudent Investor Act' is based on:",
-        c: ["Modern Portfolio Theory", "The Dow Theory", "The Rule of 72", "The 1933 Act"],
-        a: 0,
-        f: "Logic: It focuses on diversification and total portfolio management."
-    },
-    {
-        q: "Which of the following is 'Market Manipulation'?",
-        c: ["Matched Orders", "Buying a stock at its low", "Selling a stock to pay for a house", "Shorting a stock with a high P/E"],
-        a: 0,
-        f: "Logic: Matched orders (wash trades) create fake volume to trick others."
-    },
-    {
-        q: "An IA's 'Form ADV-W' is filed to:",
-        c: ["Withdraw a registration", "Warn the Admin of a theft", "Website update", "Wait for a new license"],
-        a: 0,
-        f: "Logic: W stands for Withdrawal."
-    },
-    {
-        q: "A 'Large' IA ($100M+) is regulated by:",
-        c: ["The SEC", "The State", "The FINRA", "The Treasury"],
-        a: 0,
-        f: "Logic: These are Federal Covered Advisers."
-    },
-    {
-        q: "An agent can be registered with two BDs:",
-        c: ["Only if the Administrator allows it", "Never", "Always", "Only if they work 80 hours a week"],
-        a: 0,
-        f: "Logic: Dual registration is generally prohibited unless specifically authorized."
-    },
-    {
-        q: "The 'Effective Date' for a security registration by coordination is:",
-        c: ["Simultaneous with the SEC effectiveness", "30 days later", "1 year later", "Immediately upon filing"],
-        a: 0,
-        f: "Logic: Coordination 'coordinates' with the federal date."
-    },
-    {
-        q: "Which of the following is 'Cybersecurity' related?",
-        c: ["Phishing", "Front-running", "Churning", "Back-dating"],
-        a: 0,
-        f: "Logic: Protecting client data from digital theft is a major regulatory focus."
-    },
-    {
-        q: "An IA must provide a balance sheet to the Admin if they:",
-        c: ["Require pre-payment of $500+ fees, 6 months in advance", "Have a website", "Have 100 clients", "Use an IAR"],
-        a: 0,
-        f: "Logic: High pre-payments trigger a requirement for proof of financial stability."
-    },
-    {
-        q: "Under the USA, a 'Person' is:",
-        c: ["A legal entity (individual, corp, trust)", "Only a human being", "Only the Administrator", "Only a Broker-Dealer"],
-        a: 0,
-        f: "Logic: Legal 'persons' can enter into contracts and sue/be sued."
-    },
-    {
-        q: "A 'Private Placement' is exempt if sold to no more than:",
-        c: ["10 non-institutional investors in 12 months", "35 investors", "100 investors", "0 investors"],
-        a: 0,
-        f: "Logic: The USA limit for the state exemption is 10 retail investors."
-    },
-    {
-        q: "Which of the following is 'Inside Information'?",
-        c: ["Knowledge of an unannounced merger", "A CEO's public speech", "An analyst's public report", "The current market price"],
-        a: 0,
-        f: "Logic: Information must be non-public and material to be 'Inside'."
-    },
-    {
-        q: "If an IA is a partnership, it must notify clients of changes in:",
-        c: ["Minority interest partners", "The firm's janitorial service", "The office floor plan", "The type of computers used"],
-        a: 0,
-        f: "Logic: Clients must be told about changes in the ownership structure."
-    },
-    {
-        q: "An IA must obtain client consent for an assignment of contract:",
-        c: ["Always", "Never", "Only if the fee increases", "Only if the client is over 65"],
-        a: 0,
-        f: "Logic: You cannot pass a client to a new owner without their permission."
-    },
-    {
-        q: "A BD charge for clerical services is a(n):",
-        c: ["Service Fee", "Commission", "Markup", "Advisory Fee"],
-        a: 0,
-        f: "Logic: BDs charge for things like safe-keeping or transfers, which are not based on trades."
-    },
-    {
-        q: "Which of the following is an IA 'Prohibited Practice'?",
-        c: ["Guaranteeing a client against loss", "Charging an hourly rate", "Working from a home office", "Using a custodian"],
-        a: 0,
-        f: "Logic: No professional can guarantee investment results."
-    },
-    {
-        q: "The 'Uniform Securities Act' was created by:",
-        c: ["NASAA", "The SEC", "The US Congress", "The Federal Reserve"],
-        a: 0,
-        f: "Logic: North American Securities Administrators Association (State regulators)."
-    },
-    {
-        q: "Which is a 'Federal Covered Security'?",
-        c: ["Investment Company Shares (Mutual Funds)", "Local Municipal Bonds", "Intrastate Offerings", "Pennystocks"],
-        a: 0,
-        f: "Logic: Mutual funds are regulated federally under the 1940 Act."
-    },
-    {
-        q: "A BD agent must register in a state if they:",
-        c: ["Call a resident to offer a stock", "Call a resident to say 'hi'", "Send a holiday card", "Check the weather in that state"],
-        a: 0,
-        f: "Logic: Any 'Offer to Sell' triggers registration."
-    },
     {
-        q: "Registration of a security lasts for:",
-        c: ["1 year from the effective date", "Permanently", "Until December 31", "30 days"],
+        q: "A person who provides advice solely on U.S. Government securities is EXCLUDED from the definition of an IA under:",
+        c: ["The Investment Advisers Act of 1940", "The Uniform Securities Act", "Both Acts", "Neither Act"],
         a: 0,
-        f: "Logic: It may last longer if the offering is still in progress (sold out)."
+        f: "Logic: This is a Federal exclusion. Under state law, they are generally still considered IAs."
     },
     {
-        q: "An IA 'Agency Cross Transaction' requires:",
-        c: ["Prior written consent from both clients", "Verbal consent only", "SEC approval", "A 10% fee limit"],
+        q: "An Administrator may summary suspend a registration. A hearing must be granted within how many days of a written request?",
+        c: ["15 days", "30 days", "45 days", "60 days"],
         a: 0,
-        f: "Logic: Acting for both buyer and seller is a conflict that must be disclosed and approved."
+        f: "Logic: The 15-day rule provides a fast path for the person to defend their license."
     },
     {
-        q: "Which of the following is 'Churning'?",
-        c: ["Excessive trading to generate commissions", "Selling a stock too quickly", "Buying only blue-chip stocks", "Rebalancing once a year"],
+        q: "Which of the following is NOT an 'Access Person' of an Investment Adviser?",
+        c: ["A clerk with no access to non-public information", "A director of the firm", "An officer of the firm", "An IAR with access to client trade data"],
         a: 0,
-        f: "Logic: Churning is about the broker's benefit, not the client's."
+        f: "Logic: Access persons are those with inside knowledge of client trades or research."
     },
     {
-        q: "An IA cannot be compensated based on:",
-        c: ["A share of capital gains", "Assets Under Management", "A flat fee", "An hourly rate"],
+        q: "A 'Hedge Clause' in an advisory contract is generally:",
+        c: ["Prohibited and unenforceable", "Required for margin accounts", "Permitted if disclosed", "Used to limit market risk"],
         a: 0,
-        f: "Logic: Performance-based fees are generally forbidden (except for qualified clients)."
+        f: "Logic: You cannot legally ask a client to waive your fiduciary responsibility."
     },
     {
-        q: "What must a BD disclose about their markups?",
-        c: ["The amount of the markup on the confirmation", "Nothing", "The CEO's salary", "The firm's rent"],
+        q: "Which of the following is a 'Qualified Client' for performance fee purposes?",
+        c: ["A person with $2.2M net worth", "A person with $1M annual income", "A person with a Series 66", "A non-profit organization"],
         a: 0,
-        f: "Logic: All fees and markups must be clearly disclosed to the buyer/seller."
+        f: "Logic: $2.2M Net Worth or $1.1M AUM are the current thresholds."
     },
     {
-        q: "A BD 'Confirmation' must be sent:",
-        c: ["At or before the completion of the transaction", "Within 1 year", "Only if requested", "Once a month"],
+        q: "If an IA has custody of client funds, account statements must be sent to the client at least:",
+        c: ["Quarterly", "Monthly", "Annually", "Semiannually"],
         a: 0,
-        f: "Logic: Clients need a receipt of the trade immediately."
+        f: "Logic: Statements must be sent at least every 3 months."
     },
     {
-        q: "If an IA is registered with the SEC, the state can require:",
-        c: ["Notice filing and a fee", "Full state registration", "A Series 7 exam for the CEO", "Access to the firm's fridge"],
+        q: "The term 'Guaranteed' under the USA refers to a guarantee of:",
+        c: ["Principal, Interest, or Dividends", "High market returns", "Zero capital losses", "Approval by the Administrator"],
         a: 0,
-        f: "Logic: NSMIA limited the states' power over federal covered advisers."
+        f: "Logic: Guaranteed means a third party (not the issuer) backs the payments."
     },
     {
-        q: "Which is an 'Unfair' fee for an IA?",
-        c: ["A fee significantly higher than other IAs for the same service", "A $500 planning fee", "A 1% AUM fee", "An hourly rate of $200"],
+        q: "Registration of a security under the USA generally remains effective for:",
+        c: ["One year from its effective date", "One year from the filing date", "Indefinitely", "Until the end of the year"],
         a: 0,
-        f: "Logic: Fees must be reasonable and competitive."
+        f: "Logic: One year is the standard, though it can stay open longer if shares are still being sold."
     },
     {
-        q: "When an IA has custody, an independent CPA must audit them:",
-        c: ["Once a year, unannounced", "Every 5 years", "Never", "Only if the SEC asks"],
+        q: "A 'Soft Dollar' arrangement is permissible if the goods/services purchased primarily benefit:",
+        c: ["The IA's clients", "The IA's partners", "The IA's marketing budget", "The IA's office overhead"],
         a: 0,
-        f: "Logic: The 'Surprise Audit' is a key safeguard for custodial accounts."
+        f: "Logic: Soft dollars must be used for things like research that help the client's performance."
     },
     {
-        q: "Under the USA, a 'Sale' includes:",
-        c: ["A contract of sale or disposition of a security for value", "A stock dividend", "A pledge of stock for a loan", "A merger"],
+        q: "Which of the following describes 'Front-Running'?",
+        c: ["Trading for the firm's account before a large client order", "Trading between two accounts to create volume", "Selling a stock before it crashes", "Buying a stock at the market open"],
         a: 0,
-        f: "Logic: Value must change hands for a sale to occur."
+        f: "Logic: Front-running is an unethical use of non-public knowledge of client orders."
     },
     {
-        q: "Which of the following is NOT an IA 'Access Person'?",
-        c: ["A client who visits the office daily", "An employee with access to non-public trade info", "A director of the firm", "A partner of the firm"],
+        q: "An Administrator's power to issue a subpoena applies:",
+        c: ["Both inside and outside the state", "Only within the state's borders", "Only with a court order", "Only to Broker-Dealers"],
         a: 0,
-        f: "Logic: Access persons are internal to the firm."
+        f: "Logic: Investigative powers are broad and cross state lines."
     },
     {
-        q: "If an Administrator summary suspends a registration, the hearing occurs within:",
-        c: ["15 days of written request", "30 days", "48 hours", "1 year"],
+        q: "What is the statute of limitations for civil liability under the USA?",
+        c: ["3 years from the act or 2 years from discovery", "5 years from the act", "10 years from discovery", "2 years from the trade date"],
         a: 0,
-        f: "Logic: The '15-day rule' ensures the person gets a fast chance to defend themselves."
+        f: "Logic: The '3 and 2' rule is the limit for suing for damages."
     },
     {
-        q: "An IA must provide a client with a Brochure at least every:",
-        c: ["Year (if there are material changes)", "Month", "5 years", "Time they buy a stock"],
+        q: "A 'Successor Firm' registering mid-year pays which filing fee?",
+        c: ["No fee until the next December 31st", "A full annual fee", "A pro-rated fee", "A double fee"],
         a: 0,
-        f: "Logic: This ensures the client remains informed about the firm's status."
+        f: "Logic: Successor firms get a 'free ride' on the fee until the annual renewal."
     },
     {
         q: "Which is a 'Fiduciary'?",
@@ -4227,8 +3547,9 @@ const simLib = [
         a: 0,
         f: "Logic: IAs must act in the client's best interest; BDs usually just meet a 'suitability' standard."
     }
-]
-]; // SIMULATION LIBRARY COMPLETE
+] // Closes Pillar 4 Array
+]; // Closes simLib Array
+
 // ========================================
 // 🚀 ENGINE LOGIC
 // ========================================
