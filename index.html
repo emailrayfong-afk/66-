@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: ARTEMIS S66 v18.5</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v18.9</title>
 <style>
         :root { 
             --nasa-blue: #0b3d91; 
@@ -844,6 +844,15 @@ const sprintLib = [
     {q: "Uniform Securities Act recordkeeping timeframes?", c: ["3yr BD / 5yr IA", "5yr BD / 3yr IA"], a: 0, f: "Logic: IA records last longer."},
     {q: "Broker-Dealer firm defined as an IAR?", c: ["False", "True"], a: 0, f: "Logic: Humans are IARs; Firms are IAs."},
     {q: "IA eligible for SEC if required in 15+ states?", c: ["Yes", "No"], a: 0, f: "Logic: Multi-state rule exception."},
+{
+        q: "An IA with only $15 million in AUM begins advising a registered mutual fund. Does the firm need to register with the SEC?",
+        c: [
+            "Yes, advising an investment company automatically makes them a Federal Covered Adviser", 
+            "No, their AUM is below the $100 million threshold required for SEC registration"
+        ],
+        a: 0,
+        f: "Logic: The AUM rule is completely bypassed here. Any IA advising a registered investment company is automatically bumped up to SEC registration."
+    },
     {q: "SEC financial filing deadline from fiscal year-end?", c: ["90 days", "120 days"], a: 0, f: "Logic: 90 to regulator; 120 to client."},
     {q: "USA: Which is NOT a Broker-Dealer?", c: ["A Bank", "Firm trading own account"], a: 0, f: "Logic: Banks are excluded."},
     {q: "Do all state registrations expire Dec 31st?", c: ["Yes", "No"], a: 0, f: "Logic: Uniform annual expiry."},
@@ -3523,6 +3532,16 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: The 'de minimis' rule allows up to 5 retail clients in a state without registration, provided there is no physical office in that state."
+    },{
+        q: "An investment advisory firm currently manages $25 million in assets and operates exclusively in one state. The firm recently signed a contract to provide investment advice to a newly created mutual fund. According to the Investment Advisers Act of 1940, where must this advisory firm register?",
+        c: [
+            "With the SEC, because advising a registered investment company automatically makes the firm a Federal Covered Adviser.", 
+            "Only with the State Administrator, because the firm's AUM is well below the $100 million threshold.", 
+            "With both the State Administrator and the SEC, because they serve both retail clients and investment companies.", 
+            "Neither, because providing advice to a mutual fund qualifies the firm for a complete exemption from registration."
+        ],
+        a: 0,
+        f: "Logic: While Assets Under Management (AUM) is the most common way to become a Federal Covered Adviser, it is not the only way. Any firm that provides advice to a registered investment company (like a mutual fund) is automatically required to register federally with the SEC, regardless of how small their AUM is."
     },
     {
         q: "According to the Uniform Securities Act, which of the following would NOT be defined as an Investment Adviser Representative (IAR)?",
