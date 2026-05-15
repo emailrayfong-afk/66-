@@ -2377,7 +2377,7 @@ a: 0,
 
 // --- 2. ENGINE ---
 let audioCtx;
-let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0;
+let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0, originalLength = 0;
 let mode = 'sprint'; 
 let currentScores = [0, 0, 0, 0];
 
@@ -2392,7 +2392,8 @@ function saveMissionProgress() {
         savedIndex: idx,
         savedPillar: currentPillar,
         savedActiveSet: activeSet,
-        savedMode: mode
+        savedMode: mode,
+        savedOriginalLength: originalLength
     };
     localStorage.setItem('artemisS66_Save', JSON.stringify(missionData));
 }
@@ -2403,21 +2404,18 @@ function loadMissionProgress() {
     if (saveData) {
         const missionData = JSON.parse(saveData);
         
-        // Restore all your specific game variables
         sessionScore = missionData.savedScore;
         idx = missionData.savedIndex;
         currentPillar = missionData.savedPillar;
         activeSet = missionData.savedActiveSet;
         mode = missionData.savedMode;
+        originalLength = missionData.savedOriginalLength || activeSet.length;
         
-        // Fix the UI mode buttons to match the saved state
         setMode(mode);
 
-        // Hide the main menu and show the game board
         document.getElementById('menu').style.display = 'none';
         document.getElementById('game').style.display = 'block';
         
-        // Load up the exact question you were on
         showQuestion();
         
         alert("Mission telemetry restored. Resuming mission.");
@@ -2461,6 +2459,7 @@ function start(pillar) {
 
     const targetCount = (mode === 'sprint') ? 25 : [8, 17, 30, 45][pillar];
     const actualCount = Math.min(targetCount, sourceLib.length);
+    originalLength = actualCount; // Lock in the original denominator for scoring
     
     let shuffled = [...sourceLib].sort(() => 0.5 - Math.random());
     activeSet = shuffled.slice(0, actualCount);
@@ -2473,15 +2472,22 @@ function start(pillar) {
 
 function showQuestion() {
     const q = activeSet[idx];
-    document.getElementById('status-line').innerText = `PILLAR 0${currentPillar + 1} | OBJECTIVE ${idx + 1} OF ${activeSet.length}`;
+    const statusEl = document.getElementById('status-line');
     
-    // Randomize the choices for this specific display
+    // UI Update: Differentiate between normal questions and retry queue
+    if (idx < originalLength) {
+        statusEl.innerText = `PILLAR 0${currentPillar + 1} | OBJECTIVE ${idx + 1} OF ${originalLength}`;
+        statusEl.style.color = '#666';
+    } else {
+        statusEl.innerText = `PILLAR 0${currentPillar + 1} | RETRYING MISSED OBJECTIVE`;
+        statusEl.style.color = 'var(--error-red)'; // Flash red to indicate retry phase
+    }
+    
     let choices = q.c.map((text, i) => ({ text: text, isCorrect: i === q.a }));
     choices.sort(() => 0.5 - Math.random());
     
     let html = `<div class="q-text">${q.q}</div>`;
     choices.forEach((choice) => {
-        // We pass the boolean 'isCorrect' directly to the check function
         html += `<button class="ans-btn" onclick="check(${choice.isCorrect}, this)">${choice.text}</button>`;
     });
     
@@ -2497,17 +2503,27 @@ function check(isCorrect, btn) {
     if (isCorrect) {
         btn.style.background = "#e8f5e9";
         btn.style.borderColor = "#2e7d32";
-        sessionScore++;
+        
+        // SCORE LOGIC: Only count points if it is the first attempt
+        if (idx < originalLength) {
+            sessionScore++;
+        }
         playTone(600, 0.1);
     } else {
         btn.style.background = "#ffebee";
         btn.style.borderColor = "#c62828";
-        // Find and highlight the correct button by comparing text
+        
         for (let b of btns) {
             if (b.innerText === q.c[q.a]) {
                 b.style.border = "2px solid #2e7d32";
             }
         }
+        
+        // SPRINT LOGIC: If wrong in Sprint mode, push question to the end of the queue
+        if (mode === 'sprint') {
+            activeSet.push(q);
+        }
+        
         playTone(200, 0.2);
     }
 
@@ -2516,7 +2532,6 @@ function check(isCorrect, btn) {
     document.getElementById('next').style.display = 'block';
     for (let b of btns) b.disabled = true;
 
-    // Trigger the Auto-Save right after an answer is logged
     saveMissionProgress();
 }
 
@@ -2530,14 +2545,14 @@ function next() {
 }
 
 function endSession() {
-    const pct = Math.round((sessionScore / activeSet.length) * 100);
+    // Calculate final score using the locked originalLength, ignoring retry queue inflation
+    const pct = Math.round((sessionScore / originalLength) * 100);
     currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
     
     const total = currentScores.reduce((a, b) => a + b, 0);
     const avg = Math.round(total / 4);
 
     const rocket = document.getElementById('rocket');
-    // Launch only if total average (Flight Readiness) is 73 or higher
     if (avg >= 73) {
         rocket.classList.add('takeoff');
         setTimeout(() => { rocket.classList.remove('takeoff'); }, 3000);
@@ -2550,7 +2565,6 @@ function endSession() {
     document.getElementById('menu').style.display = 'block';
     updateFuel();
 
-    // Wipe the save file now that the session is officially over
     clearMissionProgress();
 }
 
