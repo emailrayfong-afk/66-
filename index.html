@@ -1283,10 +1283,13 @@ const simLib = [
     q: "When a Variable Annuity is 'Annuitized,' the number of 'Annuity Units' is:",
     c: ["Fixed", "Fluctuating based on the S&P 500", "Increasing each month", "Decreasing as payments are made"],
     a: 0,
-    f: "Logic: Once you annuitize, the number of units becomes fixed, but the dollar value of each unit continues to fluctuate based on the separate account's performance."
-},
+ f: "Logic: Once you annuitize, the number of units becomes fixed, but the dollar value of each unit continues to fluctuate based on the separate account's performance."
+    },
+    {
+        q: "A US-based investor buys an ADR of a German company. The stock rises 10% in Euros, but the Euro weakens by 12% against the USD. What happens?",
+        c: ["The ADR value decreases in USD", "The ADR value increases", "No change", "It increases by 2%"],
         a: 0,
-        f: "Logic: Application. Currency Risk. Even though the stock rose 10%, the 12% drop in the currency's value more than offset the gain, resulting in a net loss for the US investor."
+        f: "Logic: Application. Currency Risk. The 12% currency drop more than offset the 10% stock gain."
     },
     {
         q: "An investor owns a 6% convertible bond with a conversion price of $40. The underlying common stock is currently trading at $50 per share. If the bond is currently trading at its 'parity price,' what is its market value?",
