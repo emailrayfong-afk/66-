@@ -1280,17 +1280,17 @@ const simLib = [
     f: "Logic: Just like an IRA, distributions from an annuity before age 59.5 are subject to a 10% IRS penalty on the earnings portion."
 },
 {
-    q: "When a Variable Annuity is 'Annuitized,' the number of 'Annuity Units' is:",
-    c: ["Fixed", "Fluctuating based on the S&P 500", "Increasing each month", "Decreasing as payments are made"],
+        q: "When a Variable Annuity is 'Annuitized,' the number of 'Annuity Units' is:",
+        c: ["Fixed", "Fluctuating", "Increasing", "Decreasing"],
+a: 0,
+    f: "Logic: Once you annuitize, the number of units becomes fixed, but the dollar value of each unit continues to fluctuate based on the separate account's performance."
+},
+{
+    q: "A US-based investor buys an ADR of a German company. The stock rises 10% in Euros, but the Euro weakens 12% against the USD. What is the impact?",
+    c: ["The ADR value will decrease in USD terms", "The ADR value will increase", "No change", "It increases by 2%"],
     a: 0,
- f: "Logic: Once you annuitize, the number of units becomes fixed, but the dollar value of each unit continues to fluctuate based on the separate account's performance."
-    },
-    {
-        q: "A US-based investor buys an ADR of a German company. The stock rises 10% in Euros, but the Euro weakens by 12% against the USD. What happens?",
-        c: ["The ADR value decreases in USD", "The ADR value increases", "No change", "It increases by 2%"],
-        a: 0,
-        f: "Logic: Application. Currency Risk. The 12% currency drop more than offset the 10% stock gain."
-    },
+    f: "Logic: Currency Risk. The 12% currency drop more than offset the 10% stock gain."
+},
     {
         q: "An investor owns a 6% convertible bond with a conversion price of $40. The underlying common stock is currently trading at $50 per share. If the bond is currently trading at its 'parity price,' what is its market value?",
         c: [
@@ -2368,14 +2368,15 @@ const simLib = [
 ]
 ];
 
+<script>
 // --- 2. ENGINE ---
 let audioCtx;
 let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0;
-let appMode = 'sprint'; 
+let mode = 'sprint'; 
 let currentScores = [0,0,0,0];
 
 function setMode(m) {
-    appMode = m;
+    mode = m;
     document.getElementById('mode-sprint').className = m === 'sprint' ? 'mode-btn active' : 'mode-btn';
     document.getElementById('mode-sim').className = m === 'sim' ? 'mode-btn active' : 'mode-btn';
 }
@@ -2384,6 +2385,7 @@ function initAudio() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
+    // Added for browser compatibility: wakes up the sound engine on first click
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
@@ -2392,21 +2394,17 @@ function initAudio() {
 function start(pillar) {
     initAudio(); 
     currentPillar = pillar;
-    currentQ = 0;
-    score = 0; 
-    answered = false;
-    missionLog = []; 
+    idx = 0; 
+    sessionScore = 0;
     
-    // FIX: This line ensures the game actually uses your 100-question library
     const sourceLib = (mode === 'sprint') ? sprintLib[pillar] : simLib[pillar];
     
     if (!sourceLib || sourceLib.length === 0) {
-        alert("Pillar " + (pillar + 1) + " data is missing! Check your arrays.");
+        alert("Pillar " + (pillar + 1) + " data is missing!");
         return;
     }
-    
-    // Safety check: Don't try to pull 25 questions if the library has fewer
-    const targetCount = mode === 'sprint' ? 25 : [8, 17, 30, 45][pillar];
+
+    const targetCount = (mode === 'sprint') ? 25 : [8, 17, 30, 45][pillar];
     const actualCount = Math.min(targetCount, sourceLib.length);
     
     let shuffled = [...sourceLib].sort(() => 0.5 - Math.random());
@@ -2414,7 +2412,6 @@ function start(pillar) {
     
     document.getElementById('menu').style.display = 'none';
     document.getElementById('game').style.display = 'block';
-    document.getElementById('mission-log-btn').style.display = 'none';
     
     showQuestion();
 }
@@ -2446,7 +2443,6 @@ function check(selectedIdx, btn) {
     } else {
         btn.style.background = "#ffebee";
         btn.style.borderColor = "#c62828";
-        // Highlight the correct answer for learning
         btns[q.a].style.border = "2px solid #2e7d32";
         playTone(200, 0.2);
     }
@@ -2466,7 +2462,10 @@ function next() {
     }
 }
 
-function checkMissionSuccess(pct) {
+function endSession() {
+    const pct = Math.round((sessionScore / activeSet.length) * 100);
+    currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
+    
     const rocket = document.getElementById('rocket');
     if (pct >= 73) {
         rocket.classList.add('takeoff');
@@ -2475,13 +2474,6 @@ function checkMissionSuccess(pct) {
         rocket.classList.add('shake');
         setTimeout(() => { rocket.classList.remove('shake'); }, 1000);
     }
-}
-
-function endSession() {
-    const pct = Math.round((sessionScore / activeSet.length) * 100);
-    currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
-    
-    checkMissionSuccess(pct);
 
     document.getElementById('game').style.display = 'none';
     document.getElementById('menu').style.display = 'block';
@@ -2514,3 +2506,4 @@ function playTone(freq, dur) {
 }
 
 window.onload = updateFuel;
+</script>
