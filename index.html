@@ -2372,7 +2372,7 @@ a: 0,
 let audioCtx;
 let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0;
 let mode = 'sprint'; 
-let currentScores = [0,0,0,0];
+let currentScores = [0, 0, 0, 0];
 
 function setMode(m) {
     mode = m;
@@ -2384,7 +2384,6 @@ function initAudio() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
-    // Added for browser compatibility: wakes up the sound engine on first click
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
@@ -2419,9 +2418,14 @@ function showQuestion() {
     const q = activeSet[idx];
     document.getElementById('status-line').innerText = `PILLAR 0${currentPillar + 1} | OBJECTIVE ${idx + 1} OF ${activeSet.length}`;
     
+    // Randomize the choices for this specific display
+    let choices = q.c.map((text, i) => ({ text: text, isCorrect: i === q.a }));
+    choices.sort(() => 0.5 - Math.random());
+    
     let html = `<div class="q-text">${q.q}</div>`;
-    q.c.forEach((choice, i) => {
-        html += `<button class="ans-btn" onclick="check(${i}, this)">${choice}</button>`;
+    choices.forEach((choice) => {
+        // We pass the boolean 'isCorrect' directly to the check function
+        html += `<button class="ans-btn" onclick="check(${choice.isCorrect}, this)">${choice.text}</button>`;
     });
     
     document.getElementById('q-area').innerHTML = html;
@@ -2429,9 +2433,8 @@ function showQuestion() {
     document.getElementById('next').style.display = 'none';
 }
 
-function check(selectedIdx, btn) {
+function check(isCorrect, btn) {
     const q = activeSet[idx];
-    const isCorrect = (selectedIdx === q.a);
     const btns = document.getElementsByClassName('ans-btn');
     
     if (isCorrect) {
@@ -2442,7 +2445,12 @@ function check(selectedIdx, btn) {
     } else {
         btn.style.background = "#ffebee";
         btn.style.borderColor = "#c62828";
-        btns[q.a].style.border = "2px solid #2e7d32";
+        // Find and highlight the correct button by comparing text
+        for (let b of btns) {
+            if (b.innerText === q.c[q.a]) {
+                b.style.border = "2px solid #2e7d32";
+            }
+        }
         playTone(200, 0.2);
     }
 
@@ -2465,8 +2473,12 @@ function endSession() {
     const pct = Math.round((sessionScore / activeSet.length) * 100);
     currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
     
+    const total = currentScores.reduce((a, b) => a + b, 0);
+    const avg = Math.round(total / 4);
+
     const rocket = document.getElementById('rocket');
-    if (pct >= 73) {
+    // Launch only if total average (Flight Readiness) is 73 or higher
+    if (avg >= 73) {
         rocket.classList.add('takeoff');
         setTimeout(() => { rocket.classList.remove('takeoff'); }, 3000);
     } else {
@@ -2505,4 +2517,3 @@ function playTone(freq, dur) {
 }
 
 window.onload = updateFuel;
-</script>
