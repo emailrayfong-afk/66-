@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: ARTEMIS S66 v18.6</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v19.1</title>
     <style>
         :root { 
             --nasa-blue: #0b3d91; 
@@ -188,11 +188,17 @@
             <div id="total-text">FLIGHT READINESS: 0%</div>
             <div id="fuel-fill"></div>
         </div>
+
         <div id="menu">
+            <button onclick="loadMissionProgress()" id="resumeBtn" style="background-color: var(--nasa-blue); color: white; margin-bottom: 15px; width: 100%; padding: 15px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase;">
+                Resume Last Mission
+            </button>
+            
             <div class="mode-toggle">
                 <button id="mode-sprint" class="mode-btn active" onclick="setMode('sprint')">TRAINING SPRINTS</button>
                 <button id="mode-sim" class="mode-btn" onclick="setMode('sim')">MISSION SIMULATION</button>
             </div>
+
             <div class="grid">
                 <button class="p-btn" onclick="start(0)">01. ECONOMICS <span id="s0" style="display:block; font-size:10px;">0%</span></button>
                 <button class="p-btn" onclick="start(1)">02. VEHICLES <span id="s1" style="display:block; font-size:10px;">0%</span></button>
@@ -200,6 +206,7 @@
                 <button class="p-btn" onclick="start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">0%</span></button>
             </div>
         </div>
+
         <div id="game" style="display:none;">
             <div id="status-line" style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px;"></div>
             <div id="q-area"></div>
@@ -2374,6 +2381,56 @@ let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0;
 let mode = 'sprint'; 
 let currentScores = [0, 0, 0, 0];
 
+// ==========================================
+// MISSION SAVE SYSTEM
+// ==========================================
+function saveMissionProgress() {
+    if (!activeSet || activeSet.length === 0) return;
+    
+    const missionData = {
+        savedScore: sessionScore,
+        savedIndex: idx,
+        savedPillar: currentPillar,
+        savedActiveSet: activeSet,
+        savedMode: mode
+    };
+    localStorage.setItem('artemisS66_Save', JSON.stringify(missionData));
+}
+
+function loadMissionProgress() {
+    const saveData = localStorage.getItem('artemisS66_Save');
+    
+    if (saveData) {
+        const missionData = JSON.parse(saveData);
+        
+        // Restore all your specific game variables
+        sessionScore = missionData.savedScore;
+        idx = missionData.savedIndex;
+        currentPillar = missionData.savedPillar;
+        activeSet = missionData.savedActiveSet;
+        mode = missionData.savedMode;
+        
+        // Fix the UI mode buttons to match the saved state
+        setMode(mode);
+
+        // Hide the main menu and show the game board
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        
+        // Load up the exact question you were on
+        showQuestion();
+        
+        alert("Mission telemetry restored. Resuming mission.");
+    } else {
+        alert("No previous mission data found.");
+    }
+}
+
+function clearMissionProgress() {
+    localStorage.removeItem('artemisS66_Save');
+}
+// ==========================================
+
 function setMode(m) {
     mode = m;
     document.getElementById('mode-sprint').className = m === 'sprint' ? 'mode-btn active' : 'mode-btn';
@@ -2458,6 +2515,9 @@ function check(isCorrect, btn) {
     document.getElementById('feedback').style.display = 'block';
     document.getElementById('next').style.display = 'block';
     for (let b of btns) b.disabled = true;
+
+    // Trigger the Auto-Save right after an answer is logged
+    saveMissionProgress();
 }
 
 function next() {
@@ -2489,6 +2549,9 @@ function endSession() {
     document.getElementById('game').style.display = 'none';
     document.getElementById('menu').style.display = 'block';
     updateFuel();
+
+    // Wipe the save file now that the session is officially over
+    clearMissionProgress();
 }
 
 function updateFuel() {
