@@ -212,7 +212,19 @@
 // ALL 100 QUESTIONS PER PILLAR ARE NOW CONSOLIDATED HERE
 const sprintLib = [
 [ // 01. ECONOMICS (PILLAR 1: 100 QUESTIONS)
-    {q: "Which return calculation ignores the timing of cash flows?", c: ["Time-weighted", "Dollar-weighted"], a: 0, f: "Logic: Time-weighted measures manager skill; Dollar-weighted measures investor timing."},
+    {q: "Which return calculation ignores the timing of cash flows?", c: ["Time-weighted", "Dollar-weighted"], a: 0, f: "Logic: Time-weighted measures manager skill; Dollar-weighted measures investor timing."},// Add to sprintLib[0]
+{
+    q: "If an investment's Net Present Value (NPV) is negative, this means:",
+    c: ["Current Market Value > Discounted Cash Flows", "Discounted Cash Flows > Current Market Value"],
+    a: 0,
+    f: "Logic: A negative NPV indicates the upfront cost (Current Market Value) is greater than the present value of the expected returns (DCF)."
+},
+{
+    q: "A high Wilshire 5000-to-GDP ratio indicates the U.S. equity market is:",
+    c: ["Overvalued", "Undervalued"],
+    a: 0,
+    f: "Logic: A high ratio means total market capitalization is significantly higher than actual economic output, signaling an overvalued market."
+},
     {q: "Payment / Rate is the formula for which calculation?", c: ["Perpetuity", "Future Value"], a: 0, f: "Logic: Dividing the payout by the rate gives the principal needed for a perpetuity."},
     {q: "DCF is used to calculate which value?", c: ["Present Value", "Stated Value"], a: 0, f: "Logic: Discounted Cash Flow finds what future money is worth today (Present Value)."},
     {q: "What is the 'break-even' rate of a project?", c: ["Internal Rate of Return (IRR)", "Expected Return"], a: 0, f: "Logic: IRR is the rate that makes NPV equal to zero."},
@@ -420,7 +432,18 @@ const sprintLib = [
     {q: "Contributions to a 'Roth IRA' are made with which type of tax treatment?", c: ["After-tax dollars", "Pre-tax dollars"], a: 0, f: "Logic: You pay tax now for tax-free growth and withdrawals later."},
     {q: "In a 'Defined Benefit' plan, which party bears the primary investment risk?", c: ["The Employer", "The Employee"], a: 0, f: "Logic: The employer promises a specific payout and must fund the gap."},
     {q: "Which strategy involves selling 'winners' to return a portfolio to its original target asset mix?", c: ["Rebalancing", "Tactical Allocation"], a: 0, f: "Logic: Rebalancing is a passive way to maintain the risk profile."},
-    {q: "A client wanting to bypass probate while maintaining full control of assets should use which designation?", c: ["Transfer on Death (TOD)", "Tenants in Common"], a: 0, f: "Logic: TOD/POD goes direct to heirs without court intervention."},
+    {q: "A client wanting to bypass probate while maintaining full control of assets should use which designation?", c: ["Transfer on Death (TOD)", "Tenants in Common"], a: 0, f: "Logic: TOD/POD goes direct to heirs without court intervention."},{
+    q: "A partner contributes property worth $100,000 with a $40,000 mortgage to a partnership. What is the increase in their cost basis?",
+    c: ["$60,000 (Equity)", "$100,000 (Full Value)"],
+    a: 0,
+    f: "Logic: Basis only increases by the partner's equity in the property because the partnership assumes the debt."
+},
+{
+    q: "Which business structure provides limited liability while avoiding double taxation via flow-through treatment?",
+    c: ["LLC", "C-Corporation"],
+    a: 0,
+    f: "Logic: LLCs provide the 'best of both worlds': corporate-style protection with partnership-style taxation."
+},
     {q: "Which 'Alpha' indicates that an investment manager outperformed risk-adjusted expectations?", c: ["Positive Alpha", "Negative Alpha"], a: 0, f: "Logic: Alpha is the 'excess' return above what Beta predicted."},
     {q: "Required Minimum Distributions (RMDs) must generally begin at what age under SECURE 2.0?", c: ["73", "59.5"], a: 0, f: "Logic: 59.5 is for penalty-free; 73 is the mandatory start age."},
     {q: "Which ownership type is limited strictly to legally married couples?", c: ["Tenancy by the Entirety", "Joint Tenants (JTWROS)"], a: 0, f: "Logic: Entirety treats the couple as a single legal unit."},
@@ -520,6 +543,41 @@ const sprintLib = [
         a: 0,
         f: "Logic: Pension consultants have a unique federal threshold. They must consult on at least $200 million in plan assets to be eligible for SEC registration."
     },{
+    q: "Can the State Administrator personally sentence an IAR to a term in jail?",
+    c: ["No (only a court can)", "Yes"],
+    a: 0,
+    f: "Logic: The Administrator is a regulator. They must refer cases to a prosecutor for criminal sentencing."
+},
+{
+    q: "If a client wins a civil suit under the USA, are 'Treble Damages' included in the recovery?",
+    c: ["No", "Yes"],
+    a: 0,
+    f: "Logic: Recovery includes principal, interest, costs, and fees. Triple (Treble) damages are for federal Insider Trading cases."
+},
+{
+    q: "Under the USA, a Private Placement is exempt if offered to how many retail investors in 12 months?",
+    c: ["No more than 10", "No more than 35"],
+    a: 0,
+    f: "Logic: The state-level (USA) limit for private placements is 10 offers to retail investors."
+},
+{
+    q: "Is an Investment Adviser required to keep copies of a client's actual tax returns as part of their records?",
+    c: ["No", "Yes"],
+    a: 0,
+    f: "Logic: While firms must keep logs and emails, a client's individual tax returns are not a required record."
+},
+{
+    q: "Under the UPIA, which factor is LEAST important when making a prudent investment decision?",
+    c: ["The length of the adviser's contract", "The impact of inflation"],
+    a: 0,
+    f: "Logic: Fiduciary decisions should focus on client needs (taxes, inflation) rather than the adviser's contract terms."
+},
+{
+    q: "Is it permitted for an IA to charge a fee based on BOTH a flat dollar amount and a percentage of total assets?",
+    c: ["No (Unreasonable/Double-dipping)", "Yes"],
+    a: 0,
+    f: "Logic: Charging multiple layers of fees on the same assets is considered 'double-dipping' and is prohibited."
+},{
         q: "Is an investment adviser permitted to charge a performance-based fee when managing a Mutual Fund?",
         c: ["Yes", "No"],
         a: 0,
@@ -1721,7 +1779,45 @@ const simLib = [
         ],
         a: 0,
         f: "Logic: Suitability Application. While a UIT has high fees and is unmanaged, it is the only choice that aligns with 'Significant Volatility' and 'Capital Appreciation.' The others are too conservative for this specific client's profile."
+    },{
+        q: "Which plan allows a 50-year-old municipal firefighter to take penalty-free distributions immediately upon retirement?",
+        c: [
+            "Section 457 Plan", 
+            "401(k) Plan", 
+            "403(b) Plan", 
+            "Traditional IRA"
+        ],
+        a: 0,
+        f: "Logic: 457 plans are unique in that they do not impose the standard 10% early withdrawal penalty before age 59.5, provided the employee has officially separated from service."
     },
+    {
+        q: "An investor holds a 100% equity portfolio and is concerned about systematic market risk. The most appropriate strategy to mitigate this specific risk is to:",
+        c: [
+            "Allocate a portion of the portfolio to debt instruments", 
+            "Diversify into equities across different sectors", 
+            "Increase holdings in small-cap domestic stocks", 
+            "Shift to a strictly growth-oriented equity strategy"
+        ],
+        a: 0,
+        f: "Logic: Systematic risk (overall market risk) cannot be eliminated by simply diversifying within the same asset class. To mitigate it, you must add non-correlated asset classes, such as debt instruments (bonds)."
+    },
+{
+    q: "Which plan allows a 50-year-old municipal firefighter to take penalty-free distributions immediately upon retirement?",
+    c: ["Section 457 Plan", "401(k) Plan", "403(b) Plan", "Traditional IRA"],
+    a: 0,
+    f: "Logic: 457 plans are unique in that they do not impose the standard 10% early withdrawal penalty before age 59.5, provided the employee has officially separated from service."
+},
+{
+    q: "An investor holds a 100% equity portfolio and is concerned about systematic market risk. The most appropriate strategy to mitigate this specific risk is to:",
+    c: [
+        "Allocate a portion of the portfolio to debt instruments", 
+        "Diversify into equities across different sectors", 
+        "Increase holdings in small-cap domestic stocks", 
+        "Shift to a strictly growth-oriented equity strategy"
+    ],
+    a: 0,
+    f: "Logic: Systematic risk (overall market risk) cannot be eliminated by simply diversifying within the same asset class. To mitigate it, you must add non-correlated asset classes, such as debt instruments (bonds)."
+},
     {
         q: "An investor is using the Sharpe Ratio to compare two portfolios. Portfolio A has a higher total return than Portfolio B, but Portfolio B has a higher Sharpe Ratio. What is the most accurate interpretation of this data?",
         c: [
