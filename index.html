@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: ARTEMIS S66 v19.1</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v18.6</title>
     <style>
         :root { 
             --nasa-blue: #0b3d91; 
@@ -188,17 +188,11 @@
             <div id="total-text">FLIGHT READINESS: 0%</div>
             <div id="fuel-fill"></div>
         </div>
-
         <div id="menu">
-            <button onclick="loadMissionProgress()" id="resumeBtn" style="background-color: var(--nasa-blue); color: white; margin-bottom: 15px; width: 100%; padding: 15px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase;">
-                Resume Last Mission
-            </button>
-            
             <div class="mode-toggle">
                 <button id="mode-sprint" class="mode-btn active" onclick="setMode('sprint')">TRAINING SPRINTS</button>
                 <button id="mode-sim" class="mode-btn" onclick="setMode('sim')">MISSION SIMULATION</button>
             </div>
-
             <div class="grid">
                 <button class="p-btn" onclick="start(0)">01. ECONOMICS <span id="s0" style="display:block; font-size:10px;">0%</span></button>
                 <button class="p-btn" onclick="start(1)">02. VEHICLES <span id="s1" style="display:block; font-size:10px;">0%</span></button>
@@ -206,7 +200,6 @@
                 <button class="p-btn" onclick="start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">0%</span></button>
             </div>
         </div>
-
         <div id="game" style="display:none;">
             <div id="status-line" style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px;"></div>
             <div id="q-area"></div>
@@ -225,7 +218,167 @@ const sprintLib = [
     c: ["Current Market Value > Discounted Cash Flows", "Discounted Cash Flows > Current Market Value"],
     a: 0,
     f: "Logic: A negative NPV indicates the upfront cost (Current Market Value) is greater than the present value of the expected returns (DCF)."
-},
+},{
+        q: "If the discount rate used in a calculation increases, the resulting Present Value will:",
+        c: ["Decrease", "Increase"],
+        a: 0,
+        f: "Logic: Inverse relationship. A higher discount rate shrinks the present value of future money."
+    },
+    {
+        q: "If the required rate of return is reduced, the NPV of an investment will:",
+        c: ["Increase", "Decrease"],
+        a: 0,
+        f: "Logic: Lower discount rate = higher present value of cash flows = higher overall NPV."
+    },{
+        q: "Who is most negatively impacted by unanticipated inflation?",
+        c: ["Holders of long-term fixed-income bonds", "Borrowers with fixed-rate loans"],
+        a: 0,
+        f: "Logic: Inflation destroys the purchasing power of fixed bond payments. Fixed borrowers benefit by paying debt back with cheaper dollars."
+    },
+    {
+        q: "To combat rising inflation, the Federal Reserve would MOST likely:",
+        c: ["Raise federal funds rates and sell treasury securities", "Lower the discount rate and buy treasury securities"],
+        a: 0,
+        f: "Logic: Fighting inflation requires tightening the money supply—raising rates and selling Treasuries."
+    },
+    {
+        q: "Which combination is a FISCAL policy used to stimulate a sluggish economy?",
+        c: ["Increase government spending and decrease taxes", "Increase the money supply through open market operations"],
+        a: 0,
+        f: "Logic: Fiscal policy involves government taxes and spending. Open market operations are Monetary policy."
+    },
+    {
+        q: "Find the median of these returns: -4%, +8%, +2%, +3%, +7%, -1%",
+        c: ["2.5%", "3.0%"],
+        a: 0,
+        f: "Logic: Ordered: -4, -1, 2, 3, 7, 8. Average the middle two: (2 + 3) / 2 = 2.5%."
+    },
+    {
+        q: "An investor buying a house in 1 year wants to capture market upside safely. Their primary concern is:",
+        c: ["Risk-adjusted return", "Expected return of the investment"],
+        a: 0,
+        f: "Logic: With a strict short-term timeline, raw expected return is too dangerous. They must focus on risk-adjusted return."
+    },
+    {
+        q: "A correlation coefficient of +0.30 indicates the securities:",
+        c: ["Have a weak tendency to move in the same direction", "Will perfectly move in the same direction"],
+        a: 0,
+        f: "Logic: Positive means moving together, but 0.30 is far away from a perfect 1.0, making it a weak relationship."
+    },
+    {
+        q: "If economy capacity is at high levels and unemployment is at record lows, what is likely occurring?",
+        c: ["Inflation is rising", "Deflation will begin"],
+        a: 0,
+        f: "Logic: Full employment and max capacity mean demand outstrips supply, which causes inflation."
+    },
+    {
+        q: "The Prime Rate is the interest rate that:",
+        c: ["Commercial banks charge their most credit-worthy retail/corporate borrowers", "Banks charge each other for overnight loans"],
+        a: 0,
+        f: "Logic: Prime is the best rate for prime customers. Bank-to-bank overnight is the Fed Funds Rate."
+    },
+    {
+        q: "An investor uses the Sharpe Ratio to find:",
+        c: ["Risk-adjusted return", "Volatility compared to the market"],
+        a: 0,
+        f: "Logic: Sharpe measures risk-adjusted return. Beta measures volatility against the broader market."
+    },
+    {
+        q: "Why discount a future cash flow to its present value?",
+        c: ["To evaluate the time value of money to make a valuation", "To calculate the internal rate of return"],
+        a: 0,
+        f: "Logic: Discounting accounts for the time value of money, letting you properly value an asset today."
+    },
+    {
+        q: "The Federal Funds Rate is the rate at which:",
+        c: ["Commercial banks lend to other banks overnight", "The Federal Reserve lends to member banks"],
+        a: 0,
+        f: "Logic: Fed Funds = Bank to Bank. The Discount Rate is what the Fed charges banks."
+    },
+    {
+        q: "Assets: $500k. Inventory: $200k. Liabilities: $250k. What is the Quick Ratio?",
+        c: ["1.2", "2.0"],
+        a: 0,
+        f: "Logic: Quick Ratio (Acid Test) excludes inventory. (500 - 200) / 250 = 1.2."
+    },
+    {
+        q: "NPV is the difference between:",
+        c: ["Present value of expected cash flows and the initial cost", "Future value and present value"],
+        a: 0,
+        f: "Logic: NPV calculates what the future cash flows are worth today, minus what you have to pay today."
+    },
+    {
+        q: "The 'basket of goods' is another name for the economic measurement of:",
+        c: ["Consumer Price Index (CPI)", "Gross Domestic Product (GDP)"],
+        a: 0,
+        f: "Logic: CPI tracks the cost of a static basket of consumer goods to measure inflation."
+    },
+    {
+        q: "Which ratio compares a company's market price per share to its earnings per share?",
+        c: ["P/E Ratio", "P/B Ratio"],
+        a: 0,
+        f: "Logic: Price-to-Earnings (P/E) directly links the stock price to the corporate profits."
+    },
+    {
+        q: "Why do financial professionals discount future cash flows?",
+        c: ["To determine its worth today given the time value of money", "To project future market prices"],
+        a: 0,
+        f: "Logic: Discounting accounts for the time value of money, bringing future numbers back to present-day dollars."
+    },
+    {
+        q: "A value investor looking for undervalued stocks would seek a company with:",
+        c: ["A lower P/B than the sector averages", "A higher P/B than the sector averages"],
+        a: 0,
+        f: "Logic: A low Price-to-Book means you are paying less for the company's underlying assets."
+    },
+    {
+        q: "Future value looks at:",
+        c: ["Present value and compounds interest over X years at Y interest rate", "Future cash flows and discounts them"],
+        a: 0,
+        f: "Logic: Future Value pushes money forward using compounding. Present Value pulls it back using discounting."
+    },
+    {
+        q: "If the IRR of a bond's cash flow is 5%, this means the bond's:",
+        c: ["Yield to Maturity (YTM) is 5%", "Current Yield (CY) is 5%"],
+        a: 0,
+        f: "Logic: For fixed-income securities, the IRR is mathematically identical to the YTM."
+    },
+    {
+        q: "If the IRR is greater than the expected rate of return:",
+        c: ["The investment should be accepted (Positive NPV)", "The investment should be rejected (Negative NPV)"],
+        a: 0,
+        f: "Logic: Beating the hurdle rate means the project creates value (positive NPV)."
+    },
+    {
+        q: "When analyzing a company's liquidity, an adviser is most concerned with the:",
+        c: ["Current Ratio and Quick Ratio", "Debt to Equity Ratio"],
+        a: 0,
+        f: "Logic: Liquidity means short-term cash flow. Current and Quick ratios measure short-term health."
+    },
+    {
+        q: "IRR is officially calculated when:",
+        c: ["NPV = 0", "Discount Rate = 0"],
+        a: 0,
+        f: "Logic: IRR is the exact discount rate that makes the Present Value equal the Cost (NPV zero)."
+    },
+    {
+        q: "A widening of credit spreads between corporate bonds and US treasuries indicates investors are:",
+        c: ["Demanding a higher risk premium", "Becoming more confident in the economy"],
+        a: 0,
+        f: "Logic: Widening spreads mean investors are scared and demanding more yield to take on corporate risk."
+    },
+    {
+        q: "Present value looks at:",
+        c: ["Future cash flows and discounts them", "The cost of a security today"],
+        a: 0,
+        f: "Logic: PV is the mathematical process of discounting future money back to today."
+    },
+    {
+        q: "Company X has $50M revenue and $10M profit. It has 1M shares trading at $16. What is the EPS?",
+        c: ["$10.00", "$16.00"],
+        a: 0,
+        f: "Logic: EPS is Profit divided by Shares ($10M / 1M). Revenue and market price are distractors."
+    },
 {
     q: "A high Wilshire 5000-to-GDP ratio indicates the U.S. equity market is:",
     c: ["Overvalued", "Undervalued"],
@@ -702,6 +855,301 @@ const simLib = [
         c: ["Value", "Growth", "Speculative", "High Beta"],
         a: 0,
         f: "Logic: Value investors look for 'bargains' (Low P/B) and are often rewarded with higher income (High Yield) while waiting for the price to rise."
+    },{
+        q: "Which of the following is most negatively impacted by unanticipated inflation?",
+        c: [
+            "Holders of long-term fixed-income bonds", 
+            "Borrowers with fixed-rate loans", 
+            "Owners of real estate", 
+            "Investors in common stock"
+        ],
+        a: 0,
+        f: "Logic: Inflation destroys purchasing power. Holders of fixed-income bonds are locked into payments that become worth less over time. Borrowers actually benefit, as they pay back debt with 'cheaper' inflated dollars."
+    },
+    {
+        q: "To combat rising inflation, the Federal Reserve would MOST likely:",
+        c: [
+            "Raise federal funds rates and sell treasury securities", 
+            "Lower the discount rate and buy treasury securities", 
+            "Lower the reserve requirement", 
+            "Expand the money supply"
+        ],
+        a: 0,
+        f: "Logic: To fight inflation, the Fed tightens the money supply. They do this by raising interest rates and selling securities (which pulls cash out of the banking system)."
+    },
+    {
+        q: "Which of the following combinations of fiscal policies would a government use to stimulate a sluggish economy?",
+        c: [
+            "Increase government spending and decrease taxes", 
+            "Decrease the money supply through open market operations", 
+            "Increase the money supply through open market operations", 
+            "Decrease government spending and decrease taxes"
+        ],
+        a: 0,
+        f: "Logic: Fiscal policy is controlled by the President and Congress (Taxes and Spending). Open market operations are Monetary policy (The Fed). To stimulate growth, the government spends more and taxes less."
+    },
+    {
+        q: "Over the last six months, a stock has had the following monthly returns: -4%, +8%, +2%, +3%, +7%, -1%. What is the median return for this stock?",
+        c: [
+            "2.5%", 
+            "3.0%", 
+            "2.0%", 
+            "3.2%"
+        ],
+        a: 0,
+        f: "Logic: To find the median, put the numbers in order: -4, -1, 2, 3, 7, 8. Because there is an even number of data points, average the two middle numbers: (2 + 3) / 2 = 2.5%."
+    },
+    {
+        q: "A retail investor is planning on buying a house after 1 year for his family. They also do not want to miss any investment opportunities in that time. Which would be of utmost concern for the investor?",
+        c: [
+            "Risk-adjusted return", 
+            "Expected return of an investment", 
+            "Future value", 
+            "Net Present Value"
+        ],
+        a: 0,
+        f: "Logic: With a strict 1-year time horizon for a massive purchase, raw expected return is too dangerous to chase blindly. The investor must focus heavily on the risk-adjusted return to balance growth with capital protection."
+    },
+    {
+        q: "If two securities have a correlation coefficient of +0.30, this means they:",
+        c: [
+            "Have a weak tendency to move in the same direction", 
+            "Will perfectly move in the same direction", 
+            "Are not correlated positively", 
+            "Have no relationship between their price movements"
+        ],
+        a: 0,
+        f: "Logic: A positive number means they move together. However, +1.0 is perfect correlation. A score of +0.30 is positive, but relatively weak."
+    },
+    {
+        q: "Capacity in the economy has reached very high levels; unemployment is at record lows. Which of the following is most likely to occur?",
+        c: [
+            "Inflation is rising", 
+            "Deflation will begin", 
+            "A decrease in the CPI", 
+            "Fiscal stimulus may be necessary"
+        ],
+        a: 0,
+        f: "Logic: When an economy is running at max capacity and full employment, demand outpaces supply, driving prices up (Inflation)."
+    },
+    {
+        q: "The Prime Rate is defined as the interest rate that:",
+        c: [
+            "The most credit worthy retail borrowers receive from commercial banks", 
+            "Banks charge each other for overnight loans", 
+            "The Federal Reserve charges commercial banks for loans", 
+            "Is offered on three-month U.S. Treasury bills"
+        ],
+        a: 0,
+        f: "Logic: The Prime Rate is the preferential rate commercial banks offer to their best, most credit-worthy corporate and retail customers."
+    },
+    {
+        q: "An investor uses the Sharpe Ratio to find:",
+        c: [
+            "Risk-adjusted return", 
+            "Volatility of a security compared to the market", 
+            "The expected return of a security", 
+            "Alpha"
+        ],
+        a: 0,
+        f: "Logic: The Sharpe Ratio measures how much excess return you are getting for the total amount of risk you are taking on. It is the primary metric for risk-adjusted return."
+    },
+    {
+        q: "What is the primary reason a financial professional discounts a future cash flow to its present value?",
+        c: [
+            "To evaluate the time value of money to make a valuation", 
+            "To calculate the internal rate of return", 
+            "To figure out the stock's dividend yield", 
+            "To calculate a bond's dividend yield"
+        ],
+        a: 0,
+        f: "Logic: Discounting accounts for the time value of money, bringing future estimates back into present-day dollars so a fair valuation can be made today."
+    },
+    {
+        q: "The Federal Funds Rate is best described as the interest rate at which:",
+        c: [
+            "Commercial banks lend to other banks overnight", 
+            "The Federal Reserve lends to member banks", 
+            "Banks lend to their best corporate customers", 
+            "The Treasury issues new short-term debt"
+        ],
+        a: 0,
+        f: "Logic: The Fed Funds Rate is the bank-to-bank overnight lending rate. It is the most volatile interest rate in the economy."
+    },
+    {
+        q: "A company has Current Assets of $500,000, Inventory of $200,000, and Current Liabilities of $250,000. What is the company's Quick Ratio?",
+        c: [
+            "1.2", 
+            "2.0", 
+            "1.0", 
+            "0.8"
+        ],
+        a: 0,
+        f: "Logic: The Quick Ratio (Acid Test) removes illiquid inventory from the equation. Formula: (Current Assets - Inventory) / Current Liabilities. ($500k - $200k) / $250k = 1.2."
+    },{
+        q: "All other factors being equal, if the discount rate used in a present value calculation increases, the resulting present value will:",
+        c: [
+            "Decrease", 
+            "Increase", 
+            "Remain the same", 
+            "Fluctuate unpredictably"
+        ],
+        a: 0,
+        f: "Logic: There is an inverse relationship between the discount rate and present value. A higher discount rate heavily discounts future money, making it worth less today."
+    },
+    {
+        q: "If the required rate of return (discount rate) is reduced, then the Net Present Value (NPV) of the investment will:",
+        c: [
+            "Increase", 
+            "Decrease", 
+            "Become exactly zero", 
+            "Turn negative"
+        ],
+        a: 0,
+        f: "Logic: A lower discount rate increases the present value of future cash flows. Since NPV = PV of Cash Flows minus Initial Cost, a higher PV results in a higher NPV."
+    },
+    {
+        q: "Net Present Value (NPV) is strictly defined as the difference between:",
+        c: [
+            "The present value of expected cash flows and the initial investment cost", 
+            "Future value and present value", 
+            "The internal rate of return and the discount rate", 
+            "Total assets and total liabilities"
+        ],
+        a: 0,
+        f: "Logic: NPV is a dollar amount. You calculate the Present Value of what the investment will pay you, and subtract what it costs to buy it today."
+    },
+    {
+        q: "The 'basket of goods' is another name for what economic measurement in the US economy?",
+        c: [
+            "Consumer Price Index (CPI)", 
+            "Gross Domestic Product (GDP)", 
+            "Producer Price Index (PPI)", 
+            "The Yield Curve"
+        ],
+        a: 0,
+        f: "Logic: The CPI tracks inflation by measuring the price changes of a static 'basket' of consumer goods and services over time."
+    },
+    {
+        q: "Which valuation ratio compares a company's market price per share to its earnings per share?",
+        c: [
+            "Price-to-Earnings (P/E) Ratio", 
+            "Price-to-Book (P/B) Ratio", 
+            "Debt-to-Equity Ratio", 
+            "Current Ratio"
+        ],
+        a: 0,
+        f: "Logic: The P/E ratio is calculated by taking the current market value of a stock and dividing it by the Earnings Per Share (EPS)."
+    },
+    {
+        q: "What is the primary reason a financial professional discounts a future cash flow to its present value?",
+        c: [
+            "To determine its worth today given the time value of money", 
+            "To calculate the exact inflation rate", 
+            "To project future stock prices", 
+            "To guarantee a risk-free rate of return"
+        ],
+        a: 0,
+        f: "Logic: A dollar today is worth more than a dollar tomorrow. Discounting accounts for the opportunity cost and time value of money."
+    },
+    {
+        q: "A value investor looking for potentially undervalued stocks would MOST likely be interested in a company with a:",
+        c: [
+            "Lower P/B than the sector averages", 
+            "High P/B Ratio", 
+            "P/B Ratio equal to 1", 
+            "P/B ratio above industry averages"
+        ],
+        a: 0,
+        f: "Logic: Value investors look for bargains. A low Price-to-Book (P/B) ratio relative to the sector implies the stock is trading for less than its underlying assets are worth."
+    },
+    {
+        q: "Future value looks at:",
+        c: [
+            "Present value and compounds interest over X years at Y interest rate", 
+            "The cost of a security in the future", 
+            "The future discounted value", 
+            "Net Present Value (NPV)"
+        ],
+        a: 0,
+        f: "Logic: Future Value (FV) takes money you have today (PV) and pushes it forward using a compounding interest rate."
+    },
+    {
+        q: "If the Internal Rate of Return (IRR) of a bond's cash flow is calculated to be 5%, this means the bond's:",
+        c: [
+            "Yield to Maturity (YTM) is 5%", 
+            "Current Yield (CY) is 5%", 
+            "Coupon Rate is 5%", 
+            "Yield to Call (YTC) is 5%"
+        ],
+        a: 0,
+        f: "Logic: For a bond, the IRR is the exact same mathematical concept as Yield to Maturity (YTM). It is the true overall return if held to maturity."
+    },
+    {
+        q: "If an investment's Internal Rate of Return (IRR) is greater than the required rate of return:",
+        c: [
+            "The investment should be accepted because the NPV is positive", 
+            "The investment should be rejected because the NPV is negative", 
+            "The investment is guaranteed to lose money", 
+            "The discount rate must be zero"
+        ],
+        a: 0,
+        f: "Logic: If a project generates a higher internal return (IRR) than your required hurdle rate, it has a positive NPV and is a mathematically sound investment."
+    },
+    {
+        q: "When analyzing a company's liquidity, an adviser is most concerned with the:",
+        c: [
+            "Current Ratio and Quick Ratio", 
+            "Debt to Equity Ratio", 
+            "Price to Book", 
+            "Income statement"
+        ],
+        a: 0,
+        f: "Logic: Liquidity is the ability to pay short-term bills. The Current Ratio and Quick (Acid-Test) Ratio measure short-term assets against short-term liabilities."
+    },
+    {
+        q: "The Internal Rate of Return (IRR) is officially calculated as the discount rate when:",
+        c: [
+            "NPV = 0", 
+            "Discount Rate = 0", 
+            "IRR = 0", 
+            "DCF = 0"
+        ],
+        a: 0,
+        f: "Logic: IRR is defined as the specific discount rate that makes the present value of future cash flows exactly equal to the initial cost (making NPV zero)."
+    },
+    {
+        q: "A widening of credit spreads between corporate bonds and US treasuries typically indicates that investors are:",
+        c: [
+            "Demanding a higher risk premium for taking on additional risk", 
+            "More confident in the economy", 
+            "Expecting lower inflation in the future", 
+            "Shifting assets aggressively from bonds into stocks"
+        ],
+        a: 0,
+        f: "Logic: Widening spreads mean corporate bonds have to pay much higher yields than safe Treasuries to attract buyers, signaling fear and a demand for a higher risk premium."
+    },
+    {
+        q: "Present value looks at:",
+        c: [
+            "Future cash flows and discounts them", 
+            "Net Present Value (NPV)", 
+            "The cost of a security Today", 
+            "Internal Rate of Return (IRR)"
+        ],
+        a: 0,
+        f: "Logic: Present Value pulls future money back to today by discounting it against an expected interest rate."
+    },
+    {
+        q: "Lyons Capital has over 50 million dollars in revenue this quarter and has made 10 million dollars in profit. The stock is currently trading at $16 per share. There are 1,000,000 shares outstanding. What are the earnings per share (EPS)?",
+        c: [
+            "$10.00", 
+            "$50.00", 
+            "$16.00", 
+            "$1.60"
+        ],
+        a: 0,
+        f: "Logic: EPS is calculated by dividing Net Income (Profit) by the number of outstanding shares. Revenue and stock price are irrelevant distractors here. $10,000,000 profit / 1,000,000 shares = $10.00 per share."
     },{
     q: "A company has Total Assets of $500,000 and Total Liabilities of $300,000. What is the company's Shareholders' Equity (Net Worth)?",
     c: ["$200,000", "$800,000", "$300,000", "$500,000"],
@@ -2377,7 +2825,7 @@ a: 0,
 
 // --- 2. ENGINE ---
 let audioCtx;
-let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0, originalLength = 0;
+let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0;
 let mode = 'sprint'; 
 let currentScores = [0, 0, 0, 0];
 
@@ -2392,8 +2840,7 @@ function saveMissionProgress() {
         savedIndex: idx,
         savedPillar: currentPillar,
         savedActiveSet: activeSet,
-        savedMode: mode,
-        savedOriginalLength: originalLength
+        savedMode: mode
     };
     localStorage.setItem('artemisS66_Save', JSON.stringify(missionData));
 }
@@ -2404,18 +2851,21 @@ function loadMissionProgress() {
     if (saveData) {
         const missionData = JSON.parse(saveData);
         
+        // Restore all your specific game variables
         sessionScore = missionData.savedScore;
         idx = missionData.savedIndex;
         currentPillar = missionData.savedPillar;
         activeSet = missionData.savedActiveSet;
         mode = missionData.savedMode;
-        originalLength = missionData.savedOriginalLength || activeSet.length;
         
+        // Fix the UI mode buttons to match the saved state
         setMode(mode);
 
+        // Hide the main menu and show the game board
         document.getElementById('menu').style.display = 'none';
         document.getElementById('game').style.display = 'block';
         
+        // Load up the exact question you were on
         showQuestion();
         
         alert("Mission telemetry restored. Resuming mission.");
@@ -2459,7 +2909,6 @@ function start(pillar) {
 
     const targetCount = (mode === 'sprint') ? 25 : [8, 17, 30, 45][pillar];
     const actualCount = Math.min(targetCount, sourceLib.length);
-    originalLength = actualCount; // Lock in the original denominator for scoring
     
     let shuffled = [...sourceLib].sort(() => 0.5 - Math.random());
     activeSet = shuffled.slice(0, actualCount);
@@ -2472,22 +2921,15 @@ function start(pillar) {
 
 function showQuestion() {
     const q = activeSet[idx];
-    const statusEl = document.getElementById('status-line');
+    document.getElementById('status-line').innerText = `PILLAR 0${currentPillar + 1} | OBJECTIVE ${idx + 1} OF ${activeSet.length}`;
     
-    // UI Update: Differentiate between normal questions and retry queue
-    if (idx < originalLength) {
-        statusEl.innerText = `PILLAR 0${currentPillar + 1} | OBJECTIVE ${idx + 1} OF ${originalLength}`;
-        statusEl.style.color = '#666';
-    } else {
-        statusEl.innerText = `PILLAR 0${currentPillar + 1} | RETRYING MISSED OBJECTIVE`;
-        statusEl.style.color = 'var(--error-red)'; // Flash red to indicate retry phase
-    }
-    
+    // Randomize the choices for this specific display
     let choices = q.c.map((text, i) => ({ text: text, isCorrect: i === q.a }));
     choices.sort(() => 0.5 - Math.random());
     
     let html = `<div class="q-text">${q.q}</div>`;
     choices.forEach((choice) => {
+        // We pass the boolean 'isCorrect' directly to the check function
         html += `<button class="ans-btn" onclick="check(${choice.isCorrect}, this)">${choice.text}</button>`;
     });
     
@@ -2503,27 +2945,17 @@ function check(isCorrect, btn) {
     if (isCorrect) {
         btn.style.background = "#e8f5e9";
         btn.style.borderColor = "#2e7d32";
-        
-        // SCORE LOGIC: Only count points if it is the first attempt
-        if (idx < originalLength) {
-            sessionScore++;
-        }
+        sessionScore++;
         playTone(600, 0.1);
     } else {
         btn.style.background = "#ffebee";
         btn.style.borderColor = "#c62828";
-        
+        // Find and highlight the correct button by comparing text
         for (let b of btns) {
             if (b.innerText === q.c[q.a]) {
                 b.style.border = "2px solid #2e7d32";
             }
         }
-        
-        // SPRINT LOGIC: If wrong in Sprint mode, push question to the end of the queue
-        if (mode === 'sprint') {
-            activeSet.push(q);
-        }
-        
         playTone(200, 0.2);
     }
 
@@ -2532,6 +2964,7 @@ function check(isCorrect, btn) {
     document.getElementById('next').style.display = 'block';
     for (let b of btns) b.disabled = true;
 
+    // Trigger the Auto-Save right after an answer is logged
     saveMissionProgress();
 }
 
@@ -2545,14 +2978,14 @@ function next() {
 }
 
 function endSession() {
-    // Calculate final score using the locked originalLength, ignoring retry queue inflation
-    const pct = Math.round((sessionScore / originalLength) * 100);
+    const pct = Math.round((sessionScore / activeSet.length) * 100);
     currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
     
     const total = currentScores.reduce((a, b) => a + b, 0);
     const avg = Math.round(total / 4);
 
     const rocket = document.getElementById('rocket');
+    // Launch only if total average (Flight Readiness) is 73 or higher
     if (avg >= 73) {
         rocket.classList.add('takeoff');
         setTimeout(() => { rocket.classList.remove('takeoff'); }, 3000);
@@ -2565,6 +2998,7 @@ function endSession() {
     document.getElementById('menu').style.display = 'block';
     updateFuel();
 
+    // Wipe the save file now that the session is officially over
     clearMissionProgress();
 }
 
