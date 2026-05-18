@@ -485,7 +485,12 @@ const sprintLib = [
     {q: "Does a 'Value' investor look for a high or low P/E ratio?", c: ["Low P/E", "High P/E"], a: 0, f: "Logic: Value investors look for bargains cheap relative to earnings."},
     {q: "The 'Security Market Line' (SML) is a representation of:", c: ["CAPM", "Efficient Frontier"], a: 0, f: "Logic: The SML plots expected return against Beta."}
 ], [ // 02. INVESTMENT VEHICLES (PILLAR 2: FULL 100 QUESTIONS)
-    {q: "Which type of investment company issues 'redeemable' shares and typically trades at its Net Asset Value (NAV)?", c: ["Open-End Mutual Fund", "Closed-End Fund"], a: 0, f: "Logic: Open-ends are bought from/sold to the issuer. Closed-ends trade on exchanges."},
+    {q: "Which type of investment company issues 'redeemable' shares and typically trades at its Net Asset Value (NAV)?", c: ["Open-End Mutual Fund", "Closed-End Fund"], a: 0, f: "Logic: Open-ends are bought from/sold to the issuer. Closed-ends trade on exchanges."},{
+        q: "Are digital assets (cryptocurrencies) universally classified as Federal Covered Securities?",
+        c: ["No, they are highly volatile and may not meet the definition of a security", "Yes, they are regulated by the SEC uniformly"],
+        a: 0,
+        f: "Logic: Crypto is heavily tested as a highly speculative asset that lacks central bank backing and often falls outside standard security definitions."
+    },
     {q: "An investor is looking for a senior debt security backed only by the 'full faith and credit' of the issuer. This is a:", c: ["Debenture", "Mortgage Bond"], a: 0, f: "Logic: Debentures are senior but unsecured."},
     {q: "Municipal bond interest is generally exempt from which of the following taxes?", c: ["Federal Income Tax", "Capital Gains Tax"], a: 0, f: "Logic: Interest is exempt; trading profits are taxable."},
     {q: "A 'Zero-Coupon' bond provides a return to the investor through which process?", c: ["Accretion (Growth to Par)", "Semi-annual interest"], a: 0, f: "Logic: Buy at discount, matures at $1,000."},
@@ -707,7 +712,30 @@ const sprintLib = [
     c: ["No (only a court can)", "Yes"],
     a: 0,
     f: "Logic: The Administrator is a regulator. They must refer cases to a prosecutor for criminal sentencing."
-},
+},{
+        q: "Must an Investment Adviser establish a Succession Plan for the death or incapacitation of key personnel?",
+        c: ["Yes, under Business Continuity rules", "No, this is only required for Broker-Dealers"],
+        a: 0,
+        f: "Logic: NASAA requires all IAs to have a plan in place for disaster recovery and succession."
+    },
+    {
+        q: "If financial exploitation of a vulnerable senior is suspected, a firm is permitted to:",
+        c: ["Delay disbursement of funds for up to 15 days", "Immediately freeze the account permanently"],
+        a: 0,
+        f: "Logic: Firms are granted a 'safe harbor' to delay payouts while investigating elder abuse."
+    },
+    {
+        q: "What is the new NASAA annual Continuing Education (CE) requirement for IARs?",
+        c: ["12 credits (6 Ethics, 6 Products)", "No CE is required for IARs"],
+        a: 0,
+        f: "Logic: IARs must now complete 12 hours of CE annually."
+    },
+    {
+        q: "What is the threshold for filing a Suspicious Activity Report (SAR)?",
+        c: ["$5,000", "$10,000"],
+        a: 0,
+        f: "Logic: SARs trigger at $5,000. CTRs (Cash) trigger at over $10,000."
+    },
 {
     q: "If a client wins a civil suit under the USA, are 'Treble Damages' included in the recovery?",
     c: ["No", "Yes"],
@@ -1655,7 +1683,17 @@ const simLib = [
     ],
     a: 0,
     f: "Logic: Application. Currency Risk. Even though the stock rose 10%, the 12% drop in the currency's value more than offset the gain, resulting in a net loss for the US investor."
-},
+},{
+        q: "Under the NASAA statement of policy regarding digital assets, cryptocurrencies are generally considered to be:",
+        c: [
+            "Highly volatile assets that may not meet the legal definition of a security", 
+            "Federal Covered Securities exempt from state registration", 
+            "A standard cash equivalent suitable for money market funds", 
+            "Regulated commodities guaranteed by the Federal Reserve"
+        ],
+        a: 0,
+        f: "Logic: Digital assets (crypto) are highly speculative. While they are sometimes regulated as securities depending on the 'Howey Test,' they are not inherently classified as securities and have no central bank backing."
+    },
 {
     q: "In a Variable Annuity, the performance of the 'Separate Account' directly affects which of the following?",
     c: ["The value of the accumulation units", "The insurance company's general account", "The guaranteed minimum interest rate", "The agent's commission rate"],
@@ -2238,6 +2276,55 @@ a: 0,
         a: 0,
         f: "Logic: Suitability Application. While a UIT has high fees and is unmanaged, it is the only choice that aligns with 'Significant Volatility' and 'Capital Appreciation.' The others are too conservative for this specific client's profile."
     },{
+        q: "If a retiree realizes a massive capital gain, what Medicare provision might cause their premiums to increase?",
+        c: ["IRMAA (Income-Related Monthly Adjustment Amount)", "ERISA surcharge limits"],
+        a: 0,
+        f: "Logic: High income in retirement triggers IRMAA, which increases the cost of Medicare Part B and D."
+    },
+    {
+        q: "Which account offers a 'Triple-Tax Advantage' for medical expenses?",
+        c: ["Health Savings Account (HSA)", "529 Savings Plan"],
+        a: 0,
+        f: "Logic: HSAs allow pre-tax contributions, tax-deferred growth, and tax-free withdrawals for medical bills."
+    },
+    {
+        q: "Investing based on environmental, social, or religious criteria is known as:",
+        c: ["ESG Investing", "Tactical Allocation"],
+        a: 0,
+        f: "Logic: ESG focuses on non-financial investment considerations."
+    },{
+        q: "A client is 68 years old and withdrawing funds from a Traditional IRA. They recently realized a massive capital gain from a real estate sale. Which of the following Medicare-related issues should the IAR warn the client about?",
+        c: [
+            "IRMAA (Income-Related Monthly Adjustment Amount) surcharges", 
+            "The permanent loss of Medicare Part A benefits", 
+            "A mandatory 10% penalty on all future IRA distributions", 
+            "The inability to use Health Savings Account (HSA) funds"
+        ],
+        a: 0,
+        f: "Logic: IRMAA causes Medicare Part B and Part D premiums to increase significantly if a retiree's Modified Adjusted Gross Income (MAGI) crosses certain thresholds."
+    },
+    {
+        q: "Which of the following accounts provides a 'Triple-Tax Advantage' (Pre-tax contributions, tax-deferred growth, and tax-free withdrawals for qualified expenses)?",
+        c: [
+            "Health Savings Account (HSA)", 
+            "Flexible Spending Account (FSA)", 
+            "Roth IRA", 
+            "529 College Savings Plan"
+        ],
+        a: 0,
+        f: "Logic: HSAs are unique because if the funds are used for qualified medical expenses, they are never taxed at any point in the process."
+    },
+    {
+        q: "An investor strictly filters their portfolio to exclude tobacco, firearms, and fossil fuel companies. This is an example of:",
+        c: [
+            "ESG (Environmental, Social, and Governance) investing", 
+            "Tactical asset allocation", 
+            "Sector rotation", 
+            "Modern Portfolio Theory (MPT)"
+        ],
+        a: 0,
+        f: "Logic: ESG investing incorporates non-financial considerations (values, religion, environment) into the portfolio construction process."
+    },{
         q: "Which plan allows a 50-year-old municipal firefighter to take penalty-free distributions immediately upon retirement?",
         c: [
             "Section 457 Plan", 
@@ -2378,6 +2465,49 @@ a: 0,
         ],
         a: 0,
         f: "Logic: Registration Nuance. The 'de minimis' rule allows an IA or IAR to have up to 5 retail clients in a state without registering, provided they have no physical office (place of business) in that state."
+    },{
+        q: "Under the NASAA Model Rule on Business Continuity and Succession Planning, an Investment Adviser must:",
+        c: [
+            "Establish a written plan to ensure operations continue in the event of a disaster or the death of key personnel", 
+            "Keep 6 months of operating capital in a separate escrow account", 
+            "Notify the Administrator 30 days prior to a planned server outage", 
+            "Register a backup IAR in every state they operate in"
+        ],
+        a: 0,
+        f: "Logic: Every IA must have a Business Continuity Plan (BCP) and a Succession Plan to protect clients if the firm's systems fail or if a solo adviser dies/becomes incapacitated."
+    },
+    {
+        q: "If a broker-dealer or investment adviser reasonably suspects financial exploitation of a vulnerable adult, NASAA model rules permit the firm to:",
+        c: [
+            "Delay disbursement of funds from the account for up to 15 business days", 
+            "Liquidate the account and send the cash directly to the client's home address", 
+            "Immediately arrest the suspected exploiter", 
+            "Transfer the assets to the State Administrator's custody"
+        ],
+        a: 0,
+        f: "Logic: To protect seniors and vulnerable adults, firms are granted a safe harbor to 'freeze' or delay disbursements (usually for 15 days) while they investigate suspected financial abuse."
+    },
+    {
+        q: "Under NASAA rules, what is the annual Continuing Education (CE) requirement for an Investment Adviser Representative (IAR)?",
+        c: [
+            "12 credits (6 for Ethics/Professional Responsibility and 6 for Products/Practice)", 
+            "24 credits exclusively focused on Ethics", 
+            "Zero credits, as IARs are exempt once they pass the Series 66", 
+            "10 credits every two years"
+        ],
+        a: 0,
+        f: "Logic: NASAA recently implemented a model rule requiring IARs to complete 12 hours of CE annually to maintain their registration."
+    },
+    {
+        q: "Under Anti-Money Laundering (AML) regulations, a firm must file a Suspicious Activity Report (SAR) for any transaction (or pattern of transactions) that is questionable and involves at least:",
+        c: [
+            "$5,000", 
+            "$10,000", 
+            "$3,000", 
+            "$100,000"
+        ],
+        a: 0,
+        f: "Logic: Currency Transaction Reports (CTRs) are for physical cash over $10,000. Suspicious Activity Reports (SARs) are for suspicious behavior involving $5,000 or more."
     },{
         q: "Under the Investment Advisers Act of 1940, in which of the following situations is an investment adviser permitted to charge a performance-based fee?",
         c: [
