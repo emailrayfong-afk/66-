@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MISSION COMMAND: ARTEMIS S66 v18.6</title>
+    <title>MISSION COMMAND: ARTEMIS S66 v20</title>
     <style>
         :root { 
             --nasa-blue: #0b3d91; 
@@ -54,6 +54,7 @@
                 <button class="p-btn" onclick="start(2)">03. STRATEGY <span id="s2" style="display:block; font-size:10px;">0%</span></button>
                 <button class="p-btn" onclick="start(3)">04. REGULATIONS <span id="s3" style="display:block; font-size:10px;">0%</span></button>
             </div>
+            <button onclick="localStorage.clear(); window.location.reload();" style="background:var(--artemis-red); color:white; border:none; padding:15px; width:100%; margin-top:10px; border-radius:5px; font-weight:bold; cursor:pointer;">COMMAND RESET</button>
         </div>
         <div id="game" style="display:none;">
             <div id="status-line" style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px;"></div>
@@ -63,8 +64,7 @@
         </div>
     </div>
 
-<script>
-// --- 1. DATA LIBRARIES ---
+<script>// --- 1. DATA LIBRARIES ---
 // ALL 100 QUESTIONS PER PILLAR ARE NOW CONSOLIDATED HERE
 const sprintLib = [
 [ // 01. ECONOMICS (PILLAR 1: 100 QUESTIONS)
@@ -2804,137 +2804,102 @@ a: 0,
 ]
 ];
 
-// --- 2. ENGINE ---
-let audioCtx;
-let gameState = {
-    mode: 'sprint',
-    idx: 0,
-    currentPillar: 0,
-    sessionScore: 0,
-    activeSet: [],
-    originalSetLength: 0
-};
+// --- ENGINE ---
+    let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0, originalLength = 0, mode = 'sprint';
+    let currentScores = [0, 0, 0, 0];
 
-let globalScores = { sprint: [0,0,0,0], sim: [0,0,0,0] };
-
-function playTone(freq, dur) {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    osc.connect(g); g.connect(audioCtx.destination);
-    osc.frequency.value = freq;
-    g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-    osc.start(); 
-    osc.stop(audioCtx.currentTime + dur);
-}
-
-function hardReset() {
-    if (confirm("COMMAND RESET: Wipe all data?")) {
-        localStorage.clear();
-        window.location.reload(); 
+    function setMode(m) {
+        mode = m;
+        // Reset UI buttons
+        document.getElementById('mode-sprint').className = m === 'sprint' ? 'mode-btn active' : 'mode-btn';
+        document.getElementById('mode-sim').className = m === 'sim' ? 'mode-btn active' : 'mode-btn';
+        // Reset Game
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('menu').style.display = 'block';
+        activeSet = []; idx = 0; sessionScore = 0;
     }
-}
 
-function setMode(m) {
-    if (gameState.mode !== m) {
-        localStorage.clear();
-        window.location.reload(); 
-    }
-}
-
-function start(pillar) {
-    // Browser policy: Initialize audio context on the first user interaction
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    
-    gameState.currentPillar = pillar;
-    gameState.idx = 0;
-    gameState.sessionScore = 0;
-    
-    const lib = (gameState.mode === 'sprint') ? sprintLib[pillar] : simLib[pillar];
-    const target = (gameState.mode === 'sprint') ? 25 : [8, 17, 30, 45][pillar];
-    
-    let pool = [...lib].sort(() => 0.5 - Math.random());
-    gameState.activeSet = pool.slice(0, Math.min(target, lib.length));
-    gameState.originalSetLength = gameState.activeSet.length;
-    
-    document.getElementById('menu').style.display = 'none';
-    document.getElementById('game').style.display = 'block';
-    showQuestion();
-}
-
-function showQuestion() {
-    const q = gameState.activeSet[gameState.idx];
-    document.getElementById('status-line').innerText = `PILLAR 0${gameState.currentPillar + 1} | GATE ${gameState.idx + 1} OF ${gameState.originalSetLength}`;
-    
-    let choices = q.c.map((text, i) => ({ text, isCorrect: i === q.a })).sort(() => 0.5 - Math.random());
-    let html = `<div class="q-text">${q.q}</div>`;
-    choices.forEach(c => html += `<button class="ans-btn" onclick="check(${c.isCorrect}, this)">${c.text}</button>`);
-    
-    document.getElementById('q-area').innerHTML = html;
-}
-
-function check(isCorrect, btn) {
-    const q = gameState.activeSet[gameState.idx];
-    document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
-    
-    if (isCorrect) {
-        btn.style.background = "#e8f5e9";
-        if (gameState.idx < gameState.originalSetLength) gameState.sessionScore++;
-        playTone(600, 0.1); // Correct sound
-    } else {
-        btn.style.background = "#ffebee";
-        if (gameState.mode === 'sprint') {
-            let retry = JSON.parse(JSON.stringify(q));
-            retry.isRetry = true;
-            gameState.activeSet.push(retry);
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
-        playTone(200, 0.2); // Incorrect sound
+        return array;
     }
-    document.getElementById('feedback').innerHTML = `<strong>${isCorrect ? '✅' : '❌'}</strong> ${q.f}`;
-    document.getElementById('feedback').style.display = 'block';
-    document.getElementById('next').style.display = 'block';
-}
 
-function next() {
-    gameState.idx++;
-    if (gameState.idx < gameState.activeSet.length) showQuestion();
-    else endSession();
-}
-
-function endSession() {
-    const pct = Math.round((gameState.sessionScore / gameState.originalSetLength) * 100);
-    globalScores[gameState.mode][gameState.currentPillar] = Math.max(pct, globalScores[gameState.mode][gameState.currentPillar]);
-    localStorage.setItem('artemis_global', JSON.stringify(globalScores));
-    
-    document.getElementById('game').style.display = 'none';
-    document.getElementById('menu').style.display = 'block';
-    updateFuel();
-}
-
-function updateFuel() {
-    const scores = globalScores[gameState.mode] || [0,0,0,0];
-    const avg = Math.round(scores.reduce((a, b) => a + b, 0) / 4);
-    document.getElementById('fuel-fill').style.width = avg + '%';
-    document.getElementById('total-text').innerText = `READINESS: ${avg}%`;
-    scores.forEach((s, i) => {
-        let el = document.getElementById(`s${i}`);
-        if(el) { el.innerText = s + '%'; el.style.color = s >= 73 ? "#2e7d32" : "#666"; }
-    });
-
-    if (!document.getElementById('reset-btn')) {
-        let rBtn = document.createElement('button');
-        rBtn.id = 'reset-btn';
-        rBtn.style.cssText = "background-color: var(--artemis-red); color: white; margin-top: 10px; width: 100%; padding: 15px; font-size: 14px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;";
-        rBtn.innerText = 'COMMAND RESET';
-        rBtn.onclick = hardReset;
-        document.getElementById('menu').appendChild(rBtn);
+    function start(pillar) {
+        currentPillar = pillar;
+        idx = 0; 
+        sessionScore = 0;
+        const sourceLib = (mode === 'sprint') ? sprintLib[pillar] : simLib[pillar];
+        const target = (mode === 'sprint') ? 25 : [8, 17, 30, 45][pillar];
+        
+        activeSet = shuffle([...sourceLib]).slice(0, Math.min(target, sourceLib.length));
+        originalLength = activeSet.length;
+        
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        showQuestion();
     }
-}
 
-window.onload = () => {
-    const saved = localStorage.getItem('artemis_global');
-    if (saved) globalScores = JSON.parse(saved);
-    updateFuel();
-};
+    function showQuestion() {
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next').style.display = 'none';
+        
+        const q = activeSet[idx];
+        document.getElementById('status-line').innerText = (idx < originalLength) 
+            ? `PILLAR 0${currentPillar + 1} | GATE ${idx + 1} OF ${originalLength}`
+            : `PILLAR 0${currentPillar + 1} | RETRYING MISSED OBJECTIVE`;
+        
+        let choices = q.c.map((text, i) => ({ text, isCorrect: i === q.a }));
+        shuffle(choices);
+        
+        let html = `<div class="q-text">${q.q}</div>`;
+        choices.forEach(c => html += `<button class="ans-btn" onclick="check(${c.isCorrect}, this)">${c.text}</button>`);
+        document.getElementById('q-area').innerHTML = html;
+    }
+
+    function check(isCorrect, btn) {
+        const q = activeSet[idx];
+        document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+        
+        if (isCorrect) {
+            btn.style.background = "#e8f5e9";
+            if (idx < originalLength) sessionScore++;
+        } else {
+            btn.style.background = "#ffebee";
+            let retryQ = JSON.parse(JSON.stringify(q));
+            retryQ.isRetry = true;
+            activeSet.push(retryQ);
+        }
+        document.getElementById('feedback').innerHTML = `<strong>${isCorrect ? '✅' : '❌'}</strong> ${q.f}`;
+        document.getElementById('feedback').style.display = 'block';
+        document.getElementById('next').style.display = 'block';
+    }
+
+    function next() {
+        idx++;
+        if (idx < activeSet.length) showQuestion();
+        else endSession();
+    }
+
+    function endSession() {
+        const pct = Math.round((sessionScore / originalLength) * 100);
+        currentScores[currentPillar] = Math.max(pct, currentScores[currentPillar]);
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('menu').style.display = 'block';
+        updateFuel();
+    }
+
+    function updateFuel() {
+        const avg = Math.round(currentScores.reduce((a, b) => a + b, 0) / 4);
+        document.getElementById('fuel-fill').style.width = avg + '%';
+        document.getElementById('total-text').innerText = `FLIGHT READINESS: ${avg}%`;
+        currentScores.forEach((s, i) => {
+            let el = document.getElementById(`s${i}`);
+            if(el) { el.innerText = s + '%'; el.style.color = s >= 73 ? "#2e7d32" : "#666"; }
+        });
+    }
 </script>
+</body>
+</html>
