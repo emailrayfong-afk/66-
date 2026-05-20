@@ -2805,15 +2805,26 @@ a: 0,
 ];
 
 // --- ENGINE ---
+    let audioCtx; // Audio Context variable
     let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0, originalLength = 0, mode = 'sprint';
     let currentScores = [0, 0, 0, 0];
 
+    // --- SOUND FIX: The Tone Function ---
+    function playTone(freq, dur) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.connect(g); g.connect(audioCtx.destination);
+        osc.frequency.value = freq;
+        g.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.start(); osc.stop(audioCtx.currentTime + dur);
+    }
+
     function setMode(m) {
         mode = m;
-        // Reset UI buttons
         document.getElementById('mode-sprint').className = m === 'sprint' ? 'mode-btn active' : 'mode-btn';
         document.getElementById('mode-sim').className = m === 'sim' ? 'mode-btn active' : 'mode-btn';
-        // Reset Game
         document.getElementById('game').style.display = 'none';
         document.getElementById('menu').style.display = 'block';
         activeSet = []; idx = 0; sessionScore = 0;
@@ -2866,11 +2877,13 @@ a: 0,
         if (isCorrect) {
             btn.style.background = "#e8f5e9";
             if (idx < originalLength) sessionScore++;
+            playTone(600, 0.1); // SOUND: Success
         } else {
             btn.style.background = "#ffebee";
             let retryQ = JSON.parse(JSON.stringify(q));
             retryQ.isRetry = true;
             activeSet.push(retryQ);
+            playTone(200, 0.2); // SOUND: Error
         }
         document.getElementById('feedback').innerHTML = `<strong>${isCorrect ? '✅' : '❌'}</strong> ${q.f}`;
         document.getElementById('feedback').style.display = 'block';
@@ -2900,6 +2913,6 @@ a: 0,
             if(el) { el.innerText = s + '%'; el.style.color = s >= 73 ? "#2e7d32" : "#666"; }
         });
     }
+
+    window.onload = updateFuel;
 </script>
-</body>
-</html>
