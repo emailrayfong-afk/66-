@@ -2804,12 +2804,11 @@ a: 0,
 ]
 ];
 
-// --- ENGINE ---
-    let audioCtx; // Audio Context variable
+// --- 2. ENGINE ---
+    let audioCtx;
     let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0, originalLength = 0, mode = 'sprint';
     let currentScores = [0, 0, 0, 0];
 
-    // --- SOUND FIX: The Tone Function ---
     function playTone(freq, dur) {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -2872,18 +2871,29 @@ a: 0,
 
     function check(isCorrect, btn) {
         const q = activeSet[idx];
-        document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+        const btns = document.querySelectorAll('.ans-btn');
+        btns.forEach(b => b.disabled = true);
         
         if (isCorrect) {
             btn.style.background = "#e8f5e9";
+            btn.style.borderColor = "#2e7d32";
             if (idx < originalLength) sessionScore++;
-            playTone(600, 0.1); // SOUND: Success
+            playTone(600, 0.1); // Sound: Correct
         } else {
             btn.style.background = "#ffebee";
+            btn.style.borderColor = "#c62828";
+            // Highlight correct one in Green
+            btns.forEach(b => { 
+                if (b.innerText === q.c[q.a]) {
+                    b.style.background = "#e8f5e9";
+                    b.style.border = "3px solid #2e7d32";
+                }
+            });
+            // Add to retry
             let retryQ = JSON.parse(JSON.stringify(q));
             retryQ.isRetry = true;
             activeSet.push(retryQ);
-            playTone(200, 0.2); // SOUND: Error
+            playTone(200, 0.2); // Sound: Error
         }
         document.getElementById('feedback').innerHTML = `<strong>${isCorrect ? '✅' : '❌'}</strong> ${q.f}`;
         document.getElementById('feedback').style.display = 'block';
