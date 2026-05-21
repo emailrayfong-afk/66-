@@ -2202,18 +2202,6 @@ a: 0,
         a: 0,
         f: "Logic: Systematic risk (overall market risk) cannot be eliminated by simply diversifying within the same asset class. To mitigate it, you must add non-correlated asset classes, such as debt instruments (bonds)."
     },
-
-{
-    q: "An investor holds a 100% equity portfolio and is concerned about systematic market risk. The most appropriate strategy to mitigate this specific risk is to:",
-    c: [
-        "Allocate a portion of the portfolio to debt instruments", 
-        "Diversify into equities across different sectors", 
-        "Increase holdings in small-cap domestic stocks", 
-        "Shift to a strictly growth-oriented equity strategy"
-    ],
-    a: 0,
-    f: "Logic: Systematic risk (overall market risk) cannot be eliminated by simply diversifying within the same asset class. To mitigate it, you must add non-correlated asset classes, such as debt instruments (bonds)."
-},
     {
         q: "An investor is using the Sharpe Ratio to compare two portfolios. Portfolio A has a higher total return than Portfolio B, but Portfolio B has a higher Sharpe Ratio. What is the most accurate interpretation of this data?",
         c: [
@@ -2809,6 +2797,7 @@ a: 0,
     let activeSet = [], idx = 0, currentPillar = 0, sessionScore = 0, originalLength = 0, mode = 'sprint';
     let currentScores = [0, 0, 0, 0];
 
+    // Helper: Play Sound
     function playTone(freq, dur) {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -2855,7 +2844,6 @@ a: 0,
     function showQuestion() {
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next').style.display = 'none';
-        
         const q = activeSet[idx];
         document.getElementById('status-line').innerText = (idx < originalLength) 
             ? `PILLAR 0${currentPillar + 1} | GATE ${idx + 1} OF ${originalLength}`
@@ -2871,29 +2859,24 @@ a: 0,
 
     function check(isCorrect, btn) {
         const q = activeSet[idx];
-        const btns = document.querySelectorAll('.ans-btn');
-        btns.forEach(b => b.disabled = true);
+        document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
         
         if (isCorrect) {
             btn.style.background = "#e8f5e9";
             btn.style.borderColor = "#2e7d32";
             if (idx < originalLength) sessionScore++;
-            playTone(600, 0.1); // Sound: Correct
+            playTone(600, 0.1);
         } else {
             btn.style.background = "#ffebee";
             btn.style.borderColor = "#c62828";
-            // Highlight correct one in Green
-            btns.forEach(b => { 
-                if (b.innerText === q.c[q.a]) {
-                    b.style.background = "#e8f5e9";
-                    b.style.border = "3px solid #2e7d32";
-                }
+            // Highlight Correct
+            document.querySelectorAll('.ans-btn').forEach(b => { 
+                if (b.innerText === q.c[q.a]) { b.style.background = "#e8f5e9"; b.style.borderColor = "#2e7d32"; }
             });
-            // Add to retry
             let retryQ = JSON.parse(JSON.stringify(q));
             retryQ.isRetry = true;
             activeSet.push(retryQ);
-            playTone(200, 0.2); // Sound: Error
+            playTone(200, 0.2);
         }
         document.getElementById('feedback').innerHTML = `<strong>${isCorrect ? '✅' : '❌'}</strong> ${q.f}`;
         document.getElementById('feedback').style.display = 'block';
@@ -2912,6 +2895,39 @@ a: 0,
         document.getElementById('game').style.display = 'none';
         document.getElementById('menu').style.display = 'block';
         updateFuel();
+        
+        // Launch Sequence Trigger
+        if (pct >= 73) runLaunch();
+        else runExplosion();
+    }
+
+    function runLaunch() {
+        let rocket = document.getElementById('rocket');
+        let menu = document.getElementById('menu');
+        let count = 10;
+        rocket.classList.add('shake');
+        let timer = setInterval(() => {
+            playTone(440, 0.1);
+            menu.innerHTML = `<h2 style="text-align:center;">LIFT OFF IN: ${count}</h2>`;
+            if (--count < 0) {
+                clearInterval(timer);
+                rocket.classList.remove('shake');
+                rocket.classList.add('takeoff');
+                playTone(880, 0.5);
+                setTimeout(() => window.location.reload(), 3000);
+            }
+        }, 1000);
+    }
+
+    function runExplosion() {
+        let rocket = document.getElementById('rocket');
+        document.body.classList.add('flash-red');
+        rocket.innerText = '💥';
+        playTone(100, 0.5);
+        setTimeout(() => {
+            document.body.classList.remove('flash-red');
+            rocket.innerText = '🚀';
+        }, 2000);
     }
 
     function updateFuel() {
